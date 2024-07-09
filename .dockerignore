@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.DS_Store
+*.md
+.git
+.github
+.gitignore
+.next
+out
+typescript-version
+.gitattributes
+CHANGELOG.md
+LICENSE
+README.md
