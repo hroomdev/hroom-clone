@@ -4,9 +4,9 @@
   "license": "Commercial",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 8001",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p 8000",
+    "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -15,6 +15,7 @@
     "postinstall": "prisma generate && npm run build:icons",
     "removeI18n": "tsx src/remove-translation-scripts/index.js"
   },
+  "//": " -H 0.0.0.0 -p 8001  -H 0.0.0.0 -p 8000",
   "dependencies": {
     "@auth/prisma-adapter": "2.2.0",
     "@emoji-mart/data": "1.2.1",
