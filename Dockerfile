@@ -12,13 +12,20 @@ RUN ls -l
 #ADD ./* /home/app/
 # Устанавливаем зависимости
 RUN npm install -g npm@10.8.1
-RUN npm install -g next
-RUN npm install -g pnpm
-RUN npx @next/codemod built-in-next-font . --force
 RUN npm install
+RUN npm install -g pnpm
+RUN npm install --save-dev cross-env
+RUN npm install -g next
+RUN npx @next/codemod built-in-next-font . --force
+
 RUN ls -l
 # Экспонируем порт 8000 для нашего приложения
 EXPOSE 8001
+EXPOSE 8000
+EXPOSE 3000
+EXPOSE 448
+EXPOSE 80
+EXPOSE 5678
 #RUN npm run dev
 CMD ["npm", "run", "dev"]
 

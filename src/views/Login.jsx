@@ -19,7 +19,6 @@ import Divider from '@mui/material/Divider'
 import Alert from '@mui/material/Alert'
 
 // Third-party Imports
-import { signIn } from 'next-auth/react'
 import { Controller, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { object, minLength, string, email, pipe, nonEmpty } from 'valibot'
@@ -67,9 +66,13 @@ const Login = ({ mode }) => {
   const { lang: locale } = useParams()
   const { settings } = useSettings()
 
+  const hS = event => {
+    event.preventDefault()
+  }
+
   const {
     control,
-    handleSubmit,
+    handleSubmit = { hS },
     formState: { errors }
   } = useForm({
     resolver: valibotResolver(schema),
