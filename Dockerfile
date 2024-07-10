@@ -17,6 +17,7 @@ RUN npm install -g pnpm
 RUN npm install --save-dev cross-env
 RUN npm install -g next
 RUN npx @next/codemod built-in-next-font . --force
+RUN npm install axios
 
 RUN ls -l
 # Экспонируем порт 8000 для нашего приложения

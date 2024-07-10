@@ -22,6 +22,10 @@ import { sendMsg } from '@/redux-store/slices/chat'
 // Component Imports
 import CustomIconButton from '@core/components/mui/IconButton'
 
+const axios = require('axios')
+
+const apiKey = 'sk-zAPWzK2dtBsu0zXWOwI4T3BlbkFJUaQB8yEeFoFF3wtQjG5uconst'
+
 // Emoji Picker Component for selecting emojis
 const EmojiPicker = ({ onChange, isBelowSmScreen, openEmojiPicker, setOpenEmojiPicker, anchorRef }) => {
   return (
@@ -60,6 +64,33 @@ const EmojiPicker = ({ onChange, isBelowSmScreen, openEmojiPicker, setOpenEmojiP
   )
 }
 
+//reverse proxy api
+// Function to make a GET request to an API
+//const url = 'https://api.openai.com/v1/chat/completions';
+const makeGetRequest = async message => {
+  const url = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/chat/completions'
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`
+  }
+
+  const data = {
+    model: 'gpt-4', // Or use 'gpt-3.5-turbo' if you are using GPT-3.5
+    messages: [{ role: 'user', content: message }],
+    max_tokens: 150
+  }
+
+  try {
+    const response = await axios.post(url, data, { headers })
+    const chatResponse = response.data.choices[0].message.content
+
+    console.log('ChatGPT:', chatResponse)
+  } catch (error) {
+    console.error('Error communicating with ChatGPT:', error.response ? error.response.data : error.message)
+  }
+}
+
 const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef }) => {
   // States
   const [msg, setMsg] = useState('')
@@ -83,11 +114,15 @@ const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef })
   }
 
   const handleSendMsg = (event, msg) => {
+    // Example usage
+
     event.preventDefault()
 
     if (msg.trim() !== '') {
       dispatch(sendMsg({ msg }))
       setMsg('')
+
+      makeGetRequest(msg)
     }
   }
 

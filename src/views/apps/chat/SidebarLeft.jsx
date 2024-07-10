@@ -122,6 +122,8 @@ const SidebarLeft = props => {
   const [searchValue, setSearchValue] = useState()
 
   const handleChange = (event, newValue) => {
+    console.log('event' + event + 'newvalue' + newValue)
+
     setSearchValue(newValue)
     dispatch(addNewChat({ id: chatStore.contacts.find(contact => contact.fullName === newValue)?.id }))
     getActiveUserData(chatStore.contacts.find(contact => contact.fullName === newValue)?.id || chatStore.activeUser?.id)
