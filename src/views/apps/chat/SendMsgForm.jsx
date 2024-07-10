@@ -21,6 +21,7 @@ import { sendMsg } from '@/redux-store/slices/chat'
 
 // Component Imports
 import CustomIconButton from '@core/components/mui/IconButton'
+import { db } from '@/fake-db/apps/chat'
 
 const axios = require('axios')
 
@@ -67,8 +68,10 @@ const EmojiPicker = ({ onChange, isBelowSmScreen, openEmojiPicker, setOpenEmojiP
 //reverse proxy api
 // Function to make a GET request to an API
 //const url = 'https://api.openai.com/v1/chat/completions';
-const makeGetRequest = async message => {
+async function makeGetRequest(message) {
   const url = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/chat/completions'
+
+  let returnResponse = ''
 
   const headers = {
     'Content-Type': 'application/json',
@@ -82,13 +85,17 @@ const makeGetRequest = async message => {
   }
 
   try {
-    const response = await axios.post(url, data, { headers })
-    const chatResponse = response.data.choices[0].message.content
+    let response = await axios.post(url, data, { headers })
 
-    console.log('ChatGPT:', chatResponse)
+    returnResponse = response.data.choices[0].message.content
+
+    console.log('ChatGPT:', returnResponse)
   } catch (error) {
+    returnResponse = ''
     console.error('Error communicating with ChatGPT:', error.response ? error.response.data : error.message)
   }
+
+  return returnResponse
 }
 
 const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef }) => {
@@ -113,16 +120,26 @@ const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef })
     setAnchorEl(null)
   }
 
-  const handleSendMsg = (event, msg) => {
+  const handleSendMsg = async (event, msg, rec) => {
     // Example usage
+    if (rec == true) {
+      event.preventDefault()
 
-    event.preventDefault()
+      if (msg.trim() !== '') {
+        dispatch(sendMsg({ msg }))
+        setMsg('')
+      }
 
-    if (msg.trim() !== '') {
+      let b = await makeGetRequest(msg)
+
+      setMsg(b)
+
+      let chatgpt = 'ChatGPT advice: ' + b
+
+      handleSendMsg(event, chatgpt, false)
+    } else {
       dispatch(sendMsg({ msg }))
       setMsg('')
-
-      makeGetRequest(msg)
     }
   }
 
@@ -222,7 +239,9 @@ const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef })
   return (
     <form
       autoComplete='off'
-      onSubmit={event => handleSendMsg(event, msg)}
+      onSubmit={event => {
+        handleSendMsg(event, msg, true)
+      }}
       className=' bg-[var(--mui-palette-customColors-chatBg)]'
     >
       <TextField
@@ -242,7 +261,7 @@ const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef })
         }}
         onKeyDown={e => {
           if (e.key === 'Enter' && !e.shiftKey) {
-            handleSendMsg(e, msg)
+            handleSendMsg(e, msg, true)
           }
         }}
         size='small'
