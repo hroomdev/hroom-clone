@@ -25,7 +25,8 @@ import { db } from '@/fake-db/apps/chat'
 
 const axios = require('axios')
 
-const apiKey = 'sk-zAPWzK2dtBsu0zXWOwI4T3BlbkFJUaQB8yEeFoFF3wtQjG5uconst'
+const googleApiKey = process.env.GOOGLEGEMINI_API_KEY
+const apiKey = process.env.CHATGPT_API_KEY
 
 // Emoji Picker Component for selecting emojis
 const EmojiPicker = ({ onChange, isBelowSmScreen, openEmojiPicker, setOpenEmojiPicker, anchorRef }) => {
@@ -66,9 +67,7 @@ const EmojiPicker = ({ onChange, isBelowSmScreen, openEmojiPicker, setOpenEmojiP
 }
 
 //reverse proxy api
-// Function to make a GET request to an API
-//const url = 'https://api.openai.com/v1/chat/completions';
-async function makeGetRequest(message) {
+async function makeOPENCHATAIGetRequest(message) {
   const url = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/chat/completions'
 
   let returnResponse = ''
@@ -93,6 +92,36 @@ async function makeGetRequest(message) {
   } catch (error) {
     returnResponse = ''
     console.error('Error communicating with ChatGPT:', error.response ? error.response.data : error.message)
+  }
+
+  return returnResponse
+}
+
+async function makeGOOGLEGEMINIGetRequest(message) {
+  const url = 'http://hroom-team-geminiopenaiproxy-7423.twc1.net:8000/v1/chat/completions'
+
+  let returnResponse = ''
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${googleApiKey}`
+  }
+
+  const data = {
+    model: 'gpt-3.5-turbo', // Or use 'gpt-3.5-turbo' if you are using GPT-3.5
+    messages: [{ role: 'user', content: message }],
+    max_tokens: 150
+  }
+
+  try {
+    let response = await axios.post(url, data, { headers })
+
+    returnResponse = response.data.choices[0].message.content
+
+    console.log('Google gemini:', returnResponse)
+  } catch (error) {
+    returnResponse = ''
+    console.error('Error communicating with Google Gemini:', error.response ? error.response.data : error.message)
   }
 
   return returnResponse
@@ -130,13 +159,20 @@ const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef })
         setMsg('')
       }
 
-      let b = await makeGetRequest(msg)
+      let b = await makeOPENCHATAIGetRequest(msg)
+
+      let g = await makeGOOGLEGEMINIGetRequest(msg)
 
       setMsg(b)
 
+      setMsg(g)
+
       let chatgpt = 'ChatGPT advice: ' + b
+      let gemini = 'Gemini advice: ' + g
 
       handleSendMsg(event, chatgpt, false)
+
+      handleSendMsg(event, gemini, false)
     } else {
       dispatch(sendMsg({ msg }))
       setMsg('')
