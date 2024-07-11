@@ -98,7 +98,7 @@ async function makeOPENCHATAIGetRequest(message) {
 }
 
 async function makeGOOGLEGEMINIGetRequest(message) {
-  const url = 'http://hroom-team-geminiopenaiproxy-7423.twc1.net:8000/v1/chat/completions'
+  const url = 'https://workers-playground-rapid-silence-e188.hroomdeveloper.workers.dev/v1/chat/completions'
 
   let returnResponse = ''
 
