@@ -10,7 +10,7 @@ import DialogShareProject from '@views/pages/dialog-examples/DialogShareProject'
 import DialogReferEarn from '@views/pages/dialog-examples/DialogReferEarn'
 import DialogPaymentMethod from '@views/pages/dialog-examples/DialogPaymentMethod'
 import DialogPaymentProviders from '@views/pages/dialog-examples/DialogPaymentProviders'
-import DialogCreateApp from '@views/pages/dialog-examples/DialogCreateApp'
+import DialogCreateApp from '@/views/pages/dialog-examples/DialogCreateApp'
 import DialogPricing from '@views/pages/dialog-examples/DialogPricing'
 
 // Data Imports
@@ -36,40 +36,44 @@ const DialogExamples = async () => {
   // Vars
   const data = await getPricingData()
 
-  return (
-    <Grid container spacing={6}>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogAddCard />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogEditUserInfo />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogAuthentication />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogAddNewAddress />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogShareProject />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogReferEarn />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogPaymentMethod />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogPaymentProviders />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogPricing data={data} />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <DialogCreateApp />
-      </Grid>
-    </Grid>
-  )
+  return <DialogCreateApp />
+
+  // (
+  //<DialogCreateApp />
+
+  //<Grid container spacing={6}>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogAddCard />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogEditUserInfo />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogAuthentication />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogAddNewAddress />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogShareProject />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogReferEarn />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogPaymentMethod />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogPaymentProviders />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogPricing data={data} />
+  //  </Grid>
+  //  <Grid item xs={12} sm={6} md={4}>
+  //    <DialogCreateApp />
+  //  </Grid>
+  //</Grid>
+  //)
 }
 
 export default DialogExamples

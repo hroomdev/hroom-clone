@@ -24,6 +24,7 @@ const DialogCreateApp = () => {
           <Typography color='text.primary'>
             Provide application data with this form to create the app dialog popup example, easy to use in any page.
           </Typography>
+
           <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={CreateApp} />
         </CardContent>
       </Card>

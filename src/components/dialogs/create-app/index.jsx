@@ -1,4 +1,5 @@
 'use client'
+import { useEffect } from 'react'
 
 // React Imports
 import { useState } from 'react'
@@ -22,6 +23,9 @@ import classnames from 'classnames'
 import Details from './Details'
 import FrameWork from './FrameWork'
 import VerticalRadioImage from './VerticalRadioImage'
+import VerticalRadioSVG from './VerticalRadioSVG'
+import SliderStep from './SliderStep'
+import StarRate from './StarRate'
 import Database from './Database'
 import Billing from './Billing'
 import Submit from './Submit'
@@ -31,51 +35,38 @@ import StepperWrapper from '@core/styles/stepper'
 
 const steps = [
   {
-    icon: 'ri-file-text-line',
-    title: 'Details',
-    subtitle: 'Enter Details'
-  },
-
-  //{
-  //  icon: 'ri-star-smile-line',
-  //  title: 'FrameWorks ',
-  //  subtitle: 'Select Framework',
-  //  active: true
-  //},
-  {
     icon: 'ri-star-smile-line',
     title: ' VerticalRadioImage',
     subtitle: 'Select Answer',
     active: true
   },
   {
-    icon: 'ri-pie-chart-2-line',
-    title: 'Database',
-    subtitle: 'Select Database'
-  },
-  {
-    icon: 'ri-bank-card-line',
-    title: 'Billing',
-    subtitle: 'Payment Details'
+    icon: 'ri-star-smile-line',
+    title: ' VerticalRadioSVG',
+    subtitle: 'Select Answer',
+    active: true
   },
   {
     icon: 'ri-check-double-line',
-    title: 'Submit',
-    subtitle: 'Submit'
+    title: 'SliderStep',
+    subtitle: 'SliderStep'
+  },
+  {
+    icon: 'ri-check-double-line',
+    title: 'StarRate',
+    subtitle: 'StarRate'
   }
 ]
 
 const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev) => {
   const Tag =
     activeStep === 0
-      ? Details
+      ? VerticalRadioImage
       : activeStep === 1
-        ? VerticalRadioImage //FrameWork
+        ? VerticalRadioSVG
         : activeStep === 2
-          ? Database
-          : activeStep === 3
-            ? Billing
-            : Submit
+          ? SliderStep
+          : StarRate
 
   return <Tag activeStep={activeStep} handleNext={handleNext} handlePrev={handlePrev} isLastStep={isLastStep} />
 }
@@ -117,7 +108,7 @@ const CreateApp = ({ open, setOpen }) => {
       <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16 '>
         Create App
         <Typography component='span' className='flex flex-col text-right'>
-          {activeStep}/4
+          {activeStep}/{steps.length - 1}
         </Typography>
       </DialogTitle>
       <DialogContent className='pbs-0 sm:pli-16 sm:pbe-16'>
