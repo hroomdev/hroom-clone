@@ -53,6 +53,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             options: { wheelPropagation: false, suppressScrollX: true },
             onScrollY: container => scrollMenu(container, true)
           })}
+      style={{ visibility: 'hidden' }}
     >
       {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
       {/* Vertical Menu */}
@@ -62,6 +63,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
+        style={{ visibility: 'hidden' }}
       >
         <SubMenu
           label={dictionary['navigation'].dashboards}
@@ -74,7 +76,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           <MenuItem href={`/${locale}/dashboards/academy`}>{dictionary['navigation'].academy}</MenuItem>
           <MenuItem href={`/${locale}/dashboards/logistics`}>{dictionary['navigation'].logistics}</MenuItem>
         </SubMenu>
-        <SubMenu label={dictionary['navigation'].frontPages} icon={<i className='ri-file-copy-line' />}>
+        <SubMenu
+          label={dictionary['navigation'].frontPages}
+          icon={<i className='ri-file-copy-line' />}
+          style={{ visibility: 'hidden' }}
+        >
           <MenuItem href='/front-pages/landing-page' target='_blank'>
             {dictionary['navigation'].landing}
           </MenuItem>

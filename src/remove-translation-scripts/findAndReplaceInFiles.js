@@ -82,7 +82,7 @@ async function updateNextConfig() {
 
   const redirect = `return [{
     source: '/',
-    destination: '/dashboards/crm',
+    destination: '/dashboards/analytics',
     permanent: true
   }]`
 

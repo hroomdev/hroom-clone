@@ -4,14 +4,20 @@ const nextConfig = {
   redirects: async () => {
     return [
       {
+        source: '/en/dashboards/crm',
+        destination: '/en/dashboards/analytics',
+        permanent: true,
+        locale: false
+      },
+      {
         source: '/',
-        destination: '/en/dashboards/crm',
+        destination: '/en/dashboards/analytics',
         permanent: true,
         locale: false
       },
       {
         source: '/:lang(en|fr|ar)',
-        destination: '/:lang/dashboards/crm',
+        destination: '/:lang/dashboards/analytics',
         permanent: true,
         locale: false
       },

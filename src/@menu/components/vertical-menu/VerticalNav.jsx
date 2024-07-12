@@ -162,6 +162,7 @@ const VerticalNav = props => {
         className
       )}
       {...rest}
+      style={{ visibility: 'hidden' }}
     >
       {/* VerticalNav Container for hover effect when verticalNav is collapsed */}
       <StyledVerticalNavContainer
