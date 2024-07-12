@@ -17,11 +17,12 @@ import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 
 // Slice Imports
+import { sqla } from '.'
+
 import { sendMsg } from '@/redux-store/slices/chat'
 
 // Component Imports
 import CustomIconButton from '@core/components/mui/IconButton'
-import { db } from '@/fake-db/apps/chat'
 
 const axios = require('axios')
 
@@ -173,6 +174,10 @@ const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef })
       handleSendMsg(event, chatgpt, false)
 
       handleSendMsg(event, gemini, false)
+
+      console.log('start to end')
+      console.log('connect')
+      console.log('after end')
     } else {
       dispatch(sendMsg({ msg }))
       setMsg('')

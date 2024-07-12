@@ -28,5 +28,8 @@ EXPOSE 448
 EXPOSE 80
 EXPOSE 5678
 #RUN npm run dev
-CMD ["npm", "run", "dev"]
+#CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "build"]
+CMD ["npm", "start"]
+
 
