@@ -58,7 +58,8 @@ const HorizontalMenu = ({ dictionary }) => {
         backgroundColor:
           skin === 'bordered' ? 'var(--mui-palette-background-paper)' : 'var(--mui-palette-background-default)'
       }}
-      style={{ visibility: 'hidden' }}
+
+      /*style={{ visibility: 'hidden' }}*/
     >
       <Menu
         rootStyles={menuRootStyles(theme)}
@@ -77,12 +78,14 @@ const HorizontalMenu = ({ dictionary }) => {
           renderExpandedMenuItemIcon: { icon: <i className='ri-circle-line' /> },
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
-        style={{ visibility: 'hidden' }}
+
+        /*style={{ visibility: 'hidden' }}*/
       >
         <SubMenu
           label={dictionary['navigation'].dashboards}
           icon={<i className='ri-home-smile-line' />}
-          style={{ visibility: 'hidden' }}
+
+          /*style={{ visibility: 'hidden' }}*/
         >
           <MenuItem href={`/${locale}/dashboards/crm`} icon={<i className='ri-pie-chart-2-line' />}>
             {dictionary['navigation'].crm}
