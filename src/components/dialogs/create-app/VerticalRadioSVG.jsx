@@ -1,7 +1,7 @@
 // React Imports
 import * as React from 'react'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
@@ -14,6 +14,8 @@ import Button from '@mui/material/Button'
 //import Grid from '@mui/material/Grid'
 
 // Components Imports
+import { constructFrom } from 'date-fns'
+
 import CustomInputImg from '@core/components/custom-inputs/Image'
 
 import DirectionalIcon from '@components/DirectionalIcon'
@@ -21,24 +23,7 @@ import DirectionalIcon from '@components/DirectionalIcon'
 // Components Imports
 import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 
-const data = [
-  {
-    value: 'starter',
-    title: 'Starter',
-    isSelected: true,
-    content: 'A simple start for everyone.'
-  },
-  {
-    value: 'standard',
-    title: 'Standard',
-    content: 'For small to medium businesses.'
-  },
-  {
-    value: 'enterprise',
-    title: 'Enterprise',
-    content: 'Solution for big organizations.'
-  }
-]
+import { getQuestData as dbData } from '@/app/server/actions'
 
 const SVGs = [
   {
@@ -54,18 +39,69 @@ const SVGs = [
   }
 ]
 
-const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev }) => {
-  const initialSelected = data.filter(item => item.isSelected)[data.filter(item => item.isSelected).length - 1].value
+let initialData = [
+  {
+    value: '',
+    title: '',
+    isSelected: false,
+    content: ''
+  }
+]
+
+const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+  const initialSelected = 0
 
   // States
-  const [selected, setSelected] = useState(initialSelected)
+  const [selected, setSelected] = useState(0)
+
+  const [data, setData] = useState(initialData)
 
   const handleChange = prop => {
     if (typeof prop === 'string') {
       setSelected(prop)
+    } else if (typeof prop === 'int' || typeof prop === 'number') {
+      setSelected(prop)
     } else {
       setSelected(prop.target.value)
     }
+  }
+
+  useEffect(() => {
+    async function fetch() {
+      await dbData().then(dbData => {
+        var questionsubtitle = dbData.quiz1questions[activeStep].subtitle
+        var answers = dbData.quiz1questions[activeStep].answers
+        var imgSources = dbData.quiz1questions[activeStep].imgSources
+
+        setTitle(questionsubtitle)
+
+        function readData() {
+          for (let i = 0; i < answers.length; i++) {
+            var dataElement = {
+              value: i,
+              title: '',
+              isSelected: false,
+              content: answers[i]
+            }
+
+            data[i] = dataElement
+          }
+        }
+
+        readData()
+        setData(data)
+
+        setSelected(selected)
+      })
+    }
+
+    fetch()
+
+    return () => {}
+  }, [data, selected])
+
+  if (data.length < 2) {
+    return 'Loading...'
   }
 
   return (

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import Slider from '@mui/material/Slider'
 
@@ -22,80 +22,74 @@ import DirectionalIcon from '@components/DirectionalIcon'
 // Components Imports
 import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 
-const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev }) => {
+import { getQuestData as dbData } from '@/app/server/actions'
+
+const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+  const initialData = [{}]
+
   const [active, setActive] = useState(-1)
+  const [data, setData] = useState(initialData)
 
   const handleClick = active => {
+    console.log('handle click active' + active)
     setActive(active)
+  }
+
+  useEffect(() => {
+    async function fetch() {
+      await dbData().then(dbData => {
+        var answers = dbData.quiz1questions[activeStep].answers
+        var title = dbData.quiz1questions[activeStep].subtitle
+
+        setTitle(title)
+
+        function readData() {
+          for (let i = 0; i < answers.length; i++) {
+            var dataElement = {}
+
+            data[i] = dataElement
+          }
+        }
+
+        readData()
+        setData(data)
+
+        setActive(active)
+      })
+    }
+
+    fetch()
+
+    return () => {}
+  }, [data, active])
+
+  if (data.length < 2) {
+    return 'Loading...'
   }
 
   return (
     <div className='flex flex-col gap-6'>
       <Grid container spacing={4}>
-        <div className='flex flex-row space-between'>
-          <Button
-            key={1}
-            className={active <= 0 ? 'active' : undefined}
-            id={'1'}
-            onClick={a => handleClick(1)}
-            variant={active <= 0 ? 'light' : 'outlined'}
-            color='secondary'
-          >
-            <img
-              src={active <= 0 ? '/images/icons/yel_star_outline.png' : '/images/icons/yel_star.jpg'}
-              alt='firebase'
-              height={30}
-              width={30}
-            ></img>
-          </Button>
-          <Button
-            color='secondary'
-            variant={active <= 1 ? 'light' : 'outlined'}
-            key={2}
-            className={active <= 1 ? 'active' : undefined}
-            id={'2'}
-            onClick={a => handleClick(2)}
-          >
-            <img
-              src={active <= 1 ? '/images/icons/yel_star_outline.png' : '/images/icons/yel_star.jpg'}
-              alt='firebase'
-              height={30}
-              width={30}
-            ></img>
-          </Button>
-          <Button
-            color='secondary'
-            variant={active <= 2 ? 'light' : 'outlined'}
-            key={3}
-            className={active <= 2 ? 'active' : undefined}
-            id={'3'}
-            onClick={a => handleClick(3)}
-          >
-            <img
-              src={active <= 2 ? '/images/icons/yel_star_outline.png' : '/images/icons/yel_star.jpg'}
-              alt='firebase'
-              height={30}
-              width={30}
-            ></img>
-          </Button>
-          <Button
-            color='secondary'
-            variant={active <= 3 ? 'light' : 'outlined'}
-            key={4}
-            className={active <= 3 ? 'active' : undefined}
-            id={'4'}
-            onClick={a => handleClick(4)}
-          >
-            <img
-              src={active <= 3 ? '/images/icons/yel_star_outline.png' : '/images/icons/yel_star.jpg'}
-              alt='firebase'
-              height={30}
-              width={30}
-            ></img>
-          </Button>
-        </div>
+        {data.map((item, index) => {
+          return (
+            <Button
+              key={index}
+              className={active < index ? 'active' : undefined}
+              id={{ index }}
+              onClick={a => handleClick(index)}
+              variant={active < index ? 'light' : 'outlined'}
+              color='secondary'
+            >
+              <img
+                src={active < index ? '/images/icons/yel_star_outline.png' : '/images/icons/yel_star.jpg'}
+                alt='firebase'
+                height={30}
+                width={30}
+              ></img>
+            </Button>
+          )
+        })}
       </Grid>
-
       <div className='flex items-center justify-between'>
         <Button
           variant='outlined'

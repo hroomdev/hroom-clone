@@ -25,13 +25,18 @@ import FrameWork from './FrameWork'
 import VerticalRadioImage from './VerticalRadioImage'
 import VerticalRadioSVG from './VerticalRadioSVG'
 import SliderStep from './SliderStep'
+import SliderScale from './SliderScale'
 import StarRate from './StarRate'
 import Database from './Database'
 import Billing from './Billing'
 import Submit from './Submit'
 
+//import { getEcommerceData } from './../../../app/server/actions'
+
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
+
+import { getQuestData as dbData } from '@/app/server/actions'
 
 const steps = [
   {
@@ -55,28 +60,69 @@ const steps = [
     icon: 'ri-check-double-line',
     title: 'StarRate',
     subtitle: 'StarRate'
-  }
+  },
+  {
+    icon: 'ri-check-double-line',
+    title: 'Scale',
+    subtitle: 'Scale'
+  } //todo: read steeps from db
 ]
 
-const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev) => {
+const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle) => {
   const Tag =
-    activeStep === 0
-      ? VerticalRadioImage
-      : activeStep === 1
-        ? VerticalRadioSVG
-        : activeStep === 2
-          ? SliderStep
-          : StarRate
+    questionType === 'dots'
+      ? VerticalRadioSVG
+      : questionType === 'slider'
+        ? SliderStep
+        : questionType === 'image'
+          ? VerticalRadioImage
+          : questionType === 'rate'
+            ? StarRate
+            : SliderScale
 
-  return <Tag activeStep={activeStep} handleNext={handleNext} handlePrev={handlePrev} isLastStep={isLastStep} />
+  return (
+    <Tag
+      activeStep={activeStep}
+      handleNext={handleNext}
+      handlePrev={handlePrev}
+      isLastStep={isLastStep}
+      setTitle={setTitle}
+    />
+  )
 }
 
 const CreateApp = ({ open, setOpen }) => {
   // States
   const [activeStep, setActiveStep] = useState(0)
+  const [isLoading, setLoading] = useState(true)
+  const [questionType, setQuestionType] = useState('')
+  const [title, setTitle] = useState('Create App')
 
   // Vars
   const isLastStep = activeStep === steps.length - 1
+
+  function unmount() {
+    return () => {}
+  }
+
+  useEffect(() => {
+    async function fetch() {
+      await dbData().then(dbData => {
+        //setActiveStep(actStep)
+        var questionType = dbData.quiz1questions[activeStep].type
+
+        setLoading(false)
+        setQuestionType(questionType)
+      })
+    }
+
+    fetch()
+
+    return unmount
+  }, [activeStep])
+
+  if (isLoading) return <p>Loading...</p>
+  if (questionType == '') return <p>No questionType</p>
 
   const handleClose = () => {
     setOpen(false)
@@ -106,7 +152,7 @@ const CreateApp = ({ open, setOpen }) => {
   return (
     <Dialog fullWidth maxWidth='md' open={open} onClose={handleClose} scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16 '>
-        Create App
+        {title}
         <Typography component='span' className='flex flex-col text-right'>
           {activeStep}/{steps.length - 1}
         </Typography>
@@ -116,7 +162,9 @@ const CreateApp = ({ open, setOpen }) => {
           <i className='ri-close-line text-textSecondary' />
         </IconButton>
         <div className='flex gap-y-6 pbs-1 flex-col md:flex-row'>
-          <div className='flex-1'>{renderStepCount(activeStep, isLastStep, handleNext, handlePrev)}</div>
+          <div className='flex-1'>
+            {renderStepCount(activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle)}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

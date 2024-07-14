@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
@@ -17,41 +17,76 @@ import CustomInputImg from '@core/components/custom-inputs/Image'
 
 import DirectionalIcon from '@components/DirectionalIcon'
 
-const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev }) => {
-  const data = [
+import { getQuestData as dbData } from '@/app/server/actions'
+
+const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+  const initialData = [
     {
       value: 'clock',
       isSelected: true,
       img: '/images/cards/5.png'
-    },
-    {
-      value: 'donuts',
-      img: '/images/cards/2.png'
-    },
-    {
-      value: 'flowers',
-      img: '/images/cards/1.png'
-    },
-    {
-      value: 'houses',
-      img: '/images/cards/4.png'
     }
   ]
 
-  const initialSelected = data.filter(item => item.isSelected)[data.filter(item => item.isSelected).length - 1].value
+  const initialSelected = initialData.filter(item => item.isSelected)[
+    initialData.filter(item => item.isSelected).length - 1
+  ].value
 
   //States sources
   const [selected, setSelected] = useState(initialSelected)
 
+  const [data, setData] = useState(initialData)
+
   const handleChange = prop => {
+    console.log(prop)
+
     if (typeof prop === 'string') {
+      setSelected(prop)
+    } else if (typeof prop === 'int' || typeof prop === 'number') {
       setSelected(prop)
     } else {
       setSelected(prop.target.value)
     }
   }
 
-  //
+  useEffect(() => {
+    async function fetch() {
+      await dbData().then(dbData => {
+        var questionsubtitle = dbData.quiz1questions[activeStep].subtitle
+        var answers = dbData.quiz1questions[activeStep].answers
+        var imgSources = dbData.quiz1questions[activeStep].imgSrcs
+
+        setTitle(questionsubtitle)
+
+        function readData() {
+          for (let i = 0; i < answers.length; i++) {
+            var iS = i.toString(10)
+            var dataElement = {
+              value: iS,
+              isSelected: false,
+              img: imgSources[i]
+            }
+
+            data[i] = dataElement
+          }
+        }
+
+        readData()
+        setData(data)
+
+        setSelected(selected)
+      })
+    }
+
+    fetch()
+
+    return () => {}
+  }, [data, selected])
+
+  if (data.length < 2) {
+    return 'Loading...'
+  }
+
   return (
     <div className='flex flex-col gap-6'>
       <Grid container spacing={4}></Grid>
