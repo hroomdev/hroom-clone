@@ -11,6 +11,7 @@ COPY . .
 RUN ls -l
 #ADD ./* /home/app/
 # Устанавливаем зависимости
+
 RUN npm install -g npm@10.8.1
 RUN npm install
 RUN npm install -g pnpm
@@ -28,8 +29,19 @@ EXPOSE 448
 EXPOSE 80
 EXPOSE 5678
 #RUN npm run dev
-CMD ["npm", "run","dev"]
-#CMD ["npm", "run", "build"]
-#CMD ["npm", "start"]
+# Declare an argument for the web server
+ARG ENV
+
+# Use shell logic to determine which server to install
+RUN if [ "$ENV" = "prod" ]; then \
+CMD ["npm", "run", "build"] && CMD ["npm", "start"]; \
+    elif [ "$ENV" = "dev" ]; then \
+    CMD ["npm", "run", "dev"]; \
+    else \
+        echo "No valid webserver specified" && CMD ["npm", "run", "dev"]; \
+    fi
+
+
+
 
 
