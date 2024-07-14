@@ -2,35 +2,27 @@ import * as React from 'react'
 
 import { useState, useEffect } from 'react'
 
-import Slider from '@mui/material/Slider'
-
+import MuiSlider from '@mui/material/Slider'
 import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Unstable_Grid2'
 
 // MUI Imports
 import Button from '@mui/material/Button'
 
-//import Grid from '@mui/material/Grid'
-
-// Components Imports
-import CustomInputImg from '@core/components/custom-inputs/Image'
-
 import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
-
-// Components Imports
-import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 
 let initialMarks = [
   {
     value: 0,
-    label: '0°'
+    label: 'Not at all'
+  },
+  {
+    value: 100,
+    label: 'Very much so'
   }
 ]
 
-const SliderStep = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
   const initialSelected = 0
 
   const [marks, setMarks] = useState(initialMarks)
@@ -39,33 +31,26 @@ const SliderStep = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }
   const [selected, setSelected] = useState(initialSelected)
 
   const valuetext = value => {
-    return `${value}°C`
+    return `${value}`
   }
 
   useEffect(() => {
     async function fetch() {
       await dbData().then(dbData => {
         var questionsubtitle = dbData.quiz1questions[activeStep].subtitle
+
+        console.log('subtitle step ' + questionsubtitle)
+
         var answers = dbData.quiz1questions[activeStep].answers
 
         setTitle(questionsubtitle)
 
         function readMarks() {
           for (let i = 0; i < answers.length; i++) {
-            var num = (i + 1) * 10
-
-            console.log('num ' + num)
-
-            var strLabel = '' + num
-
-            console.log('strLabel ' + strLabel)
-
-            console.log('typeof num ' + typeof num)
-            console.log('typeof  strLabel' + typeof strLabel)
-
+            var num = i * 100
             var markElement = {
-              value: i,
-              label: 'z'
+              value: num,
+              label: answers[i]
             }
 
             marks[i] = markElement
@@ -74,8 +59,6 @@ const SliderStep = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }
 
         readMarks()
         setMarks(marks)
-
-        console.log('max = legnth marks * 10 + 10 ' + (10 + (marks.length - 1) * 10)) //marks.length
       })
     }
 
@@ -86,14 +69,64 @@ const SliderStep = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }
     return 'Loading...'
   }
 
+  // Styled Slider component
+
+  const Slider = styled(MuiSlider)(({ theme }) => ({
+    height: 2,
+    padding: '15px 0',
+    color: theme.palette.primary.main,
+    '& .MuiSlider-rail': {
+      opacity: 0.5,
+      backgroundColor: '#bfbfbf'
+    },
+    '& .MuiSlider-track': {
+      border: 'none'
+    },
+    '& .MuiSlider-mark': {
+      width: 1,
+      height: 8,
+      backgroundColor: '#bfbfbf',
+      '&.MuiSlider-markActive': {
+        opacity: 1,
+        backgroundColor: 'currentColor'
+      }
+    },
+    '& .MuiSlider-thumb': {
+      width: 28,
+      height: 28,
+      border: 'none',
+      backgroundColor: theme.palette.common.white,
+      boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)',
+      '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+        boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02) !important',
+
+        // Reset on touch devices, it doesn't add specificity
+        '@media (hover: none)': {
+          boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)'
+        }
+      }
+    },
+    '& .MuiSlider-valueLabel': {
+      top: 0,
+      fontSize: 12,
+      fontWeight: 'normal',
+      backgroundColor: 'unset',
+      color: theme.palette.text.primary,
+      '&:before': {
+        display: 'none'
+      },
+      '& *': {
+        background: 'transparent',
+        color: theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.common.black
+      }
+    }
+  }))
+
   return (
     <div className='flex flex-col gap-4 '>
       <Slider
         marks
-        min={0}
-        max={(marks.length - 1) * 10}
-        step={10}
-        defaultValue={0}
+        defaultValue={50}
         valueLabelDisplay='on'
         getAriaValueText={valuetext}
         aria-labelledby='label-always-visible-slider'
@@ -127,4 +160,4 @@ const SliderStep = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }
   )
 }
 
-export default SliderStep
+export default SliderStepNew

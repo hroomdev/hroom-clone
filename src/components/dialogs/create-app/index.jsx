@@ -24,8 +24,8 @@ import Details from './Details'
 import FrameWork from './FrameWork'
 import VerticalRadioImage from './VerticalRadioImage'
 import VerticalRadioSVG from './VerticalRadioSVG'
-import SliderStep from './SliderStep'
 import SliderScale from './SliderScale'
+import SliderStep from './SliderStep'
 import StarRate from './StarRate'
 import Database from './Database'
 import Billing from './Billing'
@@ -38,35 +38,7 @@ import StepperWrapper from '@core/styles/stepper'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
-const steps = [
-  {
-    icon: 'ri-star-smile-line',
-    title: ' VerticalRadioImage',
-    subtitle: 'Select Answer',
-    active: true
-  },
-  {
-    icon: 'ri-star-smile-line',
-    title: ' VerticalRadioSVG',
-    subtitle: 'Select Answer',
-    active: true
-  },
-  {
-    icon: 'ri-check-double-line',
-    title: 'SliderStep',
-    subtitle: 'SliderStep'
-  },
-  {
-    icon: 'ri-check-double-line',
-    title: 'StarRate',
-    subtitle: 'StarRate'
-  },
-  {
-    icon: 'ri-check-double-line',
-    title: 'Scale',
-    subtitle: 'Scale'
-  } //todo: read steeps from db
-]
+const initialSteps = 0
 
 const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle) => {
   const Tag =
@@ -93,13 +65,14 @@ const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questio
 
 const CreateApp = ({ open, setOpen }) => {
   // States
+  const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = useState(0)
   const [isLoading, setLoading] = useState(true)
   const [questionType, setQuestionType] = useState('')
   const [title, setTitle] = useState('Create App')
 
   // Vars
-  const isLastStep = activeStep === steps.length - 1
+  const isLastStep = activeStep === steps - 1
 
   function unmount() {
     return () => {}
@@ -107,10 +80,12 @@ const CreateApp = ({ open, setOpen }) => {
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
+      await dbData().then(data => {
         //setActiveStep(actStep)
-        var questionType = dbData.quiz1questions[activeStep].type
+        var questionType = data.quiz1questions[activeStep].type
 
+        console.log('questions length ' + data.quiz1questions.length)
+        setSteps(data.quiz1questions.length)
         setLoading(false)
         setQuestionType(questionType)
       })
@@ -119,8 +94,9 @@ const CreateApp = ({ open, setOpen }) => {
     fetch()
 
     return unmount
-  }, [activeStep])
+  }, [activeStep, steps])
 
+  if (steps < 2) return <p>Loading...</p>
   if (isLoading) return <p>Loading...</p>
   if (questionType == '') return <p>No questionType</p>
 
