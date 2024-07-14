@@ -63,6 +63,10 @@ const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitl
     }
 
     fetch()
+
+    return () => {
+      setTitle('blank')
+    }
   }, [marks])
 
   if (marks.length < 2) {

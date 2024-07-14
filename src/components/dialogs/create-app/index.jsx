@@ -83,11 +83,12 @@ const CreateApp = ({ open, setOpen }) => {
       await dbData().then(data => {
         //setActiveStep(actStep)
         var questionType = data.quiz1questions[activeStep].type
+        var questionTitle = data.quiz1questions[activeStep].subtitle
 
-        console.log('questions length ' + data.quiz1questions.length)
         setSteps(data.quiz1questions.length)
         setLoading(false)
         setQuestionType(questionType)
+        setTitle(questionTitle)
       })
     }
 
@@ -130,7 +131,7 @@ const CreateApp = ({ open, setOpen }) => {
       <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16 '>
         {title}
         <Typography component='span' className='flex flex-col text-right'>
-          {activeStep}/{steps.length - 1}
+          {activeStep + 1}/{steps}
         </Typography>
       </DialogTitle>
       <DialogContent className='pbs-0 sm:pli-16 sm:pbe-16'>

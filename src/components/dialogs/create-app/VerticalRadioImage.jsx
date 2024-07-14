@@ -14,27 +14,25 @@ import DirectionalIcon from '@components/DirectionalIcon'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
+let initialData = [
+  {
+    value: 'clock',
+    isSelected: true,
+    img: '/images/cards/5.png'
+  }
+]
+
+let initialSelected = initialData.filter(item => item.isSelected)[
+  initialData.filter(item => item.isSelected).length - 1
+].value
+
 const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
-  const initialData = [
-    {
-      value: 'clock',
-      isSelected: true,
-      img: '/images/cards/5.png'
-    }
-  ]
-
-  const initialSelected = initialData.filter(item => item.isSelected)[
-    initialData.filter(item => item.isSelected).length - 1
-  ].value
-
   //States sources
   const [selected, setSelected] = useState(initialSelected)
 
   const [data, setData] = useState(initialData)
 
   const handleChange = prop => {
-    console.log(prop)
-
     if (typeof prop === 'string') {
       setSelected(prop)
     } else if (typeof prop === 'int' || typeof prop === 'number') {
@@ -76,7 +74,7 @@ const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, se
     fetch()
 
     return () => {}
-  }, [data, selected])
+  }, [data, selected, activeStep, setTitle])
 
   if (data.length < 2) {
     return 'Loading...'
@@ -85,29 +83,24 @@ const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, se
   return (
     //todo make dev not descendant of p
     <div className='flex flex-col gap-6'>
-      <Grid container spacing={4}></Grid>
-      <div className='flex flex-row space-between'>
-        {
-          (data.map = (item, index) => {
-            return (
-              <p class='ft00'>
-                Answer 1
-                <div className='flex relative'>
-                  <CustomInputImg
-                    type='radio'
-                    key={index}
-                    data={item}
-                    selected={selected}
-                    name='custom-radios-img'
-                    handleChange={handleChange}
-                    gridProps={{ sm: 10, xs: 12 }}
-                  ></CustomInputImg>
-                </div>
-              </p>
-            )
-          })
-        }
-      </div>
+      <Grid container spacing={4}>
+        <div className='flex flex-row space-between'>
+          {data.map((item, index) => (
+            <CustomInputImg
+              type='radio'
+              key={index}
+              data={item}
+              selected={selected}
+              name='custom-radios-img'
+              handleChange={handleChange}
+              gridProps={{ sm: 4, xs: 12 }}
+            >
+              <p class='ft00'></p>
+            </CustomInputImg>
+          ))}
+        </div>
+      </Grid>
+
       <div className='flex items-center justify-between'>
         <Button
           variant='outlined'

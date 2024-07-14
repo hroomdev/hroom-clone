@@ -61,7 +61,7 @@ const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) 
     fetch()
 
     return () => {}
-  }, [data, active])
+  }, [data, active, activeStep])
 
   if (data.length < 2) {
     return 'Loading...'
