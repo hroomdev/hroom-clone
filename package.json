@@ -4,9 +4,9 @@
   "license": "Commercial",
   "private": true,
   "scripts": {
-    "dev": "cross-env PROTO=http:// HOST=0.0.0.0 PORT=8001 next dev",
+    "dev": "cross-env  PROTO=http:// HOST=0.0.0.0 PORT=8001 next dev",
     "build": "next build",
-    "start": "cross-env PROTO=http:// HOST=0.0.0.0 PORT=8001 next start",
+    "start": "  cross-env PROTO=http:// HOST=0.0.0.0 PORT=8001 next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
