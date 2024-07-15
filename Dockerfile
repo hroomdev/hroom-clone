@@ -36,4 +36,5 @@ RUN ls -l
 #RUN chmod +x docker-entrypoint.sh
 #RUN ls -l docker-entrypoint.sh
 #WORKDIR
-ENTRYPOINT ["npm","run","dev"]
+#ENTRYPOINT ["npm","run","dev"]
+ENTRYPOINT ["npm","start"]
