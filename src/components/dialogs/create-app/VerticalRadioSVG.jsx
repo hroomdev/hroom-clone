@@ -42,7 +42,7 @@ let initialData = [
   }
 ]
 
-const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
   const initialSelected = 0
   const router = useRouter()
 
@@ -54,10 +54,13 @@ const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setT
   const handleChange = prop => {
     if (typeof prop === 'string') {
       setSelected(prop)
+      selectedOptions[activeStep] = prop
     } else if (typeof prop === 'int' || typeof prop === 'number') {
       setSelected(prop)
+      selectedOptions[activeStep] = prop
     } else {
       setSelected(prop.target.value)
+      selectedOptions[activeStep] = prop.target.value
     }
   }
 

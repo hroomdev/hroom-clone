@@ -33,7 +33,7 @@ import Database from './Database'
 import Billing from './Billing'
 import Submit from './Submit'
 
-//import { getEcommerceData } from './../../../app/server/actions'
+import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
 
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
@@ -41,6 +41,7 @@ import StepperWrapper from '@core/styles/stepper'
 import { getQuestData as dbData } from '@/app/server/actions'
 
 const initialSteps = 0
+let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle) => {
   const Tag =
@@ -61,6 +62,7 @@ const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questio
       handlePrev={handlePrev}
       isLastStep={isLastStep}
       setTitle={setTitle}
+      selectedOptions={selectedOptions}
     />
   )
 }
@@ -110,11 +112,24 @@ const CreateApp = ({ open, setOpen }) => {
     setActiveStep(0)
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!isLastStep) {
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
-      console.log('close after finish submit')
+      await dbData().then(async data => {
+        let qaArray = []
+
+        for (var i = 0; i < selectedOptions.length; i++) {
+          var a = data.quiz1questions[i].answers[selectedOptions[i]]
+          var q = data.quiz1questions[i].subtitle
+
+          qaArray.push('for question ' + q + '  answer ' + a)
+        }
+
+        let prompt = qaArray.join('/n')
+        let b = await makeOPENCHATAIGetRequest(prompt)
+      })
+
       handleClose()
     }
   }

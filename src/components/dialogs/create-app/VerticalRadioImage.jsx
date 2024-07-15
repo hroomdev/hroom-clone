@@ -28,7 +28,7 @@ let initialData = [
 
 let initialSelected = ''
 
-const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
   //States sources
   const [selected, setSelected] = useState(initialSelected)
 
@@ -37,10 +37,13 @@ const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, se
   const handleChange = prop => {
     if (typeof prop === 'string') {
       setSelected(prop)
+      selectedOptions[activeStep] = prop
     } else if (typeof prop === 'int' || typeof prop === 'number') {
       setSelected(prop)
+      selectedOptions[activeStep] = prop
     } else {
       setSelected(prop.target.value)
+      selectedOptions[activeStep] = prop.target.value
     }
   }
 

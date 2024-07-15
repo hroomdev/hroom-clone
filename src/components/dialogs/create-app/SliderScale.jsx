@@ -14,6 +14,7 @@ import Button from '@mui/material/Button'
 import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
+const stepSize = 10
 let initialMarks = [
   {
     value: 0,
@@ -21,12 +22,14 @@ let initialMarks = [
   }
 ]
 
-const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
   const initialSelected = 0
   const router = useRouter()
   const [marks, setMarks] = useState(initialMarks)
 
   const valuetext = value => {
+    selectedOptions[activeStep] = Math.round(value != 0 ? value / stepSize : value)
+
     return `${value}°C`
   }
 
@@ -40,7 +43,7 @@ const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle 
 
         function readMarks() {
           for (let i = 0; i < answers.length; i++) {
-            var num = (i + 1) * 10
+            var num = (i + 1) * stepSize
 
             var markElement = {
               value: i,
@@ -69,7 +72,7 @@ const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle 
       <Slider
         marks
         min={0}
-        max={(marks.length - 1) * 10}
+        max={(marks.length - 1) * stepSize}
         step={10}
         defaultValue={0}
         valueLabelDisplay='on'

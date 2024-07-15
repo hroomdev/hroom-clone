@@ -26,7 +26,7 @@ import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
-const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
   const router = useRouter()
   const initialData = [{}]
 
@@ -34,8 +34,9 @@ const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) 
   const [data, setData] = useState(initialData)
 
   const handleClick = active => {
-    console.log('handle click active' + active)
     setActive(active)
+
+    selectedOptions[activeStep] = active
   }
 
   useEffect(() => {

@@ -11,18 +11,20 @@ import Button from '@mui/material/Button'
 import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
+const stepSize = 10
+
 let initialMarks = [
   {
     value: 0,
     label: 'Not at all'
   },
   {
-    value: 100,
+    value: stepSize,
     label: 'Very much so'
   }
 ]
 
-const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
   const initialSelected = 0
 
   const [marks, setMarks] = useState(initialMarks)
@@ -31,6 +33,8 @@ const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitl
   const [selected, setSelected] = useState(initialSelected)
 
   const valuetext = value => {
+    selectedOptions[activeStep] = Math.round((value = value != 0 ? value / stepSize : value))
+
     return `${value}`
   }
 
@@ -47,7 +51,7 @@ const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitl
 
         function readMarks() {
           for (let i = 0; i < answers.length; i++) {
-            var num = i * 100
+            var num = i * stepSize
             var markElement = {
               value: num,
               label: answers[i]
