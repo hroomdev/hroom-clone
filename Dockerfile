@@ -34,11 +34,11 @@ ARG ENV
 
 # Use shell logic to determine which server to install
 RUN if [ "$ENV" = "prod" ]; then \
-CMD ["npm", "run", "build"] && CMD ["npm", "start"]; \
+RUN npm run build &&  npm start ; \
     elif [ "$ENV" = "dev" ]; then \
-    CMD ["npm", "run", "dev"]; \
+    RUN npm run dev; \
     else \
-        echo "No valid webserver specified" && CMD ["npm", "run", "dev"]; \
+        echo "No valid webserver specified" && RUN npm run dev; \
     fi
 
 
