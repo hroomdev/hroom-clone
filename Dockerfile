@@ -21,12 +21,8 @@ RUN npm install axios
 
 RUN ls -l
 # Экспонируем порт 8000 для нашего приложения
-EXPOSE 8001
-EXPOSE 8000
 EXPOSE 3000
-EXPOSE 448
-EXPOSE 80
-EXPOSE 5678
+
 #RUN npm run dev
 # Declare an argument for the web server
 
@@ -37,4 +33,7 @@ RUN ls -l
 #RUN ls -l docker-entrypoint.sh
 #WORKDIR
 #ENTRYPOINT ["npm","run","dev"]
+
+#production
+RUN npm build
 ENTRYPOINT ["npm","start"]
