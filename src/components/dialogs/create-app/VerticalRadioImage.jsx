@@ -87,8 +87,9 @@ const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, se
     return 'Loading...'
   }
 
+  //todo make dev not descendant of p
+
   return (
-    //todo make dev not descendant of p
     <div className='flex flex-col gap-6'>
       <Grid container spacing={4}>
         <div className='flex flex-row space-between'>
