@@ -27,13 +27,14 @@ EXPOSE 3000
 # Declare an argument for the web server
 
 USER root
-#COPY docker-entrypoint.sh .
+COPY docker-entrypoint.sh .
 RUN ls -l
-#RUN chmod +x docker-entrypoint.sh
-#RUN ls -l docker-entrypoint.sh
+RUN chmod +x docker-entrypoint.sh
+RUN ls -l docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
 #WORKDIR
 #ENTRYPOINT ["npm","run","dev"]
 
 #production
-RUN npm run build
-ENTRYPOINT ["npm","start"]
+#RUN npm run build
+#ENTRYPOINT ["npm","start"]
