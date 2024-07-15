@@ -10,8 +10,8 @@ fi
 
 if [ "$#" -gt 0 ]; then
   # Got started with arguments
-  exec npm run build "$@"
-  exec npm run start
+  exec npm run build "$@";
+  exec npm run start;
 else
   # Got started without arguments
   exec npm run dev
