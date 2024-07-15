@@ -31,6 +31,10 @@ EXPOSE 5678
 #RUN npm run dev
 # Declare an argument for the web server
 
-ARG ENV="dev" #default argument when not provided in the --build-arg
-RUN if [ "$ENV" = "prod" ] ; then ENTRYPOINT ["npm", "run", "build"]; else ENTRYPOINT ["npm", "run", "start"]; fi
-
+USER root
+COPY docker-entrypoint.sh .
+RUN ls -l
+RUN chmod +x docker-entrypoint.sh
+RUN ls -l docker-entrypoint.sh
+#WORKDIR
+ENTRYPOINT ["docker-entrypoint.sh"]
