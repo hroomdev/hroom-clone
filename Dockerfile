@@ -1,5 +1,5 @@
 # Используем официальный Node.js образ в качестве базового
-FROM node:20-alpine
+FROM node@sha256:34b7aa411056c85dbf71d240d26516949b3f72b318d796c26b57caaa1df5639a
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 RUN ls -l
