@@ -4,9 +4,9 @@
   "license": "Commercial",
   "private": true,
   "scripts": {
-    "dev": "cross-env  PROTO=http:// HOST=0.0.0.0 PORT=8001 next dev",
+    "dev": "next dev",
     "build": "next build",
-    "start": "  cross-env PROTO=http:// HOST=0.0.0.0 PORT=8001 next start",
+    "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -14,7 +14,7 @@
     "postinstall": "npm run build:icons",
     "removeI18n": "tsx src/remove-translation-scripts/index.js"
   },
-  "//": "new  old -H 0.0.0.0 -p 8001  -H 0.0.0.0 -p 8000 ",
+  "//": "new  old    ",
   "dependencies": {
     "@emoji-mart/data": "1.2.1",
     "@emoji-mart/react": "1.1.1",

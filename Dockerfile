@@ -15,7 +15,6 @@ RUN ls -l
 RUN npm install -g npm@10.8.1
 RUN npm install
 RUN npm install -g pnpm
-RUN npm install --save-dev cross-env
 RUN npm install -g next
 RUN npx @next/codemod built-in-next-font . --force
 RUN npm install axios
@@ -32,9 +31,9 @@ EXPOSE 5678
 # Declare an argument for the web server
 
 USER root
-COPY docker-entrypoint.sh .
+#COPY docker-entrypoint.sh .
 RUN ls -l
-RUN chmod +x docker-entrypoint.sh
-RUN ls -l docker-entrypoint.sh
+#RUN chmod +x docker-entrypoint.sh
+#RUN ls -l docker-entrypoint.sh
 #WORKDIR
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["npm","run","dev"]
