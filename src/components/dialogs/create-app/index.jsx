@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 // React Imports
 import { useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 // MUI Imports
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -64,6 +66,8 @@ const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questio
 }
 
 const CreateApp = ({ open, setOpen }) => {
+  const router = useRouter()
+
   // States
   const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = useState(0)
@@ -81,7 +85,6 @@ const CreateApp = ({ open, setOpen }) => {
   useEffect(() => {
     async function fetch() {
       await dbData().then(data => {
-        //setActiveStep(actStep)
         var questionType = data.quiz1questions[activeStep].type
         var questionTitle = data.quiz1questions[activeStep].subtitle
 
@@ -89,6 +92,7 @@ const CreateApp = ({ open, setOpen }) => {
         setLoading(false)
         setQuestionType(questionType)
         setTitle(questionTitle)
+        router.refresh()
       })
     }
 
@@ -106,14 +110,11 @@ const CreateApp = ({ open, setOpen }) => {
     setActiveStep(0)
   }
 
-  const handleStep = step => () => {
-    setActiveStep(step)
-  }
-
   const handleNext = () => {
     if (!isLastStep) {
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
+      console.log('close after finish submit')
       handleClose()
     }
   }

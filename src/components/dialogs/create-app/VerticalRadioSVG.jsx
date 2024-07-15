@@ -3,20 +3,14 @@ import * as React from 'react'
 
 import { useState, useEffect } from 'react'
 
-import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
+import { useRouter } from 'next/navigation'
+
 import Grid from '@mui/material/Unstable_Grid2'
 
 // MUI Imports
 import Button from '@mui/material/Button'
 
 //import Grid from '@mui/material/Grid'
-
-// Components Imports
-import { constructFrom } from 'date-fns'
-
-import CustomInputImg from '@core/components/custom-inputs/Image'
 
 import DirectionalIcon from '@components/DirectionalIcon'
 
@@ -50,6 +44,7 @@ let initialData = [
 
 const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
   const initialSelected = 0
+  const router = useRouter()
 
   // States
   const [selected, setSelected] = useState(0)
@@ -92,13 +87,14 @@ const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setT
         setData(data)
 
         setSelected(selected)
+        router.refresh()
       })
     }
 
     fetch()
 
     return () => {}
-  }, [data, selected])
+  }, [activeStep])
 
   if (data.length < 2) {
     return 'Loading...'

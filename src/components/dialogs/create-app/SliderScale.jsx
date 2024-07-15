@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { useState, useEffect } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 import Slider from '@mui/material/Slider'
 
 // MUI Imports
@@ -21,7 +23,7 @@ let initialMarks = [
 
 const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
   const initialSelected = 0
-
+  const router = useRouter()
   const [marks, setMarks] = useState(initialMarks)
 
   const valuetext = value => {
@@ -51,13 +53,12 @@ const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle 
 
         readMarks()
         setMarks(marks)
-
-        console.log('max = legnth marks * 10 + 10 ' + (10 + (marks.length - 1) * 10)) //marks.length
+        router.refresh()
       })
     }
 
     fetch()
-  }, [marks])
+  }, [activeStep])
 
   if (marks.length < 2) {
     return 'Loading...'

@@ -67,7 +67,7 @@ const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitl
     return () => {
       setTitle('blank')
     }
-  }, [marks])
+  }, [activeStep])
 
   if (marks.length < 2) {
     return 'Loading...'

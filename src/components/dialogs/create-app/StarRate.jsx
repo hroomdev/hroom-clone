@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { useState, useEffect } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 import Slider from '@mui/material/Slider'
 
 import { styled } from '@mui/material/styles'
@@ -25,6 +27,7 @@ import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 import { getQuestData as dbData } from '@/app/server/actions'
 
 const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
+  const router = useRouter()
   const initialData = [{}]
 
   const [active, setActive] = useState(-1)
@@ -55,15 +58,21 @@ const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) 
         setData(data)
 
         setActive(active)
+        router.refresh()
+        console.log('after set active ')
       })
     }
 
     fetch()
 
-    return () => {}
-  }, [data, active, activeStep])
+    console.log('after fetch ')
 
-  if (data.length < 2) {
+    return () => {
+      //this will reload the page without doing SSR
+    }
+  }, [activeStep])
+
+  if (data.length < 1) {
     return 'Loading...'
   }
 

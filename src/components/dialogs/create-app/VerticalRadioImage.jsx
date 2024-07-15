@@ -22,9 +22,11 @@ let initialData = [
   }
 ]
 
-let initialSelected = initialData.filter(item => item.isSelected)[
-  initialData.filter(item => item.isSelected).length - 1
-].value
+//let initialSelected = initialData.filter(item => item.isSelected)[
+//  initialData.filter(item => item.isSelected).length - 1
+//].value
+
+let initialSelected = ''
 
 const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle }) => {
   //States sources
@@ -49,6 +51,8 @@ const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, se
         var answers = dbData.quiz1questions[activeStep].answers
         var imgSources = dbData.quiz1questions[activeStep].imgSrcs
 
+        if (imgSources === 'undefined' || imgSources === undefined) return
+
         setTitle(questionsubtitle)
 
         function readData() {
@@ -67,14 +71,14 @@ const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, se
         readData()
         setData(data)
 
-        setSelected(selected)
+        setSelected(' ')
       })
     }
 
     fetch()
 
     return () => {}
-  }, [data, selected, activeStep, setTitle])
+  }, [activeStep])
 
   if (data.length < 2) {
     return 'Loading...'
