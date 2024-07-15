@@ -35,5 +35,5 @@ RUN ls -l
 #ENTRYPOINT ["npm","run","dev"]
 
 #production
-RUN npm build
+RUN npm run build
 ENTRYPOINT ["npm","start"]
