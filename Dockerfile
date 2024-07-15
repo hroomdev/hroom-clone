@@ -31,5 +31,5 @@ EXPOSE 5678
 #RUN npm run dev
 # Declare an argument for the web server
 ARG ENV="dev" #default argument when not provided in the --build-arg
-RUN if [ "$ENV" = "prod" ] ; then npm run start; else npm run dev; fi
+RUN if [ "$ENV" = "prod" ] ; then npm run build && npm run start; else npm run dev; fi
 
