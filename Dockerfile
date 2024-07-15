@@ -30,18 +30,6 @@ EXPOSE 80
 EXPOSE 5678
 #RUN npm run dev
 # Declare an argument for the web server
-ARG ENV
-
-# Use shell logic to determine which server to install
-RUN if [ "$ENV" = "prod" ]; then \
-RUN npm run build &&  npm start ; \
-    elif [ "$ENV" = "dev" ]; then \
-    RUN npm run dev; \
-    else \
-        echo "No valid webserver specified" && RUN npm run dev; \
-    fi
-
-
-
-
+ARG ENV="dev" #default argument when not provided in the --build-arg
+RUN if [ "$ENV" = "prod" ] ; then npm run start; else npm run dev; fi
 
