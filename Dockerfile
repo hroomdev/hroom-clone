@@ -40,5 +40,5 @@ USER root
 RUN ls -l
 RUN mkdir -p /app/npm
 RUN ls -l /app/npm
-CMD ["npm","run","build"]
+RUN npm run build
 ENTRYPOINT ["npm","run","start"]
