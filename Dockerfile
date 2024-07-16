@@ -36,5 +36,6 @@ USER root
 #ENTRYPOINT ["npm","run","dev"]
 
 #production
-RUN npm run build
+#RUN npm run build
+CMD ["npm","run","build"]
 ENTRYPOINT ["npm","run","start"]
