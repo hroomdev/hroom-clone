@@ -12,6 +12,7 @@ RUN ls -l
 #ADD ./* /home/app/
 # Устанавливаем зависимости
 
+RUN npm install pg
 RUN npm install -g npm@10.8.1
 RUN npm install
 RUN npm install -g pnpm

@@ -38,7 +38,7 @@ import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
 
-import { getQuestData as dbData } from '@/app/server/actions'
+import { getQuestData as dbData, clientStatus } from '@/app/server/actions'
 
 const initialSteps = 0
 let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
@@ -127,7 +127,15 @@ const CreateApp = ({ open, setOpen }) => {
         }
 
         let prompt = qaArray.join('/n')
-        let b = await makeOPENCHATAIGetRequest(prompt)
+        let selectedOptionsStr = selectedOptions[i].join(',')
+
+        //let b = await makeOPENCHATAIGetRequest(prompt)
+
+        console.log('postgresql start connect... to acquire client status..')
+
+        let c = await clientStatus(selectedOptionsStr, Date.now().toString(), '1')
+
+        console.log('client status  ' + c)
       })
 
       handleClose()
