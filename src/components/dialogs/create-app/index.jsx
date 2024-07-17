@@ -38,10 +38,17 @@ import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
 
-import { getQuestData as dbData, clientStatus } from '@/app/server/actions'
+import { getQuestData as dbData, createQuiz, createSelectedAnswers } from '@/app/server/actions'
+
+var format = require('date-format')
 
 const initialSteps = 0
+
 let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+
+//let selectedOptions = [4, 5, 5, 5, 5, 5, 3, 3, 3, 1, 2] //test data
+
+let quizGroupType = '1'
 
 const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle) => {
   const Tag =
@@ -86,6 +93,12 @@ const CreateApp = ({ open, setOpen }) => {
 
   useEffect(() => {
     async function fetch() {
+      let questData = await dbData('1')
+
+      console.log(questData)
+
+      return
+
       await dbData().then(data => {
         var questionType = data.quiz1questions[activeStep].type
         var questionTitle = data.quiz1questions[activeStep].subtitle
@@ -96,6 +109,13 @@ const CreateApp = ({ open, setOpen }) => {
         setTitle(questionTitle)
         router.refresh()
       })
+
+      //let b = await makeOPENCHATAIGetRequest(prompt)
+
+      //test db createQuiz
+
+      //var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, new Date())
+      //let c = await createQuiz(formatted, '2', '3')
     }
 
     fetch()
@@ -119,6 +139,8 @@ const CreateApp = ({ open, setOpen }) => {
       await dbData().then(async data => {
         let qaArray = []
 
+        console.log('selectedOptions length' + selectedOptions + ' selectedOptions ' + selectedOptions.length)
+
         for (var i = 0; i < selectedOptions.length; i++) {
           var a = data.quiz1questions[i].answers[selectedOptions[i]]
           var q = data.quiz1questions[i].subtitle
@@ -127,15 +149,14 @@ const CreateApp = ({ open, setOpen }) => {
         }
 
         let prompt = qaArray.join('/n')
-        let selectedOptionsStr = selectedOptions[i].join(',')
+
+        //test db
+        let selectedOptionsStr = selectedOptions.join(',')
+
+        console.log('slopt ' + selectedOptionsStr)
+        let c = await createSelectedAnswers(selectedOptionsStr, '2')
 
         //let b = await makeOPENCHATAIGetRequest(prompt)
-
-        console.log('postgresql start connect... to acquire client status..')
-
-        let c = await clientStatus(selectedOptionsStr, Date.now().toString(), '1')
-
-        console.log('client status  ' + c)
       })
 
       handleClose()
