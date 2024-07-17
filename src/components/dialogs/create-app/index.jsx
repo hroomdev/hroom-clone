@@ -17,6 +17,12 @@ import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
 import Avatar from '@mui/material/Avatar'
 import Slider from '@mui/material/Slider'
+import Switch from '@mui/material/Switch'
+
+import {
+  experimental_extendTheme as extendTheme,
+  Experimental_CssVarsProvider as CssVarsProvider
+} from '@mui/material/styles'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -75,6 +81,105 @@ const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questio
 }
 
 const CreateApp = ({ open, setOpen }) => {
+  const theme = extendTheme({
+    shape: {
+      borderRadiusRound: 999
+    },
+    components: {
+      MuiSwitch: {
+        styleOverrides: {
+          root: {
+            '&.MuiSwitch-sizeMedium:has(.MuiSwitch-colorPrimary)': {
+              width: '40px',
+              height: '21px',
+              padding: '0',
+              '& .MuiSwitch-switchBase': {
+                padding: '0',
+                '& .MuiSwitch-thumb': {
+                  width: '17px',
+                  height: '17px',
+                  background: '#FAFAFA'
+                },
+                '& + .MuiSwitch-track': {
+                  width: '38px',
+                  height: '21px',
+                  borderRadius: '100px',
+                  opacity: '1'
+                }
+              },
+              '&:not(:has(.Mui-checked)):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible))': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(3px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    background: '#BDBDBD'
+                  }
+                }
+              },
+              '&:not(:has(.Mui-checked)):has(.Mui-disabled):not(:has(.Mui-focusVisible))': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(3px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    background: 'rgba(229, 229, 229, 0.99)'
+                  }
+                }
+              },
+              '&:not(:has(.Mui-checked)):not(:has(.Mui-disabled)):has(.Mui-focusVisible)': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(3px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    border: '1px solid #000',
+                    background: '#BDBDBD'
+                  }
+                }
+              },
+              '&:has(.Mui-checked):has(.Mui-disabled):not(:has(.Mui-focusVisible))': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(19px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    background: 'rgba(187, 231, 188, 0.99)'
+                  }
+                }
+              },
+              '&:not(:has(.Mui-checked)):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible)):hover': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(3px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    background: '#616161'
+                  }
+                }
+              },
+              '&:has(.Mui-checked):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible))': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(19px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    background: 'var(--mui-palette-success-light)'
+                  }
+                }
+              },
+              '&:has(.Mui-checked):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible)):hover': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(19px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    background: 'var(--mui-palette-success-dark)'
+                  }
+                }
+              },
+              '&:has(.Mui-checked):not(:has(.Mui-disabled)):has(.Mui-focusVisible)': {
+                '& .MuiSwitch-switchBase': {
+                  transform: 'translateX(19px) translateY(2px)',
+                  '& + .MuiSwitch-track': {
+                    border: '1px solid #000',
+                    background: 'var(--mui-palette-success-light)'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
   const router = useRouter()
 
   // States
@@ -93,11 +198,11 @@ const CreateApp = ({ open, setOpen }) => {
 
   useEffect(() => {
     async function fetch() {
-      let questData = await dbData('1')
+      //let questData = await dbData('1')
 
-      console.log(questData)
+      //console.log(questData)
 
-      return
+      //return
 
       await dbData().then(data => {
         var questionType = data.quiz1questions[activeStep].type
@@ -189,6 +294,15 @@ const CreateApp = ({ open, setOpen }) => {
           </div>
         </div>
       </DialogContent>
+
+      <CssVarsProvider theme={theme}>
+        <div>
+          <Switch defaultChecked />
+          <Switch />
+          <Switch disabled defaultChecked />
+          <Switch disabled />
+        </div>
+      </CssVarsProvider>
     </Dialog>
   )
 }

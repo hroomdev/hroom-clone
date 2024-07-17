@@ -124,6 +124,7 @@ export const getStatisticsData = async () => {
 }
 
 export const getQuestData = async quizGroupType => {
+  return questionsData
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
