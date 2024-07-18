@@ -10,6 +10,8 @@
 
 import { connect } from 'react-redux'
 
+import { validateSort } from '@formkit/drag-and-drop'
+
 import { db as eCommerceData } from '@/fake-db/apps/ecommerce'
 import { db as academyData } from '@/fake-db/apps/academy'
 import { db as vehicleData } from '@/fake-db/apps/logistics'
@@ -124,7 +126,10 @@ export const getStatisticsData = async () => {
 }
 
 export const getQuestData = async quizGroupType => {
-  return questionsData
+  //return questionsData
+
+  console.log('quizGroupType ' + quizGroupType)
+
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -146,15 +151,13 @@ export const getQuestData = async quizGroupType => {
     var res = await client.query(queryGroup)
 
     resultQuestionGroup = res.rows[0]
-
+    console.log('qg len' + res.rows.length)
     console.log('res log resultQuestionGroup' + res.rows[0])
   } catch (e) {
     console.error(e.stack)
   } finally {
     client.end()
   }
-
-  //var questionIds = resultQuestionGroup.toString().split(',').map(Number)
 
   var splittedStr = resultQuestionGroup.toString().split(',')
 
@@ -169,7 +172,7 @@ export const getQuestData = async quizGroupType => {
   })
 
   const queryQuestions = {
-    text: 'SELECT "public"."question-list"."Type","public"."question-list"."Question" FROM "public"."question-list" WHERE "public"."question-list"."id" = ANY ($1)',
+    text: 'SELECT "public"."question-list"."id","public"."question-list"."Type","public"."question-list"."Question" FROM "public"."question-list" WHERE "public"."question-list"."id" = ANY ($1)',
     values: [questionIdsNums],
     rowMode: 'array'
   }
@@ -190,25 +193,34 @@ export const getQuestData = async quizGroupType => {
     await client.connect()
     var res = await client.query(queryQuestions)
 
-    for (var i = 0; i < res.rows.length; i++) {
-      var typequestion = res.rows[i]
-      var typequestionSplittedStr = typequestion.toString().split(',')
+    for (var i = 0; i < questionIdsNums.length; i++) {
+      var id = questionIdsNums[i]
 
-      console.log(typequestionSplittedStr0 + 'type')
-      console.log(typequestionSplittedStr1 + 'question')
+      for (var j = 0; j < res.rows.length; j++) {
+        var idtypequestion = res.rows[j]
+        var idtypequestionSplittedStr = idtypequestion.toString().split(',')
 
-      if (typequestionSplittedStr[0] == '') {
-        console.log(i + 'question  before type empty initialize as dots5')
-        typequestionSplittedStr[0] = 'dots5'
+        var idtypequestionSplittedStr0 = idtypequestion.toString().split(',')[0]
+        var idtypequestionSplittedStr1 = idtypequestion.toString().split(',')[1]
+        var idtypequestionSplittedStr2 = idtypequestion.toString().split(',')[2]
+
+        if (!idtypequestionSplittedStr1 || idtypequestionSplittedStr1 === '' || idtypequestionSplittedStr1 === ' ') {
+          idtypequestionSplittedStr1 = 'dots5'
+        }
+
+        if (id == idtypequestionSplittedStr0) {
+          if (idtypequestionSplittedStr1 == '') {
+            console.error('doesnt reassigns')
+          }
+
+          types.push(idtypequestionSplittedStr1)
+          questions.push(idtypequestionSplittedStr2)
+
+          typesQuestions.push(idtypequestionSplittedStr)
+
+          break
+        }
       }
-
-      var typequestionSplittedStr0 = typequestion.toString().split(',')[0]
-      var typequestionSplittedStr1 = typequestion.toString().split(',')[1]
-
-      types.push(typequestionSplittedStr0)
-      questions.push(typequestionSplittedStr1)
-
-      typesQuestions.push(typequestionSplittedStr)
     }
   } catch (e) {
     console.error(e.stack)
@@ -240,41 +252,26 @@ export const getQuestData = async quizGroupType => {
 
       typeAnswersSplittedStrs.push(typeanswers)
     }
-
-    console.log('aggregation ends  *******resAnswers            ' + resAnswers.length)
   } catch (e) {
     console.error(e.stack)
   } finally {
     client.end()
   }
 
-  console.log('aggregation ends  ****************')
-
-  console.log('questionIdsNums length  ' + questionIdsNums.length)
-
-  console.log('types length  ' + types.length)
-
   for (var i = 0; i < types.length; i++) {
     console.log('type' + types)
   }
 
-  console.log('typeAnswersSplittedStrs length  ' + typeAnswersSplittedStrs.length)
-
-  console.log('questions length  ' + questions.length)
   var answers = []
 
   for (var i = 0; i < questionIdsNums.length; i++) {
     var thisAnswers = []
 
     for (var j = 0; j < typeAnswersSplittedStrs.length; j++) {
-      console.log(types[i] + ' types i -------------------------- ' + typeAnswersSplittedStrs[j])
-
       var ansTypes = typeAnswersSplittedStrs[j].toString().split(',')
       var ansType = ansTypes[0]
 
       if (ansType == types[i]) {
-        console.log('**************************types match ' + ansType + 'for question i ' + i)
-
         var ans1 = typeAnswersSplittedStrs[j].toString().split(',')[1]
         var ans2 = typeAnswersSplittedStrs[j].toString().split(',')[2]
         var ans3 = typeAnswersSplittedStrs[j].toString().split(',')[3]
@@ -291,17 +288,42 @@ export const getQuestData = async quizGroupType => {
       }
     }
 
-    console.log('thisAnswers length ' + thisAnswers.length)
-
     answers.push(thisAnswers)
   }
 
+  var quizQuestions = []
+  var quiz1Questions = []
+
+  var imgSources = []
+
   for (var i = 0; i < questionIdsNums.length; i++) {
-    console.log('quiz question id ' + questionIdsNums[i])
-    console.log('quiz question type ' + types[i])
-    console.log('quiz question text ' + questions[i])
-    console.log('quiz question answers ' + answers[i])
+    console.log('adding quiz question id ' + questionIdsNums[i] + ' num ' + i)
+
+    //console.log('quiz question type ' + types[i])
+    //console.log('quiz question text ' + questions[i])
+    //console.log('quiz question answers ' + answers[i])
+
+    if (types[i].includes('image')) {
+      imgSources = [
+        '/images/illustrations/characters/2.png',
+        '/images/illustrations/characters/1.png',
+        '/images/illustrations/characters/4.png',
+        '/images/illustrations/characters/5.png',
+        '/images/illustrations/characters/3.png'
+      ]
+    }
+
+    var quizQuestion = {
+      type: types[i],
+      subtitle: questions[i],
+      answers: answers[i],
+      imgSrcs: types[i].includes('image') ? imgSources : undefined
+    }
+
+    quiz1Questions.push(quizQuestion)
   }
 
-  return resultQuestionGroup
+  quizQuestions.push(quiz1Questions)
+
+  return quizQuestions
 }

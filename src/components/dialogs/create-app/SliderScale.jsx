@@ -22,7 +22,15 @@ let initialMarks = [
   }
 ]
 
-const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
+const SliderScale = ({
+  quizGroupTypeId,
+  activeStep,
+  isLastStep,
+  handleNext,
+  handlePrev,
+  setTitle,
+  selectedOptions
+}) => {
   const initialSelected = 0
   const router = useRouter()
   const [marks, setMarks] = useState(initialMarks)
@@ -35,9 +43,9 @@ const SliderScale = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle,
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData.quiz1questions[activeStep].subtitle
-        var answers = dbData.quiz1questions[activeStep].answers
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
 
         setTitle(questionsubtitle)
 

@@ -24,7 +24,16 @@ let initialMarks = [
   }
 ]
 
-const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
+const SliderStepNew = ({
+  quizGroupTypeId,
+  activeStep,
+  isLastStep,
+  handleNext,
+  handlePrev,
+  setTitle,
+  selectedOptions
+}) => {
+  console.log('quiz group type id ' + quizGroupTypeId)
   const initialSelected = 0
 
   const [marks, setMarks] = useState(initialMarks)
@@ -40,12 +49,12 @@ const SliderStepNew = ({ activeStep, isLastStep, handleNext, handlePrev, setTitl
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData.quiz1questions[activeStep].subtitle
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
 
         console.log('subtitle step ' + questionsubtitle)
 
-        var answers = dbData.quiz1questions[activeStep].answers
+        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
 
         setTitle(questionsubtitle)
 

@@ -54,22 +54,22 @@ let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 //let selectedOptions = [4, 5, 5, 5, 5, 5, 3, 3, 3, 1, 2] //test data
 
-let quizGroupType = '1'
-
-const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle) => {
-  const Tag =
-    questionType === 'dots'
-      ? VerticalRadioSVG
-      : questionType === 'slider'
-        ? SliderStep
-        : questionType === 'image'
-          ? VerticalRadioImage
-          : questionType === 'rate'
-            ? StarRate
-            : SliderScale
+const renderStepCount = (quizGroupTypeId, activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle) => {
+  const Tag = questionType.includes('dots')
+    ? VerticalRadioSVG
+    : questionType.includes('slider')
+      ? SliderStep
+      : questionType.includes('image')
+        ? VerticalRadioImage
+        : questionType.includes('stars')
+          ? StarRate
+          : questionType.includes('scale')
+            ? SliderScale
+            : console.error('unknown question type ' + questionType)
 
   return (
     <Tag
+      quizGroupTypeId={quizGroupTypeId}
       activeStep={activeStep}
       handleNext={handleNext}
       handlePrev={handlePrev}
@@ -79,6 +79,8 @@ const renderStepCount = (activeStep, isLastStep, handleNext, handlePrev, questio
     />
   )
 }
+
+let quizGroupTypeId = '1'
 
 const CreateApp = ({ open, setOpen }) => {
   const theme = extendTheme({
@@ -182,7 +184,7 @@ const CreateApp = ({ open, setOpen }) => {
 
   const router = useRouter()
 
-  // States
+  //states
   const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = useState(0)
   const [isLoading, setLoading] = useState(true)
@@ -198,17 +200,12 @@ const CreateApp = ({ open, setOpen }) => {
 
   useEffect(() => {
     async function fetch() {
-      //let questData = await dbData('1')
+      await dbData(quizGroupTypeId).then(data => {
+        console.log(data.length)
+        var questionType = data[Number.parseInt(quizGroupTypeId) - 1][activeStep].type
+        var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
 
-      //console.log(questData)
-
-      //return
-
-      await dbData().then(data => {
-        var questionType = data.quiz1questions[activeStep].type
-        var questionTitle = data.quiz1questions[activeStep].subtitle
-
-        setSteps(data.quiz1questions.length)
+        setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
         setLoading(false)
         setQuestionType(questionType)
         setTitle(questionTitle)
@@ -241,14 +238,14 @@ const CreateApp = ({ open, setOpen }) => {
     if (!isLastStep) {
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
-      await dbData().then(async data => {
+      await dbData(quizGroupTypeId).then(async data => {
         let qaArray = []
 
         console.log('selectedOptions length' + selectedOptions + ' selectedOptions ' + selectedOptions.length)
 
         for (var i = 0; i < selectedOptions.length; i++) {
-          var a = data.quiz1questions[i].answers[selectedOptions[i]]
-          var q = data.quiz1questions[i].subtitle
+          var a = data[Number.parseInt(quizGroupTypeId) - 1][i].answers[selectedOptions[i]]
+          var q = data[Number.parseInt(quizGroupTypeId) - 1][i].subtitle
 
           qaArray.push('for question ' + q + '  answer ' + a)
         }
@@ -259,7 +256,7 @@ const CreateApp = ({ open, setOpen }) => {
         let selectedOptionsStr = selectedOptions.join(',')
 
         console.log('slopt ' + selectedOptionsStr)
-        let c = await createSelectedAnswers(selectedOptionsStr, '2')
+        let c = await createSelectedAnswers(selectedOptionsStr, quizGroupTypeId)
 
         //let b = await makeOPENCHATAIGetRequest(prompt)
       })
@@ -290,7 +287,7 @@ const CreateApp = ({ open, setOpen }) => {
         </IconButton>
         <div className='flex gap-y-6 pbs-1 flex-col md:flex-row'>
           <div className='flex-1'>
-            {renderStepCount(activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle)}
+            {renderStepCount(quizGroupTypeId, activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle)}
           </div>
         </div>
       </DialogContent>

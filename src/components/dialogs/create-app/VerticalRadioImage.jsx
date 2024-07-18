@@ -28,7 +28,17 @@ let initialData = [
 
 let initialSelected = ''
 
-const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
+const VerticalRadioImage = ({
+  quizGroupTypeId,
+  activeStep,
+  isLastStep,
+  handleNext,
+  handlePrev,
+  setTitle,
+  selectedOptions
+}) => {
+  console.log('VerticalRadioImage quizGroupTypeId' + quizGroupTypeId + 'active step' + activeStep)
+
   //States sources
   const [selected, setSelected] = useState(initialSelected)
 
@@ -49,10 +59,10 @@ const VerticalRadioImage = ({ activeStep, isLastStep, handleNext, handlePrev, se
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData.quiz1questions[activeStep].subtitle
-        var answers = dbData.quiz1questions[activeStep].answers
-        var imgSources = dbData.quiz1questions[activeStep].imgSrcs
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
+        var imgSources = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].imgSrcs
 
         if (imgSources === 'undefined' || imgSources === undefined) return
 

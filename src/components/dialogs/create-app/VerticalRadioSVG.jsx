@@ -42,7 +42,15 @@ let initialData = [
   }
 ]
 
-const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
+const VerticalRadioSVG = ({
+  quizGroupTypeId,
+  activeStep,
+  isLastStep,
+  handleNext,
+  handlePrev,
+  setTitle,
+  selectedOptions
+}) => {
   const initialSelected = 0
   const router = useRouter()
 
@@ -66,10 +74,12 @@ const VerticalRadioSVG = ({ activeStep, isLastStep, handleNext, handlePrev, setT
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData.quiz1questions[activeStep].subtitle
-        var answers = dbData.quiz1questions[activeStep].answers
-        var imgSources = dbData.quiz1questions[activeStep].imgSources
+      console.log('quizGroupTypeId inside ' + quizGroupTypeId)
+
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
+        var imgSources = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].imgSources
 
         setTitle(questionsubtitle)
 

@@ -26,7 +26,7 @@ import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
-const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
+const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
   const router = useRouter()
   const initialData = [{}]
 
@@ -41,9 +41,9 @@ const StarRate = ({ activeStep, isLastStep, handleNext, handlePrev, setTitle, se
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var answers = dbData.quiz1questions[activeStep].answers
-        var title = dbData.quiz1questions[activeStep].subtitle
+      await dbData(quizGroupTypeId).then(dbData => {
+        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
+        var title = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
 
         setTitle(title)
 
