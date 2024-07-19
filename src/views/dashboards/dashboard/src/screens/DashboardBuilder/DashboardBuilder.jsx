@@ -11,11 +11,8 @@ import { RemixIconsLineMapCarLine5 } from '../../icons/RemixIconsLineMapCarLine5
 import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineSystemArrowRightLine1'
 import './style.css'
 
-export const DashboardBuilder = () => {
-  return (
-    <div className='dashboard-builder'>
-      <div className='menu-wrapper'>
-        <Menu
+/*
+<Menu
           className='menu-instance'
           icon={<RemixIconsLineBusinessBarChartBoxLine4 className='icon-instance-node' color='#E7E3FC' />}
           logoClassName='design-component-instance-node'
@@ -23,7 +20,11 @@ export const DashboardBuilder = () => {
           menuDrawerClassName='menu-2'
           override={<RemixIconsLineBusinessCalendarLine3 className='icon-instance-node' color='#E7E3FC' />}
         />
-      </div>
+        */
+export const DashboardBuilder = () => {
+  return (
+    <div className='dashboard-builder'>
+      <div className='menu-wrapper'></div>
       <div className='div-6'>
         <div className='body-2'>
           <div className='row'>

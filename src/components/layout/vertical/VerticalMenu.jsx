@@ -58,6 +58,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
     >
       {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
       {/* Vertical Menu */}
+      {/* */}
       <Menu
         popoutMenuOffset={{ mainAxis: 10 }}
         menuItemStyles={menuItemStyles(verticalNavOptions, theme)}
@@ -67,23 +68,29 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 
         /*style={{ visibility: 'hidden' }}*/
       >
+        {/*
         <SubMenu
           label={dictionary['navigation'].dashboards}
           icon={<i className='ri-home-smile-line' />}
           suffix={<Chip label='5' size='small' color='error' />}
         >
+
           <MenuItem href={`/${locale}/dashboards/crm`}>{dictionary['navigation'].crm}</MenuItem>
           <MenuItem href={`/${locale}/dashboards/analytics`}>{dictionary['navigation'].analytics}</MenuItem>
           <MenuItem href={`/${locale}/dashboards/ecommerce`}>{dictionary['navigation'].eCommerce}</MenuItem>
           <MenuItem href={`/${locale}/dashboards/academy`}>{dictionary['navigation'].academy}</MenuItem>
           <MenuItem href={`/${locale}/dashboards/logistics`}>{dictionary['navigation'].logistics}</MenuItem>
+
         </SubMenu>
-        <SubMenu
+        */}
+        {/*<SubMenu
+
           label={dictionary['navigation'].frontPages}
           icon={<i className='ri-file-copy-line' />}
 
-          /*style={{ visibility: 'hidden' }}*/
+
         >
+          {/*
           <MenuItem href='/front-pages/landing-page' target='_blank'>
             {dictionary['navigation'].landing}
           </MenuItem>
@@ -99,6 +106,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           <MenuItem href='/front-pages/help-center' target='_blank'>
             {dictionary['navigation'].helpCenter}
           </MenuItem>
+
         </SubMenu>
         <MenuSection label={dictionary['navigation'].appsPages}>
           <SubMenu label={dictionary['navigation'].eCommerce} icon={<i className='ri-shopping-bag-3-line' />}>
@@ -314,72 +322,81 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             {dictionary['navigation'].muiTables}
           </MenuItem>
         </MenuSection>
+        */}
+
+        {/*
         <MenuSection label={dictionary['navigation'].chartsMisc}>
+
           <SubMenu label={dictionary['navigation'].charts} icon={<i className='ri-bar-chart-2-line' />}>
             <MenuItem href={`/${locale}/charts/apex-charts`}>{dictionary['navigation'].apex}</MenuItem>
             <MenuItem href={`/${locale}/charts/recharts`}>{dictionary['navigation'].recharts}</MenuItem>
           </SubMenu>
-          <MenuItem
-            href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/user-interface/foundation`}
-            suffix={<i className='ri-external-link-line text-xl' />}
-            target='_blank'
-            icon={<i className='ri-pantone-line' />}
-          >
-            {dictionary['navigation'].foundation}
+           */}
+        <MenuItem
+          href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/user-interface/foundation`}
+          suffix={<i className='ri-external-link-line text-xl' />}
+          target='_blank'
+          icon={<i className='ri-pantone-line' />}
+        >
+          {dictionary['navigation'].foundation}
+        </MenuItem>
+        <MenuItem
+          href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/user-interface/components`}
+          suffix={<i className='ri-external-link-line text-xl' />}
+          target='_blank'
+          icon={<i className='ri-toggle-line' />}
+        >
+          {dictionary['navigation'].components}
+        </MenuItem>
+        <MenuItem
+          href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/menu-examples/overview`}
+          suffix={<i className='ri-external-link-line text-xl' />}
+          target='_blank'
+          icon={<i className='ri-menu-search-line' />}
+        >
+          {dictionary['navigation'].menuExamples}
+        </MenuItem>
+        <MenuItem
+          href='https://themeselection.com/support'
+          suffix={<i className='ri-external-link-line text-xl' />}
+          target='_blank'
+          icon={<i className='ri-lifebuoy-line' />}
+        >
+          {dictionary['navigation'].raiseSupport}
+        </MenuItem>
+        <MenuItem
+          href={`${process.env.NEXT_PUBLIC_DOCS_URL}`}
+          suffix={<i className='ri-external-link-line text-xl' />}
+          target='_blank'
+          icon={<i className='ri-book-line' />}
+        >
+          {dictionary['navigation'].documentation}
+        </MenuItem>
+        {/*
+        <SubMenu label={dictionary['navigation'].others} icon={<i className='ri-more-line' />}>
+          <MenuItem suffix={<Chip label='New' size='small' color='info' />}>
+            {dictionary['navigation'].itemWithBadge}
           </MenuItem>
           <MenuItem
-            href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/user-interface/components`}
-            suffix={<i className='ri-external-link-line text-xl' />}
+            href='https://mui.com/store/contributors/themeselection'
             target='_blank'
-            icon={<i className='ri-toggle-line' />}
-          >
-            {dictionary['navigation'].components}
-          </MenuItem>
-          <MenuItem
-            href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/menu-examples/overview`}
             suffix={<i className='ri-external-link-line text-xl' />}
-            target='_blank'
-            icon={<i className='ri-menu-search-line' />}
           >
-            {dictionary['navigation'].menuExamples}
+            {dictionary['navigation'].externalLink}
           </MenuItem>
-          <MenuItem
-            href='https://themeselection.com/support'
-            suffix={<i className='ri-external-link-line text-xl' />}
-            target='_blank'
-            icon={<i className='ri-lifebuoy-line' />}
-          >
-            {dictionary['navigation'].raiseSupport}
-          </MenuItem>
-          <MenuItem
-            href={`${process.env.NEXT_PUBLIC_DOCS_URL}`}
-            suffix={<i className='ri-external-link-line text-xl' />}
-            target='_blank'
-            icon={<i className='ri-book-line' />}
-          >
-            {dictionary['navigation'].documentation}
-          </MenuItem>
-          <SubMenu label={dictionary['navigation'].others} icon={<i className='ri-more-line' />}>
-            <MenuItem suffix={<Chip label='New' size='small' color='info' />}>
-              {dictionary['navigation'].itemWithBadge}
-            </MenuItem>
-            <MenuItem
-              href='https://mui.com/store/contributors/themeselection'
-              target='_blank'
-              suffix={<i className='ri-external-link-line text-xl' />}
-            >
-              {dictionary['navigation'].externalLink}
-            </MenuItem>
-            <SubMenu label={dictionary['navigation'].menuLevels}>
-              <MenuItem>{dictionary['navigation'].menuLevel2}</MenuItem>
-              <SubMenu label={dictionary['navigation'].menuLevel2}>
-                <MenuItem>{dictionary['navigation'].menuLevel3}</MenuItem>
-                <MenuItem>{dictionary['navigation'].menuLevel3}</MenuItem>
-              </SubMenu>
+
+          <SubMenu label={dictionary['navigation'].menuLevels}>
+            <MenuItem>{dictionary['navigation'].menuLevel2}</MenuItem>
+            <SubMenu label={dictionary['navigation'].menuLevel2}>
+              <MenuItem>{dictionary['navigation'].menuLevel3}</MenuItem>
+              <MenuItem>{dictionary['navigation'].menuLevel3}</MenuItem>
             </SubMenu>
-            <MenuItem disabled>{dictionary['navigation'].disabledMenu}</MenuItem>
           </SubMenu>
+          <MenuItem disabled>{dictionary['navigation'].disabledMenu}</MenuItem>
+        </SubMenu>  */}
+        {/*
         </MenuSection>
+         </ScrollWrapper> */}
       </Menu>
       {/* <Menu
           popoutMenuOffset={{ mainAxis: 10 }}

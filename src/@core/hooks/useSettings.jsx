@@ -8,6 +8,8 @@ export const useSettings = () => {
   // Hooks
   const context = useContext(SettingsContext)
 
+  //console.log(SettingsContext)
+
   if (!context) {
     throw new Error('useSettingsContext must be used within a SettingsProvider')
   }

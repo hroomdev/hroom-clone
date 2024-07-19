@@ -25,10 +25,10 @@ const ThemeProvider = props => {
     skin: 'default'
   }
 
-  const theme = extendTheme(defaultCoreTheme(settings, 'light', direction))
+  const theme = extendTheme(defaultCoreTheme(settings, 'dark', direction))
 
   useEffect(() => {
-    document.body.setAttribute('data-mui-color-scheme', 'light')
+    document.body.setAttribute('data-mui-color-scheme', 'dark')
   }, [])
 
   return (
@@ -41,7 +41,7 @@ const ThemeProvider = props => {
         })
       }}
     >
-      <CssVarsProvider theme={theme} defaultMode='light'>
+      <CssVarsProvider theme={theme} defaultMode='dark'>
         <>
           <CssBaseline />
           {children}

@@ -58,7 +58,13 @@ const Navigation = props => {
   // Vars
   const { isCollapsed, isHovered, collapseVerticalNav, isBreakpointReached } = verticalNavOptions
   const isServer = typeof window === 'undefined'
+
+  //force set semiDark
+  settings.semiDark = true
+  useSettings(settings)
+
   const isSemiDark = settings.semiDark
+
   let isDark
 
   if (isServer) {
@@ -111,15 +117,16 @@ const Navigation = props => {
         <Link href={getLocalizedUrl('/', locale)}>
           <Logo />
         </Link>
-        {!(isCollapsed && !isHovered) && (
-          <NavCollapseIcons
-            lockedIcon={<i className='ri-radio-button-line text-xl' />}
-            unlockedIcon={<i className='ri-checkbox-blank-circle-line text-xl' />}
-            closeIcon={<i className='ri-close-line text-xl' />}
-            className='text-textSecondary'
-            onClick={() => updateSettings({ layout: !isCollapsed ? 'collapsed' : 'vertical' })}
-          />
-        )}
+
+        {/* {!(isCollapsed && !isHovered) && (*/}
+        {/*   <NavCollapseIcons*/}
+        {/*     lockedIcon={<i className='ri-radio-button-line text-xl' />}*/}
+        {/*     unlockedIcon={<i className='ri-checkbox-blank-circle-line text-xl' />}*/}
+        {/*     closeIcon={<i className='ri-close-line text-xl' />}*/}
+        {/*     className='text-textSecondary'*/}
+        {/*     onClick={() => updateSettings({ layout: !isCollapsed ? 'collapsed' : 'vertical' })}*/}
+        {/*   />*/}
+        {/* )}                                                                                             */}
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
       <VerticalMenu dictionary={dictionary} scrollMenu={scrollMenu} />
