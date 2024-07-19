@@ -30,19 +30,15 @@ const Layout = async ({ children, params }) => {
   const mode = getMode()
   const systemMode = getSystemMode()
 
+  //with menu
+  //LayoutWrapper navigation={<Navigation dictionary={dictionary} mode={mode} systemMode={systemMode} />}
+  //navbar={<Navbar />}
+
   return (
     <Providers direction={direction}>
       <LayoutWrapper
         systemMode={systemMode}
-        verticalLayout={
-          <VerticalLayout
-            navigation={<Navigation dictionary={dictionary} mode={mode} systemMode={systemMode} />}
-            navbar={<Navbar />}
-            footer={<VerticalFooter />}
-          >
-            {children}
-          </VerticalLayout>
-        }
+        verticalLayout={<VerticalLayout footer={<VerticalFooter />}>{children}</VerticalLayout>}
         horizontalLayout={
           <HorizontalLayout header={<Header dictionary={dictionary} />} footer={<HorizontalFooter />}>
             {children}

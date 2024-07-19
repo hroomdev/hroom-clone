@@ -5,13 +5,13 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/en/dashboards/analytics',
+        destination: '/en/dashboards/dashboard',
         permanent: true,
         locale: false
       },
       {
         source: '/:lang(en|fr|ar)',
-        destination: '/:lang/dashboards/analytics',
+        destination: '/:lang/dashboards/dashboard',
         permanent: true,
         locale: false
       },

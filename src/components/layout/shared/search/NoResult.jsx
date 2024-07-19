@@ -10,8 +10,8 @@ import { getLocalizedUrl } from '@/utils/i18n'
 
 const noResultData = [
   {
-    label: 'Analytics',
-    href: '/dashboards/analytics',
+    label: 'Dashboard',
+    href: '/dashboards/dashboard',
     icon: 'ri-bar-chart-line'
   },
   {

@@ -1,0 +1,1 @@
+export { RemixIconsLineUserStarSmileLine } from "./RemixIconsLineUserStarSmileLine";

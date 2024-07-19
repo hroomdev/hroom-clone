@@ -17,7 +17,7 @@
  */
 const themeConfig = {
   templateName: 'Materio',
-  homePageUrl: '/dashboards/analytics',
+  homePageUrl: '/dashboards/dashboard',
   settingsCookieName: 'materio-mui-next-demo-1',
   mode: 'system', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
