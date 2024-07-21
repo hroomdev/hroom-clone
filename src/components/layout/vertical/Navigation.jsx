@@ -13,6 +13,7 @@ import { styled, useColorScheme, useTheme } from '@mui/material/styles'
 // Component Imports
 import VerticalNav, { NavHeader, NavCollapseIcons } from '@menu/vertical-menu'
 import VerticalMenu from './VerticalMenu'
+import DashboardVerticalMenu from './DashboardVerticalMenu'
 import Logo from '@components/layout/shared/Logo'
 
 // Hook Imports
@@ -118,6 +119,7 @@ const Navigation = props => {
           <Logo />
         </Link>
 
+        {/* // todo find way to call onCLick updateSettings in onHover VerticalMenu Menu */}
         {/* {!(isCollapsed && !isHovered) && (*/}
         {/*   <NavCollapseIcons*/}
         {/*     lockedIcon={<i className='ri-radio-button-line text-xl' />}*/}
@@ -129,7 +131,9 @@ const Navigation = props => {
         {/* )}                                                                                             */}
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
-      <VerticalMenu dictionary={dictionary} scrollMenu={scrollMenu} />
+
+      <DashboardVerticalMenu dictionary={dictionary} scrollMenu={scrollMenu} />
+      {/*<VerticalMenu dictionary={dictionary} scrollMenu={scrollMenu} /> */}
     </VerticalNav>
   )
 }

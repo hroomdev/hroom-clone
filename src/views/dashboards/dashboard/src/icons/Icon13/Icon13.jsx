@@ -11,14 +11,14 @@ export const Icon13 = ({ color = "#56CA00", opacity = "unset", className }) => {
     <svg
       className={`icon-13 ${className}`}
       fill="none"
-      height="25"
-      viewBox="0 0 24 25"
+      height="24"
+      viewBox="0 0 24 24"
       width="24"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        className="path-4"
-        d="M7.41 16.0767L12 11.4967L16.59 16.0767L18 14.6667L12 8.66675L6 14.6667L7.41 16.0767Z"
+        className="path-5"
+        d="M7.41 15.41L12 10.83L16.59 15.41L18 14L12 8L6 14L7.41 15.41Z"
         fill={color}
         fillOpacity={opacity}
       />

@@ -49,7 +49,7 @@ const SliderStepNew = ({
 
   useEffect(() => {
     async function fetch() {
-      await dbData(quizGroupTypeId).then(dbData => {
+      await dbData().then(dbData => {
         var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
 
         console.log('subtitle step ' + questionsubtitle)

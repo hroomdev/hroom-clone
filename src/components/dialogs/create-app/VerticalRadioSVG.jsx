@@ -76,7 +76,7 @@ const VerticalRadioSVG = ({
     async function fetch() {
       console.log('quizGroupTypeId inside ' + quizGroupTypeId)
 
-      await dbData(quizGroupTypeId).then(dbData => {
+      await dbData().then(dbData => {
         var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
         var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
         var imgSources = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].imgSources

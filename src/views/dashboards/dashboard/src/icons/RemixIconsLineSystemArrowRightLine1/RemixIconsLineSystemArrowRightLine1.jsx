@@ -6,7 +6,7 @@ Please share your feedback here: https://form.asana.com/?k=uvp-HPgd3_hyoXRBw1IcN
 import PropTypes from "prop-types";
 import React from "react";
 
-export const RemixIconsLineSystemArrowRightLine1 = ({ color = "#8C57FF", opacity = "unset", className }) => {
+export const RemixIconsLineSystemArrowRightLine1 = ({ color = "#B29DF8", opacity = "unset", className }) => {
   return (
     <svg
       className={`remix-icons-line-system-arrow-right-line-1 ${className}`}
@@ -17,7 +17,7 @@ export const RemixIconsLineSystemArrowRightLine1 = ({ color = "#8C57FF", opacity
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        className="path-4"
+        className="path-5"
         d="M16.172 10.9999L10.808 5.63592L12.222 4.22192L20 11.9999L12.222 19.7779L10.808 18.3639L16.172 12.9999H4V10.9999H16.172Z"
         fill={color}
         fillOpacity={opacity}

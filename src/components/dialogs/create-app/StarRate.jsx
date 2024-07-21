@@ -41,7 +41,7 @@ const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handleP
 
   useEffect(() => {
     async function fetch() {
-      await dbData(quizGroupTypeId).then(dbData => {
+      await dbData().then(dbData => {
         var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
         var title = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
 

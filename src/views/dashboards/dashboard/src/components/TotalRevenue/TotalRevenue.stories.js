@@ -8,9 +8,9 @@ export default {
 export const Default = {
   args: {
     className: {},
-    chartClassName: {},
-    hasListSubheader: true,
-    activitiyGaugeClassName: {},
-    ringMiddle: "/img/ring-middle.svg",
+    line: "/img/line.svg",
+    frameClassName: {},
+    text: "86%",
+    icon: "/img/icon-40.svg",
   },
 };

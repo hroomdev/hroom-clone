@@ -200,7 +200,7 @@ const CreateApp = ({ open, setOpen }) => {
 
   useEffect(() => {
     async function fetch() {
-      await dbData(quizGroupTypeId).then(data => {
+      await dbData().then(data => {
         console.log(data.length)
         var questionType = data[Number.parseInt(quizGroupTypeId) - 1][activeStep].type
         var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
@@ -238,7 +238,7 @@ const CreateApp = ({ open, setOpen }) => {
     if (!isLastStep) {
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
-      await dbData(quizGroupTypeId).then(async data => {
+      await dbData().then(async data => {
         let qaArray = []
 
         console.log('selectedOptions length' + selectedOptions + ' selectedOptions ' + selectedOptions.length)

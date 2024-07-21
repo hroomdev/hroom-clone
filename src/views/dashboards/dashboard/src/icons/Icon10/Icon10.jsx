@@ -16,8 +16,8 @@ export const Icon10 = ({ className }) => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        className="path-4"
-        d="M13.1719 12L8.22192 7.04999L9.63592 5.63599L15.9999 12L9.63592 18.364L8.22192 16.95L13.1719 12Z"
+        className="path-5"
+        d="M13.172 12L8.222 7.05L9.636 5.636L16 12L9.636 18.364L8.222 16.95L13.172 12Z"
         fill="#2E263D"
         fillOpacity="0.9"
       />

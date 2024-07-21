@@ -54,7 +54,7 @@
 }
 
 .select-custome .label-text-3 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
   font-family: var(--components-typography-input-label-font-family);
   font-size: var(--components-typography-input-label-font-size);
   font-style: var(--components-typography-input-label-font-style);
@@ -102,7 +102,7 @@
 .select-custome .input {
   background: transparent;
   border: none;
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
   margin-top: -1px;
   padding: 0;
   position: relative;
@@ -191,7 +191,7 @@
 
 .select-custome .state-disabled {
   border: 2px solid;
-  border-color: var(--variables-color-palette-error-main);
+  border-color: #ff4c51;
   flex: 0 0 auto;
   gap: 10px;
 }
@@ -209,7 +209,7 @@
 
 .select-custome .state-focus {
   border: 2px solid;
-  border-color: var(--variables-color-palette-primary-main);
+  border-color: #b29df8;
   flex: 0 0 auto;
 }
 
@@ -245,7 +245,7 @@
 
 .select-custome .state-error {
   border: 2px solid;
-  border-color: var(--variables-color-palette-error-main);
+  border-color: #ff4c51;
   flex: 0 0 auto;
 }
 
@@ -259,7 +259,6 @@
 
 .select-custome .text-field.state-disabled .form-control {
   border: 1px solid;
-  border-radius: 4px;
   margin-bottom: -1px;
   margin-left: -1px;
   margin-right: -1px;
@@ -267,7 +266,7 @@
 }
 
 .select-custome .text-field.SM .form-control {
-  border-radius: 4px;
+  border-radius: var(--extra-border-radius-border-radius-SM);
 }
 
 .select-custome .text-field.state-hover.LG .form-control {
@@ -286,6 +285,7 @@
 }
 
 .select-custome .text-field.LG.state-disabled .form-control {
+  border-radius: 4px;
   height: 46px;
 }
 
@@ -360,6 +360,7 @@
 }
 
 .select-custome .text-field.m.state-disabled .form-control {
+  border-radius: 4px;
   height: 40px;
 }
 
@@ -392,20 +393,20 @@
 }
 
 .select-custome .text-field.state-disabled .label-text-2 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
   opacity: 0.38;
 }
 
 .select-custome .text-field.state-hover .label-text-2 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
 }
 
 .select-custome .text-field.state-focus .label-text-2 {
-  color: var(--variables-color-palette-primary-main);
+  color: #b29df8;
 }
 
 .select-custome .text-field.state-default .label-text-2 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
 }
 
 .select-custome .text-field.state-success .label-text-2 {
@@ -413,7 +414,7 @@
 }
 
 .select-custome .text-field.state-error .label-text-2 {
-  color: var(--variables-color-palette-error-main);
+  color: #ff4c51;
 }
 
 .select-custome .text-field.input-text .placeholder-text-2 {
@@ -434,7 +435,7 @@
 }
 
 .select-custome .text-field.input-text .placeholder-text-3 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
 }
 
 .select-custome .text-field.state-disabled .placeholder-text-3 {
@@ -451,7 +452,7 @@
 }
 
 .select-custome .text-field.placeholder-text .placeholder-text-3 {
-  color: var(--variables-theme-text-disabled);
+  color: #2e263d66;
 }
 
 .select-custome .text-field.SM .placeholder-text-3 {
@@ -477,23 +478,23 @@
 }
 
 .select-custome .text-field.label-text.state-error .placeholder-text-3 {
-  color: var(--variables-color-palette-error-main);
+  color: #ff4c51;
 }
 
 .select-custome .text-field.label-text.state-disabled .placeholder-text-3 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
 }
 
 .select-custome .text-field.label-text.state-default .placeholder-text-3 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
 }
 
 .select-custome .text-field.label-text.state-focus .placeholder-text-3 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
 }
 
 .select-custome .text-field.label-text.state-hover .placeholder-text-3 {
-  color: var(--variables-theme-text-primary);
+  color: #2e263de6;
 }
 
 .select-custome .text-field.SM .input {
@@ -528,19 +529,19 @@
 }
 
 .select-custome.disabled .supporting-text {
-  color: var(--variables-theme-text-secondary);
+  color: var(--variables-theme-text-secondary-duplicate);
 }
 
 .select-custome.hover .supporting-text {
-  color: var(--variables-theme-text-secondary);
+  color: #2e263db2;
 }
 
 .select-custome.focus .supporting-text {
-  color: var(--variables-theme-text-secondary);
+  color: #2e263db2;
 }
 
 .select-custome.default .supporting-text {
-  color: var(--variables-theme-text-secondary);
+  color: #2e263db2;
 }
 
 .select-custome.success .supporting-text {
@@ -548,5 +549,5 @@
 }
 
 .select-custome.error .supporting-text {
-  color: var(--variables-color-palette-error-main);
+  color: #ff4c51;
 }

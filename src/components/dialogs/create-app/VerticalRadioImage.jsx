@@ -59,7 +59,7 @@ const VerticalRadioImage = ({
 
   useEffect(() => {
     async function fetch() {
-      await dbData(quizGroupTypeId).then(dbData => {
+      await dbData().then(dbData => {
         var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
         var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
         var imgSources = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].imgSrcs

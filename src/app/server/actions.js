@@ -125,11 +125,7 @@ export const getStatisticsData = async () => {
   return statisticsData
 }
 
-export const getQuestData = async quizGroupType => {
-  //return questionsData
-
-  console.log('quizGroupType ' + quizGroupType)
-
+const getQuestGroup = async questionGroupId => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -139,8 +135,7 @@ export const getQuestData = async quizGroupType => {
   })
 
   const queryGroup = {
-    text: 'SELECT "public"."question-groups"."group" FROM "public"."question-groups" WHERE "public"."question-groups"."id" = $1',
-    values: [quizGroupType],
+    text: 'SELECT "public"."question-groups"."group" FROM "public"."question-groups" WHERE "public"."question-groups"."id" != 0',
     rowMode: 'array'
   }
 
@@ -150,7 +145,7 @@ export const getQuestData = async quizGroupType => {
     await client.connect()
     var res = await client.query(queryGroup)
 
-    resultQuestionGroup = res.rows[0]
+    resultQuestionGroup = res.rows[questionGroupId - 1]
     console.log('qg len' + res.rows.length)
     console.log('res log resultQuestionGroup' + res.rows[0])
   } catch (e) {
@@ -159,27 +154,17 @@ export const getQuestData = async quizGroupType => {
     client.end()
   }
 
-  var splittedStr = resultQuestionGroup.toString().split(',')
+  return resultQuestionGroup
+}
 
-  var questionIdsNums = splittedStr.map(s => {
-    return Number.parseInt(s)
-  })
-
-  console.log('before console console ')
-
-  questionIdsNums.map((n, i) => {
-    console.log('n' + n)
-  })
-
+const getTypeQuestions = async questionIdsNums => {
   const queryQuestions = {
     text: 'SELECT "public"."question-list"."id","public"."question-list"."Type","public"."question-list"."Question" FROM "public"."question-list" WHERE "public"."question-list"."id" = ANY ($1)',
     values: [questionIdsNums],
     rowMode: 'array'
   }
 
-  var typesQuestions = []
-  var types = []
-  var questions = []
+  var typeQuestions = []
 
   try {
     client = new Client({
@@ -198,7 +183,6 @@ export const getQuestData = async quizGroupType => {
 
       for (var j = 0; j < res.rows.length; j++) {
         var idtypequestion = res.rows[j]
-        var idtypequestionSplittedStr = idtypequestion.toString().split(',')
 
         var idtypequestionSplittedStr0 = idtypequestion.toString().split(',')[0]
         var idtypequestionSplittedStr1 = idtypequestion.toString().split(',')[1]
@@ -213,10 +197,12 @@ export const getQuestData = async quizGroupType => {
             console.error('doesnt reassigns')
           }
 
-          types.push(idtypequestionSplittedStr1)
-          questions.push(idtypequestionSplittedStr2)
+          var typeQuestion = [idtypequestionSplittedStr1, idtypequestionSplittedStr2]
 
-          typesQuestions.push(idtypequestionSplittedStr)
+          typeQuestions.push(typeQuestion)
+
+          //types.push(idtypequestionSplittedStr1)
+          //questions.push(idtypequestionSplittedStr2)
 
           break
         }
@@ -227,7 +213,9 @@ export const getQuestData = async quizGroupType => {
   } finally {
     client.end()
   }
+}
 
+const getAnswers = async questionIdsNums => {
   const queryAnswers = {
     text: 'SELECT "public"."question-types"."type","public"."question-types"."answer1","public"."question-types"."answer2","public"."question-types"."answer3","public"."question-types"."answer4","public"."question-types"."answer5" FROM "public"."question-types" WHERE "public"."question-types"."id" != 0',
     rowMode: 'array'
@@ -256,10 +244,6 @@ export const getQuestData = async quizGroupType => {
     console.error(e.stack)
   } finally {
     client.end()
-  }
-
-  for (var i = 0; i < types.length; i++) {
-    console.log('type' + types)
   }
 
   var answers = []
@@ -291,39 +275,196 @@ export const getQuestData = async quizGroupType => {
     answers.push(thisAnswers)
   }
 
+  return answers
+}
+
+const quizGroupsNum = 2
+
+export const getQuestData = async () => {
+  //values for questionGroups is 'A' column here https://docs.google.com/spreadsheets/d/1TbnTMajgWkNOg1-ZeRZJbNwVyfLDTQufz9aYtWjmDAw/edit?gid=1027310322#gid=1027310322
+  //data layout @/fake-db/pages/quiz' questionsData
+
   var quizQuestions = []
-  var quiz1Questions = []
 
-  var imgSources = []
+  for (var id = 1; id < quizGroupsNum + 1; i++) {
+    var resultQuestionGroup = getQuestGroup(id)
 
-  for (var i = 0; i < questionIdsNums.length; i++) {
-    console.log('adding quiz question id ' + questionIdsNums[i] + ' num ' + i)
+    var splittedStr = resultQuestionGroup.toString().split(',')
 
-    //console.log('quiz question type ' + types[i])
-    //console.log('quiz question text ' + questions[i])
-    //console.log('quiz question answers ' + answers[i])
+    var questionIdsNums = splittedStr.map(s => {
+      return Number.parseInt(s)
+    })
 
-    if (types[i].includes('image')) {
-      imgSources = [
-        '/images/illustrations/characters/2.png',
-        '/images/illustrations/characters/1.png',
-        '/images/illustrations/characters/4.png',
-        '/images/illustrations/characters/5.png',
-        '/images/illustrations/characters/3.png'
-      ]
+    questionIdsNums.map((n, i) => {
+      console.log('n' + n)
+    })
+
+    var typeQuestions = getTypeQuestions(questionIdsNums)
+    var types = []
+    var questions = []
+
+    for (var j = 0; j < typeQuestions.length; j++) {
+      var type = typeQuestions[j][0]
+      var question = typeQuestions[j][1]
+
+      types.push(type)
+      questions.push(question)
     }
 
-    var quizQuestion = {
-      type: types[i],
-      subtitle: questions[i],
-      answers: answers[i],
-      imgSrcs: types[i].includes('image') ? imgSources : undefined
+    var answers = getAnswers(questionIdsNums)
+
+    var quizIdQuestions = []
+
+    var imgSources = []
+
+    for (var j = 0; j < questionIdsNums.length; j++) {
+      if (types[j].includes('image')) {
+        imgSources = [
+          '/images/illustrations/characters/2.png',
+          '/images/illustrations/characters/1.png',
+          '/images/illustrations/characters/4.png',
+          '/images/illustrations/characters/5.png',
+          '/images/illustrations/characters/3.png'
+        ]
+      }
+
+      var quizQuestion = {
+        type: types[j],
+        subtitle: questions[j],
+        answers: answers[j],
+        imgSrcs: types[j].includes('image') ? imgSources : undefined
+      }
+
+      quizIdQuestions.push(quizQuestion)
     }
 
-    quiz1Questions.push(quizQuestion)
+    quizQuestions.push(quizIdQuestions)
   }
 
-  quizQuestions.push(quiz1Questions)
-
   return quizQuestions
+}
+
+export const getCurrentQuizTimeStart = async () => {
+  let currentQuiz = await getCurrentQuiz()
+
+  var currentQuizTimeStart = -1
+
+  var splittedStr = currentQuiz.toString().split(',')
+
+  currentQuizTimeStart = Date.parse(splittedStr[4])
+
+  console.log(' currentQuizTimeStart ' + currentQuizTimeStart)
+
+  return currentQuizTimeStart
+}
+
+export const getCurrentQuizAuditory = async () => {
+  let currentQuizIdAudi = await getCurrentQuizIdAudi()
+
+  let currentQuizId = currentQuizIdAudi[0]
+  let currentQuizAudi = currentQuizIdAudi[1]
+
+  console.log('---------------- currentQuizId ' + currentQuizId + '  currentQuizAudi ' + currentQuizAudi)
+
+  var countSelectedAnswersIds = await getSelectedAnswersIdsCountBy(currentQuizId)
+
+  console.log('---------------- countSelectedAnswersIds ' + countSelectedAnswersIds)
+
+  return [countSelectedAnswersIds, currentQuizAudi]
+}
+
+export const getCurrentQuizIdAudi = async () => {
+  try {
+    let currentQuiz = await getCurrentQuiz()
+
+    var currentQuizId = -1
+    var currentQuizAuditory = -1
+
+    var splittedStr = currentQuiz.toString().split(',')
+
+    for (var i = 0; i < splittedStr.length; i++) {
+      console.log('idAudi lenght   splittedStr i' + i + ' ' + splittedStr[i])
+    }
+
+    currentQuizId = Number.parseInt(splittedStr[0])
+    currentQuizAuditory = Number.parseInt(splittedStr[6])
+
+    console.log(
+      'idAudi lenght   ' +
+        currentQuiz.length +
+        '  currentQuizId ' +
+        currentQuizId +
+        ' currentQuizAuditory ' +
+        currentQuizAuditory
+    )
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+  }
+
+  return [currentQuizId, currentQuizAuditory]
+}
+
+export const getSelectedAnswersIdsCountBy = async quizId => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  console.log('quizId' + quizId)
+
+  const selectedAnswersIds = {
+    text: 'SELECT "public"."selectedAnswers"."id" FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."quizId" = $1',
+    values: [quizId],
+    rowMode: 'array'
+  }
+
+  var selectedAnswersIdsCount = 0
+
+  try {
+    await client.connect()
+    var res = await client.query(selectedAnswersIds)
+
+    console.log('res.rows.length  ' + res.rows.length)
+    selectedAnswersIdsCount = res.rows.length
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return selectedAnswersIdsCount
+}
+
+export const getCurrentQuiz = async () => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryCurrentQuizId = {
+    text: 'SELECT * FROM "public"."quiz" ORDER BY "public"."quiz"."id" DESC LIMIT 1',
+    rowMode: 'array'
+  }
+
+  let currentQuiz = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryCurrentQuizId)
+
+    currentQuiz = res.rows[0]
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+
+    return currentQuiz
+  }
 }

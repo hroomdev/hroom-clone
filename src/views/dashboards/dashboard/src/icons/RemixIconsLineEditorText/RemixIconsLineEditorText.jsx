@@ -16,8 +16,8 @@ export const RemixIconsLineEditorText = ({ className }) => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        className="path-4"
-        d="M11.9167 5.50002V19.25H10.0833V5.50002H4.58333V3.66669H17.4167V5.50002H11.9167Z"
+        className="path-5"
+        d="M11.9167 5.50002V19.25H10.0833V5.50002H4.58334V3.66669H17.4167V5.50002H11.9167Z"
         fill="#2E263D"
         fillOpacity="0.9"
       />

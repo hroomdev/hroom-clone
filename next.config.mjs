@@ -5,19 +5,19 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/en/dashboards/dashboard',
+        destination: '/ru/dashboards/dashboard',
         permanent: true,
         locale: false
       },
       {
-        source: '/:lang(en|fr|ar)',
+        source: '/:lang(en|fr|ar|ru)',
         destination: '/:lang/dashboards/dashboard',
         permanent: true,
         locale: false
       },
       {
-        source: '/((?!(?:en|fr|ar|front-pages|favicon.ico)\\b)):path',
-        destination: '/en/:path',
+        source: '/((?!(?:en|fr|ar|ru|front-pages|favicon.ico)\\b)):path',
+        destination: '/ru/:path',
         permanent: true,
         locale: false
       }
