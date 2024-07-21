@@ -49,7 +49,7 @@ export const DashboardBuilder = () => {
       participantsQuizAll = data[1]
 
       participationPercent = (participantsQuizPassed / participantsQuizAll) * 100
-
+      console.log('participationPercent' + participationPercent)
       router.refresh()
     })
 
@@ -106,7 +106,7 @@ export const DashboardBuilder = () => {
                 <div className='group'>
                   {/*<div className='bar-5'></div>*/}
                   {/*<div className='bar-6' />*/}
-                  <ProgressLinearWithLabel progressPercent={participationPercent}></ProgressLinearWithLabel>
+                  <ProgressLinearWithLabel value={participationPercent}></ProgressLinearWithLabel>
                 </div>
               </div>
             </div>

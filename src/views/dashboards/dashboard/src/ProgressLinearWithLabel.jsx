@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-//import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // MUI Imports
 import Typography from '@mui/material/Typography'
@@ -18,21 +18,15 @@ const LinearProgressWithLabel = props => {
   )
 }
 
-const ProgressLinearWithLabel = progressPercent => {
+const ProgressLinearWithLabel = props => {
   // States
-  //const [progress, setProgress] = useState(10)
+  const [progress, setProgress] = useState(props.value)
 
-  //useEffect(() => {
-  //  const timer = setInterval(() => {
-  //    setProgress(prevProgress => (prevProgress >= 100 ? 10 : prevProgress + 10))
-  //  }, 800)
-  //
-  //  return () => {
-  //    clearInterval(timer)
-  //  }
-  //}, [])
+  useEffect(() => {
+    setProgress(props.value)
+  }, [props.value])
 
-  return <LinearProgressWithLabel value={progressPercent} />
+  return <LinearProgressWithLabel value={progress} />
 }
 
 export default ProgressLinearWithLabel
