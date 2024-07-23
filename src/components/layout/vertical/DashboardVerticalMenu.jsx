@@ -95,7 +95,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           {dictionary['navigation'].quizes}
         </MenuItem>
         <MenuItem href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} target='_blank' icon={<i className='ri-team-line' />}>
-          {dictionary['navigation'].quizes}
+          {dictionary['navigation'].teams}
         </MenuItem>
       </Menu>
     </ScrollWrapper>

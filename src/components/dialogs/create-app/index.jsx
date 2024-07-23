@@ -213,9 +213,7 @@ const CreateApp = ({ open, setOpen }) => {
       })
 
       //let b = await makeOPENCHATAIGetRequest(prompt)
-
       //test db createQuiz
-
       //var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, new Date())
       //let c = await createQuiz(formatted, '2', '3')
     }

@@ -158,6 +158,8 @@ const getQuestGroup = async questionGroupId => {
 }
 
 const getTypeQuestions = async questionIdsNums => {
+  console.log('type questions getTypeQuestions ' + questionIdsNums)
+
   const queryQuestions = {
     text: 'SELECT "public"."question-list"."id","public"."question-list"."Type","public"."question-list"."Question" FROM "public"."question-list" WHERE "public"."question-list"."id" = ANY ($1)',
     values: [questionIdsNums],
@@ -166,23 +168,32 @@ const getTypeQuestions = async questionIdsNums => {
 
   var typeQuestions = []
 
-  try {
-    client = new Client({
-      user: 'gen_user',
-      host: '147.45.227.55',
-      database: 'default_db',
-      password: 'j6ukvvX(SS0#&5',
-      port: 5432
-    })
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
 
+  console.log('type questions getTypeQuestions  try entered before connect questionIdsNums ' + questionIdsNums)
+
+  try {
     await client.connect()
+    console.log('type questions getTypeQuestions  try entered after connect' + client)
     var res = await client.query(queryQuestions)
+
+    console.log('res rows length  ' + res.rows.length)
 
     for (var i = 0; i < questionIdsNums.length; i++) {
       var id = questionIdsNums[i]
 
+      console.log('questionIdsNums id ' + id)
+
       for (var j = 0; j < res.rows.length; j++) {
         var idtypequestion = res.rows[j]
+
+        console.log('idtypequestion  value ' + idtypequestion)
 
         var idtypequestionSplittedStr0 = idtypequestion.toString().split(',')[0]
         var idtypequestionSplittedStr1 = idtypequestion.toString().split(',')[1]
@@ -199,6 +210,7 @@ const getTypeQuestions = async questionIdsNums => {
 
           var typeQuestion = [idtypequestionSplittedStr1, idtypequestionSplittedStr2]
 
+          console.log('j ' + j + ' typeQuestion ' + typeQuestion)
           typeQuestions.push(typeQuestion)
 
           //types.push(idtypequestionSplittedStr1)
@@ -213,9 +225,11 @@ const getTypeQuestions = async questionIdsNums => {
   } finally {
     client.end()
   }
+
+  return typeQuestions
 }
 
-const getAnswers = async questionIdsNums => {
+const getAnswers = async (questionIdsNums, types) => {
   const queryAnswers = {
     text: 'SELECT "public"."question-types"."type","public"."question-types"."answer1","public"."question-types"."answer2","public"."question-types"."answer3","public"."question-types"."answer4","public"."question-types"."answer5" FROM "public"."question-types" WHERE "public"."question-types"."id" != 0',
     rowMode: 'array'
@@ -223,15 +237,15 @@ const getAnswers = async questionIdsNums => {
 
   var typeAnswersSplittedStrs = []
 
-  try {
-    client = new Client({
-      user: 'gen_user',
-      host: '147.45.227.55',
-      database: 'default_db',
-      password: 'j6ukvvX(SS0#&5',
-      port: 5432
-    })
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
 
+  try {
     await client.connect()
     var resAnswers = await client.query(queryAnswers)
 
@@ -286,8 +300,8 @@ export const getQuestData = async () => {
 
   var quizQuestions = []
 
-  for (var id = 1; id < quizGroupsNum + 1; i++) {
-    var resultQuestionGroup = getQuestGroup(id)
+  for (var id = 1; id < quizGroupsNum + 1; id++) {
+    var resultQuestionGroup = await getQuestGroup(id)
 
     var splittedStr = resultQuestionGroup.toString().split(',')
 
@@ -296,10 +310,10 @@ export const getQuestData = async () => {
     })
 
     questionIdsNums.map((n, i) => {
-      console.log('n' + n)
+      //console.log(id + ' id | n' + n)
     })
 
-    var typeQuestions = getTypeQuestions(questionIdsNums)
+    var typeQuestions = await getTypeQuestions(questionIdsNums)
     var types = []
     var questions = []
 
@@ -311,7 +325,7 @@ export const getQuestData = async () => {
       questions.push(question)
     }
 
-    var answers = getAnswers(questionIdsNums)
+    var answers = await getAnswers(questionIdsNums, types)
 
     var quizIdQuestions = []
 
@@ -364,11 +378,7 @@ export const getCurrentQuizAuditory = async () => {
   let currentQuizId = currentQuizIdAudi[0]
   let currentQuizAudi = currentQuizIdAudi[1]
 
-  console.log('---------------- currentQuizId ' + currentQuizId + '  currentQuizAudi ' + currentQuizAudi)
-
   var countSelectedAnswersIds = await getSelectedAnswersIdsCountBy(currentQuizId)
-
-  console.log('---------------- countSelectedAnswersIds ' + countSelectedAnswersIds)
 
   return [countSelectedAnswersIds, currentQuizAudi]
 }
@@ -382,21 +392,10 @@ export const getCurrentQuizIdAudi = async () => {
 
     var splittedStr = currentQuiz.toString().split(',')
 
-    for (var i = 0; i < splittedStr.length; i++) {
-      console.log('idAudi lenght   splittedStr i' + i + ' ' + splittedStr[i])
-    }
+    for (var i = 0; i < splittedStr.length; i++) {}
 
     currentQuizId = Number.parseInt(splittedStr[0])
     currentQuizAuditory = Number.parseInt(splittedStr[6])
-
-    console.log(
-      'idAudi lenght   ' +
-        currentQuiz.length +
-        '  currentQuizId ' +
-        currentQuizId +
-        ' currentQuizAuditory ' +
-        currentQuizAuditory
-    )
   } catch (e) {
     console.error(e.stack)
   } finally {
