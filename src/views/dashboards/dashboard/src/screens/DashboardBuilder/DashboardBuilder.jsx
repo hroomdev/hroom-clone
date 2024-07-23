@@ -116,7 +116,7 @@ export const DashboardBuilder = () => {
             </div>
           </div>
           <div className='row-2'>
-            <Grid container spacing={6} flex align-self justify-between>
+            <Grid container spacing={6} flex>
               <Grid item xs='auto'>
                 <TotalRevenue
                   className='total-revenue-instance'
