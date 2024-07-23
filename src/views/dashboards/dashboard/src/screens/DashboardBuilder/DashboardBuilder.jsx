@@ -33,11 +33,11 @@ import { useInterval } from './useInterval'
 
 const intervalDataUpd = 10000
 var participationPercent = 0
-var participantsQuizPassed = 1
-var participantsQuizAll = 10
-var currentQuizStarts = new Date(Date.UTC(2024, 5, 23, 3, 10, 0)) //23 мая 2024
+var participantsQuizPassed = 0
+var participantsQuizAll = 0
+var currentQuizStarts = new Date(Date.UTC(2024, 6, 17, 3, 10, 0)) //23 мая 2024
 var curToNow = 'неделю'
-var nowToNext = 'два дня'
+var nowToNext = '13 дней'
 var nextQuizStarts = new Date(Date.UTC(2024, 7, 5, 7, 12, 6)) // 3 июня 2024
 
 const options = {
@@ -73,9 +73,30 @@ export const DashboardBuilder = () => {
   }
 
   // runs every `interval`
+  //useInterval(() => {
+  //  innerFetchData()
+  //}, intervalDataUpd)
+
+  const fetchInvolve = useCallback(async () => {
+    if (participationPercent < 70) {
+      participationPercent += 10
+    }
+
+    if (participantsQuizPassed < 7) {
+      participantsQuizPassed += 1
+    }
+
+    if (participantsQuizAll < 10) {
+      participantsQuizAll += 1
+    }
+
+    router.refresh()
+  }, [])
+
+  // runs every `interval`
   useInterval(() => {
-    innerFetchData()
-  }, intervalDataUpd)
+    fetchInvolve()
+  }, 100)
 
   return (
     <div className='dashboard-builder'>
