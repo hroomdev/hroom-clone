@@ -334,11 +334,11 @@ export const getQuestData = async () => {
     for (var j = 0; j < questionIdsNums.length; j++) {
       if (types[j].includes('image')) {
         imgSources = [
-          '/images/illustrations/characters/2.png',
-          '/images/illustrations/characters/1.png',
-          '/images/illustrations/characters/4.png',
-          '/images/illustrations/characters/5.png',
-          '/images/illustrations/characters/3.png'
+          '/images/illustrations/characters/q1.png',
+          '/images/illustrations/characters/q2.png',
+          '/images/illustrations/characters/q3.png',
+          '/images/illustrations/characters/q4.png',
+          '/images/illustrations/characters/q5.png'
         ]
       }
 

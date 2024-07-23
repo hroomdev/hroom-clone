@@ -68,8 +68,9 @@ const VerticalRadioImage = ({
 
         setTitle(questionsubtitle)
 
+        //answers.length limited to four
         function readData() {
-          for (let i = 0; i < answers.length; i++) {
+          for (let i = 0; i < 4; i++) {
             var iS = i.toString(10)
             var dataElement = {
               value: iS,
