@@ -4,15 +4,21 @@ import React, { useEffect, useState, useCallback } from 'react'
 
 import { useRouter } from 'next/navigation'
 
+import Grid from '@mui/material/Grid'
+
 import { formatDistanceToNow, subDays } from 'date-fns'
 
 import enLocale from 'date-fns/locale/en-US'
 import ruLocale from 'date-fns/locale/ru'
 
+import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
+import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
+
 import ProgressLinearWithLabel from '../../ProgressLinearWithLabel'
 import { SelectCustome } from '../../components/SelectCustome'
 import { TotalRevenue } from '../../components/TotalRevenue'
-import { Transactions } from '../../components/Transactions'
+
+//import { Transactions } from '../../components/Transactions'
 import { Icon13 } from '../../icons/Icon13'
 import { RemixIconsLineMapCarLine3 } from '../../icons/RemixIconsLineMapCarLine3'
 import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineSystemArrowRightLine1'
@@ -104,37 +110,29 @@ export const DashboardBuilder = () => {
                   </div>
                 </div>
                 <div className='group'>
-                  {/*<div className='bar-5'></div>*/}
-                  {/*<div className='bar-6' />*/}
                   <ProgressLinearWithLabel value={participationPercent}></ProgressLinearWithLabel>
                 </div>
               </div>
             </div>
           </div>
           <div className='row-2'>
-            <TotalRevenue
-              className='total-revenue-instance'
-              frameClassName='total-revenue-2'
-              icon='/static/img/icon-29.svg'
-              line='/static/img/line-2.svg'
-              text='8.2'
-            />
-            <img className='chart-3' alt='Chart' src='/static/img/chart-6.png' />
-            <Transactions
-              bodyClassName='transactions-3'
-              bodyClassNameOverride='transactions-4'
-              className='transactions-instance'
-              frameClassName='transactions-2'
-              icon='/static/img/icon-41.svg'
-              icon1='/static/img/icon-47.svg'
-              icon2='/static/img/icon-43.svg'
-              icon3='/static/img/icon-42.svg'
-              icon4='/static/img/icon-50.svg'
-              icon5='/static/img/icon-43.svg'
-              img='/static/img/icon-42.svg'
-              text='Лояльность'
-              text1='Обратная связь'
-            />
+            <Grid container spacing={6} flex align-self justify-between>
+              <Grid item xs='auto'>
+                <TotalRevenue
+                  className='total-revenue-instance'
+                  frameClassName='total-revenue-2'
+                  icon='/static/img/icon-29.svg'
+                  line='/static/img/line-2.svg'
+                  text='8.2'
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <DashboardApexLineChart />
+              </Grid>
+              <Grid item xs>
+                <DashboardTransactions />
+              </Grid>
+            </Grid>
           </div>
           <div className='row-2'>
             <div className='card'>

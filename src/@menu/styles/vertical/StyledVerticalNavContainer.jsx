@@ -1,7 +1,7 @@
 // Third-party Imports
 import styled from '@emotion/styled'
 
-// Util Imports
+// Util Imports  inline-size: ${({ width }) => `${width}px`};
 import { verticalNavClasses } from '../../utils/menuClasses'
 
 const StyledVerticalNavContainer = styled.div`

@@ -22,13 +22,13 @@ import StyledVerticalNavBgColorContainer from '../../styles/vertical/StyledVerti
 // Style Imports
 import styles from '../../styles/vertical/verticalNavBgImage.module.css'
 
-// Default Config Imports
+// Default Config Imports260 default width
 import { defaultBreakpoints, verticalNavToggleDuration } from '../../defaultConfigs'
 
 const VerticalNav = props => {
   // Props
   const {
-    width = 260,
+    width = 236,
     collapsedWidth = 80,
     defaultCollapsed = false,
     backgroundColor = 'white',

@@ -53,7 +53,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             onScrollY: container => scrollMenu(container, true)
           })}
 
-      /*style={{ visibility: 'hidden' }}*/
+      /*style={{ visibility: 'hidden' }}*/ //home-smile-line bar-chart-box-line star-smile-line wechat-line calendar-line team-line
     >
       {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
       <Menu
@@ -66,32 +66,36 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem
           href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/user-interface/foundation`}
           target='_blank'
-          icon={<i className='ri-pantone-line' />}
+          icon={<i className='ri-home-smile-line' />}
         >
           {dictionary['navigation'].dashboard}
         </MenuItem>
         <MenuItem
           href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/user-interface/components`}
           target='_blank'
-          icon={<i className='ri-toggle-line' />}
+          icon={<i className='ri-bar-chart-box-line' />}
         >
           {dictionary['navigation'].analytics}
         </MenuItem>
         <MenuItem
           href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/menu-examples/overview`}
           target='_blank'
-          icon={<i className='ri-menu-search-line' />}
+          icon={<i className='ri-star-smile-line' />}
         >
           {dictionary['navigation'].ideas}
         </MenuItem>
-        <MenuItem href='https://themeselection.com/support' target='_blank' icon={<i className='ri-lifebuoy-line' />}>
+        <MenuItem href='https://themeselection.com/support' target='_blank' icon={<i className='ri-wechat-line' />}>
           {dictionary['navigation'].commentaries}
         </MenuItem>
-        <MenuItem href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} target='_blank' icon={<i className='ri-book-line' />}>
+        <MenuItem
+          href={`${process.env.NEXT_PUBLIC_DOCS_URL}`}
+          target='_blank'
+          icon={<i className='ri-calendar-line' />}
+        >
           {dictionary['navigation'].quizes}
         </MenuItem>
-        <MenuItem href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} target='_blank' icon={<i className='ri-book-line' />}>
-          {dictionary['navigation'].teams}
+        <MenuItem href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} target='_blank' icon={<i className='ri-team-line' />}>
+          {dictionary['navigation'].quizes}
         </MenuItem>
       </Menu>
     </ScrollWrapper>

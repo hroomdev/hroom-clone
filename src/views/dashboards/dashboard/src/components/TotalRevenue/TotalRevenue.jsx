@@ -8,6 +8,8 @@ Please share your feedback here: https://form.asana.com/?k=uvp-HPgd3_hyoXRBw1IcN
 import React from 'react'
 
 import PropTypes from 'prop-types'
+
+import DashboardRadialBarChart from '@/views/dashboards/dashboard/src/DashboardRadialBarChart'
 import './style.css'
 
 export const TotalRevenue = ({
@@ -24,21 +26,10 @@ export const TotalRevenue = ({
       </div>
       <div className='chart'>
         <div className='activitiy-gauge'>
-          <div className='overlap-group'>
-            <img className='background' alt='Background' src='/static/img/background.svg' />
-            <img className='line-2' alt='Line' src={line} />
-            <img className='ellipse' alt='Ellipse' src='/static/img/ellipse-1603.svg' />
-            <div className='ring-middle'>
-              <div className='frame'>
-                <div className='ellipse-2' />
-              </div>
-              <div className='percentage'>1.5%</div>
-              <img className='vector' alt='Vector' src='/static/img/vector.svg' />
-            </div>
-            <div className={`number-wrapper ${frameClassName}`}>
-              <div className='number'>{text}</div>
-            </div>
-          </div>
+          <DashboardRadialBarChart />
+          <div className='percentage'>1.5%</div>
+          <img className='vector' alt='Vector' src='/static/img/vector.svg' />
+          <div className='overlap-group'></div>
         </div>
       </div>
       <div className='data'>
