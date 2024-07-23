@@ -289,7 +289,7 @@ const CreateApp = ({ open, setOpen }) => {
           </div>
         </div>
       </DialogContent>
-
+      {/*
       <CssVarsProvider theme={theme}>
         <div>
           <Switch defaultChecked />
@@ -298,6 +298,7 @@ const CreateApp = ({ open, setOpen }) => {
           <Switch disabled />
         </div>
       </CssVarsProvider>
+      */}
     </Dialog>
   )
 }
