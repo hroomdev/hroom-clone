@@ -26,12 +26,27 @@ import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
+var onClickNext = (f1, f2) => {
+  f1()
+  f2()
+}
+
+var onClickPrev = (f1, f2) => {
+  f1()
+  f2()
+}
+
 const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handlePrev, setTitle, selectedOptions }) => {
+  console.log(activeStep + ' activeStep ' + 'isLastStep ' + isLastStep)
+
   const router = useRouter()
   const initialData = [{}]
 
   const [active, setActive] = useState(-1)
   const [data, setData] = useState(initialData)
+
+  //const [selected, setSelected] = useState(initialSelected)
+  const [isLoading, setLoading] = useState(true)
 
   const handleClick = active => {
     setActive(active)
@@ -59,7 +74,9 @@ const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handleP
         setData(data)
 
         setActive(active)
-        router.refresh()
+
+        //router.refresh()
+        setLoading(false)
         console.log('after set active ')
       })
     }
@@ -68,12 +85,17 @@ const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handleP
 
     console.log('after fetch ')
 
-    return () => {
-      //this will reload the page without doing SSR
-    }
-  }, [activeStep])
+    return unmount
+  }, [])
 
-  if (data.length < 1) {
+  function unmount() {
+    // States
+    //setSelected(initialSelected)
+    setData(initialData)
+    setLoading(true)
+  }
+
+  if (data.length < 1 || isLoading) {
     return 'Loading...'
   }
 
@@ -105,7 +127,7 @@ const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handleP
           variant='outlined'
           color='secondary'
           disabled={activeStep === 0}
-          onClick={handlePrev}
+          onClick={onClickPrev.bind(this, unmount, handlePrev)}
           startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
         >
           Previous
@@ -113,7 +135,7 @@ const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handleP
         <Button
           variant='contained'
           color={isLastStep ? 'success' : 'primary'}
-          onClick={handleNext}
+          onClick={onClickNext.bind(this, unmount, handleNext)}
           endIcon={
             isLastStep ? (
               <i className='ri-check-line' />

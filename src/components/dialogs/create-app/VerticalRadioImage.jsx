@@ -22,11 +22,17 @@ let initialData = [
   }
 ]
 
-//let initialSelected = initialData.filter(item => item.isSelected)[
-//  initialData.filter(item => item.isSelected).length - 1
-//].value
+const initialSelected = ''
 
-let initialSelected = ''
+var onClickNext = (f1, f2) => {
+  f1()
+  f2()
+}
+
+var onClickPrev = (f1, f2) => {
+  f1()
+  f2()
+}
 
 const VerticalRadioImage = ({
   quizGroupTypeId,
@@ -37,12 +43,10 @@ const VerticalRadioImage = ({
   setTitle,
   selectedOptions
 }) => {
-  console.log('VerticalRadioImage quizGroupTypeId' + quizGroupTypeId + 'active step' + activeStep)
-
   //States sources
   const [selected, setSelected] = useState(initialSelected)
-
   const [data, setData] = useState(initialData)
+  const [isLoading, setLoading] = useState(true)
 
   const handleChange = prop => {
     if (typeof prop === 'string') {
@@ -59,6 +63,7 @@ const VerticalRadioImage = ({
 
   useEffect(() => {
     async function fetch() {
+      console.log('use effect called : VerticalRadioImage')
       await dbData().then(dbData => {
         var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
         var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
@@ -86,15 +91,23 @@ const VerticalRadioImage = ({
         setData(data)
 
         setSelected(' ')
+        setLoading(false)
       })
     }
 
     fetch()
 
-    return () => {}
-  }, [activeStep])
+    return unmount
+  }, [])
 
-  if (data.length < 2) {
+  function unmount() {
+    // States
+    setSelected(initialSelected)
+    setData(initialData)
+    setLoading(true)
+  }
+
+  if (data.length < 2 || isLoading) {
     return 'Loading...'
   }
 
@@ -125,7 +138,7 @@ const VerticalRadioImage = ({
           variant='outlined'
           color='secondary'
           disabled={activeStep === 0}
-          onClick={handlePrev}
+          onClick={onClickPrev.bind(this, unmount, handlePrev)}
           startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
         >
           Previous
@@ -133,7 +146,7 @@ const VerticalRadioImage = ({
         <Button
           variant='contained'
           color={isLastStep ? 'success' : 'primary'}
-          onClick={handleNext}
+          onClick={onClickNext.bind(this, unmount, handleNext)}
           endIcon={
             isLastStep ? (
               <i className='ri-check-line' />

@@ -22,6 +22,16 @@ let initialMarks = [
   }
 ]
 
+var onClickNext = (f1, f2) => {
+  f1()
+  f2()
+}
+
+var onClickPrev = (f1, f2) => {
+  f1()
+  f2()
+}
+
 const SliderScale = ({
   quizGroupTypeId,
   activeStep,
@@ -33,7 +43,9 @@ const SliderScale = ({
 }) => {
   const initialSelected = 0
   const router = useRouter()
+  const [selected, setSelected] = useState(initialSelected)
   const [marks, setMarks] = useState(initialMarks)
+  const [isLoading, setLoading] = useState(true)
 
   const valuetext = value => {
     selectedOptions[activeStep] = Math.round(value != 0 ? value / stepSize : value)
@@ -64,14 +76,24 @@ const SliderScale = ({
 
         readMarks()
         setMarks(marks)
-        router.refresh()
+
+        //router.refresh()
+        setLoading(false)
       })
     }
 
     fetch()
-  }, [activeStep])
 
-  if (marks.length < 2) {
+    return unmount
+  }, [])
+
+  function unmount() {
+    // States
+    setSelected(initialSelected)
+    setLoading(true)
+  }
+
+  if (marks.length < 2 || isLoading) {
     return 'Loading...'
   }
 
@@ -92,7 +114,7 @@ const SliderScale = ({
           variant='outlined'
           color='secondary'
           disabled={activeStep === 0}
-          onClick={handlePrev}
+          onClick={onClickPrev.bind(this, unmount, handlePrev)}
           startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
         >
           Previous
@@ -100,7 +122,7 @@ const SliderScale = ({
         <Button
           variant='contained'
           color={isLastStep ? 'success' : 'primary'}
-          onClick={handleNext}
+          onClick={onClickNext.bind(this, unmount, handleNext)}
           endIcon={
             isLastStep ? (
               <i className='ri-check-line' />

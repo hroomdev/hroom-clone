@@ -4,8 +4,6 @@ import { useEffect } from 'react'
 // React Imports
 import { useState } from 'react'
 
-import { useRouter } from 'next/navigation'
-
 // MUI Imports
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -54,7 +52,7 @@ let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 //let selectedOptions = [4, 5, 5, 5, 5, 5, 3, 3, 3, 1, 2] //test data
 
-const renderStepCount = (quizGroupTypeId, activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle) => {
+const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, handlePrev, questionType, setTitle) => {
   const Tag = questionType.includes('dots')
     ? VerticalRadioSVG
     : questionType.includes('slider')
@@ -65,7 +63,7 @@ const renderStepCount = (quizGroupTypeId, activeStep, isLastStep, handleNext, ha
           ? StarRate
           : questionType.includes('scale')
             ? SliderScale
-            : console.error('unknown question type ' + questionType)
+            : console.log('unknown question type ' + questionType)
 
   return (
     <Tag
@@ -73,7 +71,7 @@ const renderStepCount = (quizGroupTypeId, activeStep, isLastStep, handleNext, ha
       activeStep={activeStep}
       handleNext={handleNext}
       handlePrev={handlePrev}
-      isLastStep={isLastStep}
+      isLastStep={lastStep}
       setTitle={setTitle}
       selectedOptions={selectedOptions}
     />
@@ -182,8 +180,6 @@ const CreateApp = ({ open, setOpen }) => {
     }
   })
 
-  const router = useRouter()
-
   //states
   const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = useState(0)
@@ -191,55 +187,84 @@ const CreateApp = ({ open, setOpen }) => {
   const [questionType, setQuestionType] = useState('')
   const [title, setTitle] = useState('Create App')
 
-  // Vars
-  const isLastStep = activeStep === steps - 1
+  async function unmount() {
+    //setActiveStep(initialSteps)
 
-  function unmount() {
-    return () => {}
+    //setActiveStep(0)
+    setLoading(true)
+    setQuestionType('')
+    setTitle('                       ')
+  }
+
+  async function fetch(step) {
+    await dbData().then(data => {
+      if (step == -1) {
+        unmount()
+        console.logerror('step to fetch -1 : index.jsx should be 0 to n')
+
+        return
+      }
+
+      console.log('fetching step ' + step)
+      var questionType = data[Number.parseInt(quizGroupTypeId) - 1][step].type
+      var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
+
+      setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
+
+      setQuestionType(questionType)
+      setTitle(questionTitle)
+      setLoading(false)
+    })
+
+    //let b = await makeOPENCHATAIGetRequest(prompt)
+    //test db createQuiz
+    //var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, new Date())
+    //let c = await createQuiz(formatted, '2', '3')
   }
 
   useEffect(() => {
-    async function fetch() {
-      await dbData().then(data => {
-        console.log(data.length)
-        var questionType = data[Number.parseInt(quizGroupTypeId) - 1][activeStep].type
-        var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+    console.log(activeStep + ' activeStep use effect index page dialog : index.jsx')
 
-        setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
-        setLoading(false)
-        setQuestionType(questionType)
-        setTitle(questionTitle)
-        router.refresh()
-      })
-
-      //let b = await makeOPENCHATAIGetRequest(prompt)
-      //test db createQuiz
-      //var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, new Date())
-      //let c = await createQuiz(formatted, '2', '3')
-    }
-
-    fetch()
+    fetch(activeStep)
 
     return unmount
-  }, [activeStep, steps])
+  }, [])
 
   if (steps < 2) return <p>Loading...</p>
   if (isLoading) return <p>Loading...</p>
-  if (questionType == '') return <p>No questionType</p>
+  if (questionType == '') return <p>Loading...</p>
 
-  const handleClose = () => {
+  const handleClose = async () => {
+    console.log('handle close : index.jsx')
     setOpen(false)
+    await unmount()
+    await fetch(0)
     setActiveStep(0)
   }
 
+  const handlePrev = async () => {
+    if (activeStep > 0) {
+      await unmount()
+      await fetch(activeStep - 1)
+      console.log(' handlePrev : index.jsx')
+      setActiveStep(prevActiveStep => prevActiveStep - 1)
+    } else {
+      console.logerror('activestep is zero cant go prev!')
+    }
+  }
+
   const handleNext = async () => {
-    if (!isLastStep) {
+    console.log(' handleNext1111111111111 : index.jsx')
+
+    if (!(activeStep + 1 >= steps)) {
+      await unmount()
+      console.log(' handleNext : index.jsx' + activeStep)
+      await fetch(activeStep + 1)
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
+      await handleClose()
       await dbData().then(async data => {
         let qaArray = []
-
-        console.log('selectedOptions length' + selectedOptions + ' selectedOptions ' + selectedOptions.length)
 
         for (var i = 0; i < selectedOptions.length; i++) {
           var a = data[Number.parseInt(quizGroupTypeId) - 1][i].answers[selectedOptions[i]]
@@ -258,13 +283,8 @@ const CreateApp = ({ open, setOpen }) => {
 
         //let b = await makeOPENCHATAIGetRequest(prompt)
       })
-
-      handleClose()
+      console.log('handle close : index.jsx')
     }
-  }
-
-  const handlePrev = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1)
   }
 
   const valuetext = value => {
@@ -285,7 +305,15 @@ const CreateApp = ({ open, setOpen }) => {
         </IconButton>
         <div className='flex gap-y-6 pbs-1 flex-col md:flex-row'>
           <div className='flex-1'>
-            {renderStepCount(quizGroupTypeId, activeStep, isLastStep, handleNext, handlePrev, questionType, setTitle)}
+            {renderStepCount(
+              quizGroupTypeId,
+              activeStep,
+              activeStep >= steps - 1,
+              handleNext,
+              handlePrev,
+              questionType,
+              setTitle
+            )}
           </div>
         </div>
       </DialogContent>

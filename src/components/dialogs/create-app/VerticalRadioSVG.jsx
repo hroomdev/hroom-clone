@@ -1,7 +1,7 @@
 // React Imports
 import * as React from 'react'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -42,6 +42,20 @@ let initialData = [
   }
 ]
 
+var onClickNext = (f1, f2) => {
+  console.log('onclikcnext')
+  f1()
+  f2()
+}
+
+var onClickPrev = (f1, f2) => {
+  console.log('onclikprev')
+  f1()
+  f2()
+}
+
+var loadedStep = 0
+
 const VerticalRadioSVG = ({
   quizGroupTypeId,
   activeStep,
@@ -54,10 +68,13 @@ const VerticalRadioSVG = ({
   const initialSelected = 0
   const router = useRouter()
 
-  // States
-  const [selected, setSelected] = useState(0)
+  console.log('VerticalRadioSVG c' + Date.now() + 'activestep' + activeStep + ' islast step ' + isLastStep)
 
+  // States
+
+  const [selected, setSelected] = useState(initialSelected)
   const [data, setData] = useState(initialData)
+  const [isLoading, setLoading] = useState(true)
 
   const handleChange = prop => {
     if (typeof prop === 'string') {
@@ -74,9 +91,11 @@ const VerticalRadioSVG = ({
 
   useEffect(() => {
     async function fetch() {
-      console.log('quizGroupTypeId inside ' + quizGroupTypeId)
+      //setData(initialData)
+      console.log('useEffect  activestep' + activeStep + ' : VerticalRadioSVG')
 
       await dbData().then(dbData => {
+        //var loadedStepNumber = loadedStep
         var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
         var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
         var imgSources = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].imgSources
@@ -100,16 +119,32 @@ const VerticalRadioSVG = ({
         setData(data)
 
         setSelected(selected)
-        router.refresh()
+        console.log('set loading false' + Date.now())
+        setLoading(false)
+
+        //router.refresh()
       })
     }
 
     fetch()
 
-    return () => {}
+    console.log('return unmount' + Date.now())
+
+    return unmount
+
+    //
   }, [activeStep])
 
-  if (data.length < 2) {
+  function unmount() {
+    console.log('unmount' + Date.now() + 'activeStep ' + activeStep)
+
+    // States
+    setSelected(initialSelected)
+    setData(initialData)
+    setLoading(true)
+  }
+
+  if (data.length < 2 || isLoading) {
     return 'Loading...'
   }
 
@@ -137,8 +172,8 @@ const VerticalRadioSVG = ({
         <Button
           variant='outlined'
           color='secondary'
-          disabled={activeStep === 0}
-          onClick={handlePrev}
+          disabled={activeStep === 0 || isLoading === true}
+          onClick={onClickPrev.bind(this, () => {}, handlePrev)}
           startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
         >
           Previous
@@ -146,7 +181,8 @@ const VerticalRadioSVG = ({
         <Button
           variant='contained'
           color={isLastStep ? 'success' : 'primary'}
-          onClick={handleNext}
+          disabled={isLastStep === true || isLoading === true}
+          onClick={onClickNext.bind(this, () => {}, handleNext)}
           endIcon={
             isLastStep ? (
               <i className='ri-check-line' />
