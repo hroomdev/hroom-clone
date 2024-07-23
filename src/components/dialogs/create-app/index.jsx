@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 // React Imports
 import { useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 // MUI Imports
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -17,6 +19,8 @@ import Avatar from '@mui/material/Avatar'
 import Slider from '@mui/material/Slider'
 import Switch from '@mui/material/Switch'
 
+//import { useNavigate } from 'react-router-dom'
+
 import {
   experimental_extendTheme as extendTheme,
   Experimental_CssVarsProvider as CssVarsProvider
@@ -25,7 +29,8 @@ import {
 // Third-party Imports
 import classnames from 'classnames'
 
-// Component Imports
+import { hideVerticalMenu, showVerticalMenu } from './../../../components/layout/vertical/Navigation'
+
 import Details from './Details'
 import FrameWork from './FrameWork'
 import VerticalRadioImage from './VerticalRadioImage'
@@ -36,7 +41,6 @@ import StarRate from './StarRate'
 import Database from './Database'
 import Billing from './Billing'
 import Submit from './Submit'
-
 import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
 
 // Styled Component Imports
@@ -81,6 +85,10 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
 let quizGroupTypeId = '1'
 
 const CreateApp = ({ open, setOpen }) => {
+  const router = useRouter()
+
+  hideVerticalMenu()
+
   const theme = extendTheme({
     shape: {
       borderRadiusRound: 999
@@ -205,7 +213,6 @@ const CreateApp = ({ open, setOpen }) => {
         return
       }
 
-      console.log('fetching step ' + step)
       var questionType = data[Number.parseInt(quizGroupTypeId) - 1][step].type
       var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
 
@@ -223,8 +230,6 @@ const CreateApp = ({ open, setOpen }) => {
   }
 
   useEffect(() => {
-    console.log(activeStep + ' activeStep use effect index page dialog : index.jsx')
-
     fetch(activeStep)
 
     return unmount
@@ -234,10 +239,19 @@ const CreateApp = ({ open, setOpen }) => {
   if (isLoading) return <p>Loading...</p>
   if (questionType == '') return <p>Loading...</p>
 
+  const delay = time => new Promise(res => setTimeout(res, time))
+
   const handleClose = async () => {
-    console.log('handle close : index.jsx')
-    setOpen(false)
+    //setOpen(false)
     await unmount()
+
+    //navigate('/dashboards/dashboard')
+    router.push('/ru//dashboards/dashboard')
+
+    router.refresh()
+    showVerticalMenu()
+    await delay(5000)
+
     await fetch(0)
     setActiveStep(0)
   }
@@ -246,7 +260,6 @@ const CreateApp = ({ open, setOpen }) => {
     if (activeStep > 0) {
       await unmount()
       await fetch(activeStep - 1)
-      console.log(' handlePrev : index.jsx')
       setActiveStep(prevActiveStep => prevActiveStep - 1)
     } else {
       console.logerror('activestep is zero cant go prev!')
@@ -254,11 +267,8 @@ const CreateApp = ({ open, setOpen }) => {
   }
 
   const handleNext = async () => {
-    console.log(' handleNext1111111111111 : index.jsx')
-
     if (!(activeStep + 1 >= steps)) {
       await unmount()
-      console.log(' handleNext : index.jsx' + activeStep)
       await fetch(activeStep + 1)
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
@@ -278,12 +288,10 @@ const CreateApp = ({ open, setOpen }) => {
         //test db
         let selectedOptionsStr = selectedOptions.join(',')
 
-        console.log('slopt ' + selectedOptionsStr)
         let c = await createSelectedAnswers(selectedOptionsStr, quizGroupTypeId)
 
         //let b = await makeOPENCHATAIGetRequest(prompt)
       })
-      console.log('handle close : index.jsx')
     }
   }
 

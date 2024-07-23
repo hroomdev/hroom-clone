@@ -43,13 +43,11 @@ let initialData = [
 ]
 
 var onClickNext = (f1, f2) => {
-  console.log('onclikcnext')
   f1()
   f2()
 }
 
 var onClickPrev = (f1, f2) => {
-  console.log('onclikprev')
   f1()
   f2()
 }
@@ -67,8 +65,6 @@ const VerticalRadioSVG = ({
 }) => {
   const initialSelected = 0
   const router = useRouter()
-
-  console.log('VerticalRadioSVG c' + Date.now() + 'activestep' + activeStep + ' islast step ' + isLastStep)
 
   // States
 
@@ -92,7 +88,6 @@ const VerticalRadioSVG = ({
   useEffect(() => {
     async function fetch() {
       //setData(initialData)
-      console.log('useEffect  activestep' + activeStep + ' : VerticalRadioSVG')
 
       await dbData().then(dbData => {
         //var loadedStepNumber = loadedStep
@@ -119,7 +114,6 @@ const VerticalRadioSVG = ({
         setData(data)
 
         setSelected(selected)
-        console.log('set loading false' + Date.now())
         setLoading(false)
 
         //router.refresh()
@@ -128,16 +122,12 @@ const VerticalRadioSVG = ({
 
     fetch()
 
-    console.log('return unmount' + Date.now())
-
     return unmount
 
     //
   }, [activeStep])
 
   function unmount() {
-    console.log('unmount' + Date.now() + 'activeStep ' + activeStep)
-
     // States
     setSelected(initialSelected)
     setData(initialData)

@@ -14,7 +14,7 @@ import Button from '@mui/material/Button'
 import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
-const stepSize = 10
+const stepSize = 1
 let initialMarks = [
   {
     value: 0,
@@ -97,13 +97,14 @@ const SliderScale = ({
     return 'Loading...'
   }
 
+  //max (marks.length - 1) * stepSize
   return (
     <div className='flex flex-col gap-4 '>
       <Slider
         marks
         min={0}
-        max={(marks.length - 1) * stepSize}
-        step={10}
+        max={9}
+        step={1}
         defaultValue={0}
         valueLabelDisplay='on'
         getAriaValueText={valuetext}

@@ -42,6 +42,9 @@ const StyledBoxForShadow = styled('div')(({ theme }) => ({
   }
 }))
 
+var visibilityHook = null
+var collapsedWidth = 0 //68
+
 const Navigation = props => {
   // Props
   const { dictionary, mode, systemMode } = props
@@ -52,6 +55,8 @@ const Navigation = props => {
   const { lang: locale } = useParams()
   const { mode: muiMode, systemMode: muiSystemMode } = useColorScheme()
   const theme = useTheme()
+
+  visibilityHook = updateSettings
 
   // Refs
   const shadowRef = useRef(null)
@@ -103,7 +108,7 @@ const Navigation = props => {
     // Sidebar Vertical Menu
     <VerticalNav
       customStyles={navigationCustomStyles(verticalNavOptions, theme)}
-      collapsedWidth={68}
+      collapsedWidth={collapsedWidth}
       backgroundColor='var(--mui-palette-background-default)'
       // eslint-disable-next-line lines-around-comment
       // The following condition adds the data-mui-color-scheme='dark' attribute to the VerticalNav component
@@ -136,6 +141,18 @@ const Navigation = props => {
       {/*<VerticalMenu dictionary={dictionary} scrollMenu={scrollMenu} /> */}
     </VerticalNav>
   )
+}
+
+export const hideVerticalMenu = () => {
+  try {
+    visibilityHook({ layout: 'collapsed' })
+  } catch (error) {}
+}
+
+export const showVerticalMenu = () => {
+  try {
+    visibilityHook({ layout: 'vertical' })
+  } catch (error) {}
 }
 
 export default Navigation

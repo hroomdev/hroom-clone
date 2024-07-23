@@ -1,7 +1,9 @@
-// MUI Imports
+'use client' // MUI Imports
 import Grid from '@mui/material/Grid'
 
 // Component Imports
+//import { BrowserRouter } from 'react-router-dom'
+
 import DialogAddCard from '@views/pages/dialog-examples/DialogAddCard'
 import DialogEditUserInfo from '@views/pages/dialog-examples/DialogEditUserInfo'
 import DialogAuthentication from '@views/pages/dialog-examples/DialogAuthentication'
@@ -15,6 +17,8 @@ import DialogPricing from '@views/pages/dialog-examples/DialogPricing'
 
 // Data Imports
 import { getPricingData } from '@/app/server/actions'
+
+import CreateApp from '@components/dialogs/create-app'
 
 /**
  * ! If you need data using an API call, uncomment the below API code, update the `process.env.API_URL` variable in the
@@ -32,14 +36,12 @@ import { getPricingData } from '@/app/server/actions'
 
   return res.json()
 } */
-const DialogExamples = async () => {
+
+const DialogExamples = () => {
   // Vars
-  const data = await getPricingData()
+  //const data = getPricingData()
 
-  return <DialogCreateApp />
-
-  // (
-  //<DialogCreateApp />
+  return <CreateApp open={true} setOpen={true}></CreateApp>
 
   //<Grid container spacing={6}>
   //  <Grid item xs={12} sm={6} md={4}>

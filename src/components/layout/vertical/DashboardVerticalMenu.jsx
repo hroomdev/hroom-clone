@@ -63,11 +63,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <MenuItem
-          href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/user-interface/foundation`}
-          target='_blank'
-          icon={<i className='ri-home-smile-line' />}
-        >
+        <MenuItem href={`/${locale}/dashboards/dashboard`} target='_blank' icon={<i className='ri-home-smile-line' />}>
           {dictionary['navigation'].dashboard}
         </MenuItem>
         <MenuItem
