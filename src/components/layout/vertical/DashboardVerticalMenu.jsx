@@ -63,7 +63,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <MenuItem href={`/${locale}/dashboards/dashboard`} target='_blank' icon={<i className='ri-home-smile-line' />}>
+        <MenuItem href={`/${locale}/dashboards/dashboard`} icon={<i className='ri-home-smile-line' />}>
           {dictionary['navigation'].dashboard}
         </MenuItem>
         <MenuItem
@@ -83,11 +83,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href='https://themeselection.com/support' target='_blank' icon={<i className='ri-wechat-line' />}>
           {dictionary['navigation'].commentaries}
         </MenuItem>
-        <MenuItem
-          href={`${process.env.NEXT_PUBLIC_DOCS_URL}`}
-          target='_blank'
-          icon={<i className='ri-calendar-line' />}
-        >
+        <MenuItem href={`/${locale}/pages/dialog-examples`} icon={<i className='ri-calendar-line' />}>
           {dictionary['navigation'].quizes}
         </MenuItem>
         <MenuItem href={`${process.env.NEXT_PUBLIC_DOCS_URL}`} target='_blank' icon={<i className='ri-team-line' />}>

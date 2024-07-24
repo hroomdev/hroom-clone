@@ -205,13 +205,13 @@ const CreateApp = ({ open, setOpen }) => {
   }
 
   async function fetch(step) {
-    await dbData().then(data => {
-      if (step == -1) {
-        unmount()
-        console.logerror('step to fetch -1 : index.jsx should be 0 to n')
+    if (step == -1 || activeStep < 0) {
+      return
+    }
 
-        return
-      }
+    await dbData().then(data => {
+      //await unmount()
+      //onsole.logerror('step to fetch -1 : index.jsx should be 0 to n')
 
       var questionType = data[Number.parseInt(quizGroupTypeId) - 1][step].type
       var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
@@ -235,6 +235,7 @@ const CreateApp = ({ open, setOpen }) => {
     return unmount
   }, [])
 
+  if (activeStep < 0) return <p>Loading...</p>
   if (steps < 2) return <p>Loading...</p>
   if (isLoading) return <p>Loading...</p>
   if (questionType == '') return <p>Loading...</p>
@@ -243,17 +244,16 @@ const CreateApp = ({ open, setOpen }) => {
 
   const handleClose = async () => {
     //setOpen(false)
+    setActiveStep(-1)
     await unmount()
+    await fetch(-1)
 
-    //navigate('/dashboards/dashboard')
-    router.push('/ru//dashboards/dashboard')
+    router.push('/ru//dashboards/dashboard') //
+    router.prefetch('/ru//dashboards/dashboard')
+    router.refresh() //instantly calls hide through  collapseVerticalNav(true) useEffect Navigation
 
-    router.refresh()
-    showVerticalMenu()
-    await delay(5000)
-
-    await fetch(0)
-    setActiveStep(0)
+    await delay(1000)
+    showVerticalMenu() //calls show through  collapseVerticalNav(false)navCollapseVerticalNav
   }
 
   const handlePrev = async () => {

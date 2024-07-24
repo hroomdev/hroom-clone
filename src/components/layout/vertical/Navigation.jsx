@@ -42,8 +42,11 @@ const StyledBoxForShadow = styled('div')(({ theme }) => ({
   }
 }))
 
-var visibilityHook = null
-var collapsedWidth = 0 //68
+var navVisibilityHook = null
+var navCollapseHook = null
+var navSettings = null
+
+var navCollapsedWidth = 68
 
 const Navigation = props => {
   // Props
@@ -56,14 +59,17 @@ const Navigation = props => {
   const { mode: muiMode, systemMode: muiSystemMode } = useColorScheme()
   const theme = useTheme()
 
-  visibilityHook = updateSettings
-
   // Refs
   const shadowRef = useRef(null)
 
   // Vars
   const { isCollapsed, isHovered, collapseVerticalNav, isBreakpointReached } = verticalNavOptions
   const isServer = typeof window === 'undefined'
+
+  //method refs
+  navVisibilityHook = updateSettings
+  navCollapseHook = collapseVerticalNav
+  navSettings = settings
 
   //force set semiDark
   settings.semiDark = true
@@ -95,6 +101,10 @@ const Navigation = props => {
   }
 
   useEffect(() => {
+    console.log('settings layout is' + settings.layout + '  isCollapsed' + isCollapsed)
+
+    //collapseVerticalNav(isCollapsed)
+
     if (settings.layout === 'collapsed') {
       collapseVerticalNav(true)
     } else {
@@ -108,7 +118,7 @@ const Navigation = props => {
     // Sidebar Vertical Menu
     <VerticalNav
       customStyles={navigationCustomStyles(verticalNavOptions, theme)}
-      collapsedWidth={collapsedWidth}
+      collapsedWidth={navCollapsedWidth}
       backgroundColor='var(--mui-palette-background-default)'
       // eslint-disable-next-line lines-around-comment
       // The following condition adds the data-mui-color-scheme='dark' attribute to the VerticalNav component
@@ -144,14 +154,28 @@ const Navigation = props => {
 }
 
 export const hideVerticalMenu = () => {
+  // console.log('hideVerticalMenu')
+
   try {
-    visibilityHook({ layout: 'collapsed' })
+    navCollapsedWidth = 0
+
+    navVisibilityHook({ layout: 'collapsed' })
+
+    navCollapseHook(true)
+    navSettings.layout = 'collapsed'
   } catch (error) {}
 }
 
 export const showVerticalMenu = () => {
+  //console.log('showVerticalMenu')
+
   try {
-    visibilityHook({ layout: 'vertical' })
+    navCollapsedWidth = 68
+
+    navSettings.layout = 'vertical'
+    navVisibilityHook({ layout: 'vertical' })
+
+    navCollapseHook(false)
   } catch (error) {}
 }
 

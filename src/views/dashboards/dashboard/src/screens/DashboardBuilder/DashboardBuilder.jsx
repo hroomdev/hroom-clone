@@ -73,30 +73,9 @@ export const DashboardBuilder = () => {
   }
 
   // runs every `interval`
-  //useInterval(() => {
-  //  innerFetchData()
-  //}, intervalDataUpd)
-
-  const fetchInvolve = useCallback(async () => {
-    if (participationPercent < 70) {
-      participationPercent += 10
-    }
-
-    if (participantsQuizPassed < 7) {
-      participantsQuizPassed += 1
-    }
-
-    if (participantsQuizAll < 10) {
-      participantsQuizAll += 1
-    }
-
-    router.refresh()
-  }, [])
-
-  // runs every `interval`
   useInterval(() => {
-    fetchInvolve()
-  }, 100)
+    innerFetchData()
+  }, intervalDataUpd)
 
   return (
     <div className='dashboard-builder'>
