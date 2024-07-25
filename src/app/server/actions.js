@@ -716,6 +716,7 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
 
     currentQuiz = res.rows[0]
   } catch (e) {
+    console.log('error connect to db ' + e.stack)
     console.error(e.stack)
   } finally {
     client.end()

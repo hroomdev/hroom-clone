@@ -76,10 +76,13 @@ export const DashboardBuilder = () => {
     })
 
     await currentQuizTimeStart().then(data => {
+      console.log('currentQuizTimeStart data : DashboardBuidler ' + data)
       currentQuizStarts = new Date(data)
-
+      console.log('currentQuizStarts data : DashboardBuidler ' + currentQuizStarts)
       curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
+      console.log('curToNow data : DashboardBuidler ' + curToNow)
       nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
+      console.log('nowToNext data : DashboardBuidler ' + nowToNext)
     })
 
     //console.log('-------------')

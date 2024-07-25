@@ -15,7 +15,7 @@ import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
 import handleChange from './SelectAnswerHandler.jsx'
-import ratingMax from './../../../app/server/const.jsx'
+import { ratingMax } from './../../../app/server/const.jsx'
 
 const stepSize = 1
 let initialMarks = [

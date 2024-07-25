@@ -1,4 +1,4 @@
-import ratingMax from './../../../app/server/const.jsx'
+import { ratingMax } from './../../../app/server/const.jsx'
 
 const handleChange = (selectedOptions, activeStep, answersCount, answerId) => {
   //console.log(

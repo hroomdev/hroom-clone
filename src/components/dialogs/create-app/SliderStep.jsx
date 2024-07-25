@@ -15,7 +15,7 @@ import handleChange from './SelectAnswerHandler.jsx'
 
 const stepSize = 10
 
-import ratingMax from './../../../app/server/const.jsx'
+import { ratingMax } from './../../../app/server/const.jsx'
 
 let initialMarks = [
   {
