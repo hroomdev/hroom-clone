@@ -23,17 +23,7 @@ import { db as faqData } from '@/fake-db/pages/faq'
 import { db as pricingData } from '@/fake-db/pages/pricing'
 import { db as statisticsData } from '@/fake-db/pages/widget-examples'
 import { db as questionsData } from '@/fake-db/pages/quiz'
-import {
-  dbQuizAuditoryIdx,
-  dbQuizGroupGroupIdx,
-  dbQuizGroupTypeIdx,
-  dbQuizIdIdx,
-  dbQuizTimeStartEIdx,
-  dbQuizTimeStartSIdx,
-  dbQuizTypeIdx,
-  dbSelectedAnswersIdIdx,
-  dbSelectedAnswersSelectedOptionsIdx
-} from './dbMapping'
+import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
 
 import { ratingMax } from './const'
 
@@ -42,6 +32,7 @@ const { Client } = require('pg')
 //todo: refactor current.... to by id etc
 
 //also import questiontype
+
 export const createSelectedAnswersCurrentQuiz = async selectedOptionsStr => {
   let client = new Client({
     user: 'gen_user',
@@ -436,10 +427,12 @@ export const getQuestData = async () => {
 export const getCurrentQuizTimeStart = async () => {
   let currentQuiz = await getCurrentQuiz()
 
-  console.log('getCurrentQuizTimeStart ' + currentQuiz + ' : actions.js')
+  console.log('currentQuiz ' + currentQuiz + ' : actions.js')
   var splittedStr = currentQuiz.toString().split(',')
+  var timeStartIdx = await dbQuizTimeStartSIdx()
+  var currentQuizTimeStart = Date.parse(splittedStr[timeStartIdx])
 
-  var currentQuizTimeStart = Date.parse(splittedStr[dbQuizTimeStartSIdx] + splittedStr[dbQuizTimeStartEIdx])
+  console.log('parsed getCurrentQuizTimeStart ' + currentQuizTimeStart + ' : actions.js')
 
   return currentQuizTimeStart
 }
@@ -473,7 +466,8 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, cohortsD
   let quiz = await getQuizOrderByIdDesc(1, 0)
 
   var quizSplittedStr = quiz.toString().split(',')
-  var quizGroupId = quizSplittedStr[dbQuizTypeIdx]
+  var quizTypeIdx = await dbQuizTypeIdx()
+  var quizGroupId = quizSplittedStr[quizTypeIdx]
 
   //console.log('quizGroupId ' + quizGroupId)
   let quizGroupType = await getQuestGroupTypeBy(quizGroupId)
@@ -500,8 +494,8 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, cohortsD
   var quizMaxRating = quizCountQuestions * ratingMax //b
 
   //console.log('quizMaxRating ' + quizMaxRating)
-
-  let quizId = quizSplittedStr[dbQuizIdIdx]
+  var quizIdIdx = await dbQuizIdIdx()
+  let quizId = quizSplittedStr[quizIdIdx]
 
   //console.log('quizId ' + quizId)
 
@@ -531,8 +525,8 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, cohortsD
     var selectedAnswerSplittedStr = selectedAnswer.toString().split(',')
 
     //console.log('selectedAnswerSplittedStr ' + selectedAnswerSplittedStr)
-
-    var selectedAnswerId = selectedAnswerSplittedStr[dbSelectedAnswersIdIdx]
+    var selectedAnswersIdx = await dbSelectedAnswersIdIdx()
+    var selectedAnswerId = selectedAnswerSplittedStr[selectedAnswersIdx]
 
     //console.log('selectedAnswerId ' + selectedAnswerId)
 
@@ -606,8 +600,10 @@ export const getCurrentQuizIdAudi = async () => {
 
     for (var i = 0; i < splittedStr.length; i++) {}
 
-    var currentQuizId = Number.parseInt(splittedStr[dbQuizIdIdx])
-    var currentQuizAuditory = Number.parseInt(splittedStr[dbQuizAuditoryIdx])
+    var quizIdIdx = await dbQuizIdIdx()
+    var currentQuizId = Number.parseInt(splittedStr[quizIdIdx])
+    var auditoryIdx = await dbQuizAuditoryIdx()
+    var currentQuizAuditory = Number.parseInt(splittedStr[auditoryIdx])
   } catch (e) {
     console.error(e.stack)
   } finally {
@@ -716,7 +712,7 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
     var res = await client.query(queryCurrentQuizId)
 
     currentQuiz = res.rows[0]
-    console.log('res res.rows[0] ' + res.rows.length)
+    console.log('res res.rows[0] ' + res.rows[0])
   } catch (e) {
     console.log('error connect to db ' + e.stack)
     console.error(e.stack)

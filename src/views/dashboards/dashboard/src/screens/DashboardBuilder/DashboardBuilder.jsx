@@ -29,9 +29,7 @@ import './style.css'
 import {
   getCurrentQuizAuditory as currentQuizPassAll,
   getCurrentQuizTimeStart as currentQuizTimeStart,
-  getCurrentQuiz,
-  getCurrentQuizEngageCohort,
-  getQuizOrderByIdDesc
+  getCurrentQuizEngageCohort
 } from '@/app/server/actions'
 
 import { useInterval } from './useInterval'

@@ -1,17 +1,41 @@
+const locale = Intl.DateTimeFormat().resolvedOptions().locale
+
+console.log('locale' + locale)
+
 //layout db public.quiz columns indexes
-export const dbQuizIdIdx = 0
-export const dbQuizCreatedAtSIdx = 1
-export const dbQuizCreatedAtEIdx = 2
-export const dbQuizTypeIdx = 3
-export const dbQuizTimeStartSIdx = 4
-export const dbQuizTimeStartEIdx = 5
-export const dbQuizAuditoryIdx = 6
+export const dbQuizIdIdx = async () => {
+  return locale.toString().includes('RU') ? 0 : 0
+}
+
+export const dbQuizCreatedAtSIdx = async () => {
+  return locale.toString().includes('RU') ? 1 : 1
+}
+
+export const dbQuizTypeIdx = async () => {
+  return locale.toString().includes('RU') ? 3 : 2
+}
+
+export const dbQuizTimeStartSIdx = async () => {
+  return locale.toString().includes('RU') ? 4 : 3
+}
+
+export const dbQuizAuditoryIdx = async () => {
+  return locale.toString().includes('RU') ? 6 : 4
+}
 
 //layout db public.question-groups columns indexes breaks after 3-group using separator ,
-export const dbQuizGroupIdIdx = 0
-export const dbQuizGroupCreatedAtSIdx = 1
-export const dbQuizGroupCreatedAtEIdx = 2
-export const dbQuizGroupGroupIdx = 3
+export const dbQuizGroupIdIdx = async () => {
+  return locale.toString().includes('RU') ? 0 : 0
+}
 
-//layout db public.selectedAnswers  breaks after 3-group using separator ,
-export const dbSelectedAnswersIdIdx = 0
+export const dbQuizGroupCreatedAtSIdx = async () => {
+  return locale.toString().includes('RU') ? 1 : 1
+}
+
+export const dbQuizGroupGroupIdx = async () => {
+  return locale.toString().includes('RU') ? 3 : 2
+}
+
+export const dbSelectedAnswersIdIdx = async () => {
+  return locale.toString().includes('RU') ? 0 : 0
+}
