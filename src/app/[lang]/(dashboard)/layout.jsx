@@ -26,7 +26,9 @@ import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 const Layout = async ({ children, params }) => {
   // Vars
   const direction = i18n.langDirection[params.lang]
-  const dictionary = await getDictionary(params.lang)
+
+  var dictionary = await getDictionary(params.lang)
+
   const mode = getMode()
   const systemMode = getSystemMode()
 
@@ -34,7 +36,7 @@ const Layout = async ({ children, params }) => {
   //  menu top aligned
   //navbar={<Navbar />}
 
-  console.log('mode ' + mode + 'system  ode' + systemMode)
+  console.log('mode ' + mode + 'system  ode' + systemMode + 'paramslang' + params.lang)
 
   return (
     <Providers direction={direction}>

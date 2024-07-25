@@ -9,11 +9,13 @@ import Grid from '@mui/material/Grid'
 import OptionMenu from '@core/components/option-menu'
 import CustomAvatar from '@core/components/mui/Avatar'
 
+import { metricsru } from './screens/DashboardBuilder/Metrics'
+
 // Vars
 const data = [
   {
     stats: '5.1',
-    title: 'Удовлетворенность',
+    title: 'satisfaction',
     color: 'warning-opacity-light',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
@@ -21,7 +23,7 @@ const data = [
   },
   {
     stats: '12.5',
-    title: 'Лояльность',
+    title: 'ambassadorship',
     color: 'success-opacity-light',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
@@ -30,7 +32,7 @@ const data = [
   {
     stats: '6.3',
     color: 'error-opacity-light',
-    title: 'Счастье',
+    title: 'happiness',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
@@ -38,7 +40,7 @@ const data = [
   {
     stats: '7.7',
     color: 'error-opacity-light',
-    title: 'Отношения с руководителем',
+    title: 'relationshipWithManager',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
@@ -46,7 +48,7 @@ const data = [
   {
     stats: '7.7',
     color: 'success-opacity-light',
-    title: 'Самочувствие',
+    title: 'wellness',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
     diff: '0.4'
@@ -54,7 +56,7 @@ const data = [
   {
     stats: '7.7',
     color: 'success-opacity-light',
-    title: 'Отношения с коллегами',
+    title: 'relationshipWithPeers',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
     diff: '0.4'
@@ -62,7 +64,7 @@ const data = [
   {
     stats: '7.7',
     color: 'warning-opacity-light',
-    title: 'Личностный рост',
+    title: 'personalGrowth',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
     diff: '1'
@@ -70,7 +72,7 @@ const data = [
   {
     stats: '7.7',
     color: 'warning-opacity-light',
-    title: 'Согласованность',
+    title: 'alignment',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
     diff: '1'
@@ -78,7 +80,7 @@ const data = [
   {
     stats: '7.7',
     color: 'error-opacity-light',
-    title: 'Признание',
+    title: 'recognition',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
@@ -86,7 +88,7 @@ const data = [
   {
     stats: '7.7',
     color: 'error-opacity-light',
-    title: 'Обратная связь',
+    title: 'feedback',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
@@ -113,11 +115,13 @@ const DashboardTransactions = () => {
                       <img className='vector' alt='Vector' src={item.icon2} />
                     </Grid>
                     <Grid item xs='auto'>
-                      <div className='percentage'>{item.diff}</div>
+                      <div className='percentage' style={{ color: '#56ca00' }}>
+                        {item.diff}
+                      </div>
                     </Grid>
                     <Grid item xs={12}>
                       {' '}
-                      <Typography>{item.title}</Typography>
+                      <Typography>{metricsru[item.title]}</Typography>
                     </Grid>
                   </Grid>
                 </div>

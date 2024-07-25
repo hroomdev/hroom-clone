@@ -13,12 +13,13 @@ import ruLocale from 'date-fns/locale/ru'
 
 import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
 import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
+import TeamsTransactions from '@views/dashboards/dashboard/src/TeamsTransactions'
+import DashboardBarChart from '@views/dashboards/dashboard/src/DashboardBarChart'
+import DashboardHeatmapChart from '@views/dashboards/dashboard/src/DashboardHeatmapChart'
 
 import ProgressLinearWithLabel from '../../ProgressLinearWithLabel'
-import { SelectCustome } from '../../components/SelectCustome'
 import { TotalRevenue } from '../../components/TotalRevenue'
 
-//import { Transactions } from '../../components/Transactions'
 import { Icon13 } from '../../icons/Icon13'
 import { RemixIconsLineMapCarLine3 } from '../../icons/RemixIconsLineMapCarLine3'
 import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineSystemArrowRightLine1'
@@ -29,7 +30,9 @@ import {
   getCurrentQuizAuditory as currentQuizPassAll,
   getCurrentQuizTimeStart as currentQuizTimeStart
 } from '@/app/server/actions'
+
 import { useInterval } from './useInterval'
+import { metricsru } from './Metrics'
 
 const intervalDataUpd = 10000
 var participationPercent = 0
@@ -45,6 +48,8 @@ const options = {
   month: 'long',
   day: 'numeric'
 }
+
+var selectedMetricByTeam = 'engagement'
 
 export const DashboardBuilder = () => {
   const router = useRouter()
@@ -255,155 +260,77 @@ export const DashboardBuilder = () => {
             </div>
           </div>
           <div className='row-2'>
-            <div className='transactions-5'>
-              <div className='card-header'>
-                <SelectCustome
-                  className='select-custome-instance'
-                  hasFormLabel={false}
-                  inputText='Воволечённость'
-                  inputTextClassName='select-custome-2'
-                  showSupportingText={false}
-                  size='m'
-                  stateProp='default'
-                  textConfigurations='input-text'
-                />
-              </div>
-              <div className='body-wrapper'>
-                <div className='body-3'>
-                  <div className='div-7'>
-                    <div className='div-8'>
-                      <div className='ellipse-3' />
-                      <div className='text-wrapper-13'>Аналитика</div>
+            <Grid container spacing={6} flex>
+              <Grid item xs='auto'>
+                <TeamsTransactions />
+              </Grid>
+              <Grid item xs={5}>
+                <DashboardBarChart />
+              </Grid>
+              <Grid item xs>
+                <div className='col'>
+                  <div className='frame-10'>
+                    <div className='card-3'>
+                      <div className='frame-11'>
+                        <p className='text-11'>Улучшите обратную связь от руководства для повышения вовлеченности</p>
+                      </div>
+                      <div className='div-7'>
+                        <div className='row-7'>
+                          <div className='chip-label'>
+                            <div className='text-wrapper-12'>критично</div>
+                          </div>
+                          <div className='text-10'>Продажи</div>
+                        </div>
+                      </div>
                     </div>
-                    <div className='stats-2'>
-                      <div className='text-wrapper-14'>6.1</div>
-                      <Icon13 className='icon-instance-node-2' color='#56CA00' />
-                      <div className='percentage-3'>1.6</div>
+                    <div className='card-3'>
+                      <div className='frame-11'>
+                        <p className='text-11'>Усильте внутреннюю коммуникацию и прозрачность решений.</p>
+                      </div>
+                      <div className='div-7'>
+                        <div className='row-7'>
+                          <div className='chip-label'>
+                            <div className='text-wrapper-12'>критично</div>
+                          </div>
+                          <div className='text-10'>Финансы</div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className='div-7'>
-                    <div className='div-8'>
-                      <div className='ellipse-3' />
-                      <div className='text-wrapper-13'>Внутренние продажи</div>
+                    <div className='card-4'>
+                      <div className='frame-11'>
+                        <p className='text-11'>
+                          Сотрудники отдела разработки <br />
+                          высоко ценят возможности профессионального роста, но испытывают недостаток обратной связи от
+                          руководства.
+                        </p>
+                      </div>
+                      <div className='div-7'>
+                        <div className='row-7'>
+                          <div className='chip-label'>
+                            <div className='text-wrapper-12'>критично</div>
+                          </div>
+                          <div className='text-10'>Разработка</div>
+                        </div>
+                      </div>
                     </div>
-                    <div className='stats-2'>
-                      <div className='text-wrapper-14'>5.2</div>
-                      <Icon13 className='icon-instance-node-2' color='#56CA00' />
-                      <div className='percentage-3'>1</div>
-                    </div>
-                  </div>
-                  <div className='div-7'>
-                    <div className='div-8'>
-                      <div className='ellipse-3' />
-                      <div className='text-wrapper-13'>Исследования</div>
-                    </div>
-                    <div className='stats-2'>
-                      <div className='text-wrapper-14'>6.7</div>
-                      <Icon13 className='icon-instance-node-2' color='#56CA00' />
-                      <div className='percentage-3'>1.2</div>
-                    </div>
-                  </div>
-                  <div className='div-7'>
-                    <div className='div-8'>
-                      <div className='ellipse-3' />
-                      <div className='text-wrapper-13'>Маркетинг</div>
-                    </div>
-                    <div className='stats-2'>
-                      <div className='text-wrapper-14'>6.3</div>
-                      <Icon13 className='icon-instance-node-2' color='#56CA00' />
-                      <div className='percentage-3'>1.5</div>
-                    </div>
-                  </div>
-                  <div className='div-7'>
-                    <div className='div-8'>
-                      <div className='ellipse-3' />
-                      <div className='text-wrapper-13'>Бэкофис</div>
-                    </div>
-                    <div className='stats-2'>
-                      <div className='text-wrapper-14'>5.4</div>
-                      <Icon13 className='icon-instance-node-2' color='#56CA00' />
-                      <div className='percentage-3'>0.8</div>
-                    </div>
-                  </div>
-                  <div className='div-7'>
-                    <div className='div-8'>
-                      <div className='ellipse-3' />
-                      <div className='text-wrapper-13'>Администрация</div>
-                    </div>
-                    <div className='stats-2'>
-                      <div className='text-wrapper-14'>5.4</div>
-                      <Icon13 className='icon-instance-node-2' color='#56CA00' />
-                      <div className='percentage-3'>0.8</div>
-                    </div>
-                  </div>
-                  <div className='data-2'>
-                    <div className='div-8'>
-                      <div className='ellipse-3' />
-                      <div className='text-wrapper-13'>Ещё одна команда</div>
-                    </div>
-                    <div className='stats-2'>
-                      <div className='text-wrapper-14'>5.4</div>
-                      <Icon13 className='icon-instance-node-2' color='#56CA00' />
-                      <div className='percentage-3'>0.8</div>
+                    <div className='icon-4'>
+                      <RemixIconsLineMapCarLine3 className='icon-instance-node-2' color='#B29DF8' />
+                      <div className='text-5'>Все советы</div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <img className='chart-4' alt='Chart' src='/static/img/chart-7.png' />
-            <div className='frame-10'>
-              <div className='card-3'>
-                <div className='frame-11'>
-                  <p className='text-11'>Улучшите обратную связь от руководства для повышения вовлеченности</p>
-                </div>
-                <div className='div-7'>
-                  <div className='row-7'>
-                    <div className='chip-label'>
-                      <div className='text-wrapper-12'>критично</div>
-                    </div>
-                    <div className='text-10'>Продажи</div>
-                  </div>
-                </div>
-              </div>
-              <div className='card-3'>
-                <div className='frame-11'>
-                  <p className='text-11'>Усильте внутреннюю коммуникацию и прозрачность решений.</p>
-                </div>
-                <div className='div-7'>
-                  <div className='row-7'>
-                    <div className='chip-label'>
-                      <div className='text-wrapper-12'>критично</div>
-                    </div>
-                    <div className='text-10'>Финансы</div>
-                  </div>
-                </div>
-              </div>
-              <div className='card-4'>
-                <div className='frame-11'>
-                  <p className='text-11'>
-                    Сотрудники отдела разработки <br />
-                    высоко ценят возможности профессионального роста, но испытывают недостаток обратной связи от
-                    руководства.
-                  </p>
-                </div>
-                <div className='div-7'>
-                  <div className='row-7'>
-                    <div className='chip-label'>
-                      <div className='text-wrapper-12'>критично</div>
-                    </div>
-                    <div className='text-10'>Разработка</div>
-                  </div>
-                </div>
-              </div>
-              <div className='icon-4'>
-                <RemixIconsLineMapCarLine3 className='icon-instance-node-2' color='#B29DF8' />
-                <div className='text-5'>Все советы</div>
-              </div>
-            </div>
+              </Grid>
+            </Grid>
+
+            {/*<img className='chart-4' alt='Chart' src='/static/img/chart-7.png' />*/}
           </div>
-          <div className='row-2'>
-            <img className='chart-5' alt='Chart' src='/static/img/chart.png' />
-          </div>
+
+          <Grid container spacing={6} flex>
+            <Grid item xs='12'>
+              <DashboardHeatmapChart />
+            </Grid>
+          </Grid>
+
           <div className='row-2'>
             <div className='card-5'>
               <div className='body-4'>

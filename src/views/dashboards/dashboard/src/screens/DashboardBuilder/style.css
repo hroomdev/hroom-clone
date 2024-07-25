@@ -1,3 +1,9 @@
+#infoi {
+  padding-left: 25%;
+  padding-top: 25%;
+  z-index: 10;
+}
+
 .dashboard-builder {
   align-items: flex-start;
   background-color: #f4f5fa;
