@@ -436,6 +436,7 @@ export const getQuestData = async () => {
 export const getCurrentQuizTimeStart = async () => {
   let currentQuiz = await getCurrentQuiz()
 
+  console.log('getCurrentQuizTimeStart ' + currentQuiz + ' : actions.js')
   var splittedStr = currentQuiz.toString().split(',')
 
   var currentQuizTimeStart = Date.parse(splittedStr[dbQuizTimeStartSIdx] + splittedStr[dbQuizTimeStartEIdx])
@@ -715,6 +716,7 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
     var res = await client.query(queryCurrentQuizId)
 
     currentQuiz = res.rows[0]
+    console.log('res res.rows[0] ' + res.rows.length)
   } catch (e) {
     console.log('error connect to db ' + e.stack)
     console.error(e.stack)
@@ -723,6 +725,8 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
 
     return currentQuiz
   }
+
+  console.log('get QUIZZ RETURN no result ' + currentQuiz + '')
 }
 
 export const getCurrentQuiz = async () => {
