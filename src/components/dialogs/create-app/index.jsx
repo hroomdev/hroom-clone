@@ -48,13 +48,9 @@ import StepperWrapper from '@core/styles/stepper'
 
 import { getQuestData as dbData, createQuiz, createSelectedAnswersCurrentQuiz } from '@/app/server/actions'
 
-var format = require('date-format')
-
 const initialSteps = 0
 
 let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-
-//let selectedOptions = [4, 5, 5, 5, 5, 5, 3, 3, 3, 1, 2] //test data
 
 const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, handlePrev, questionType, setTitle) => {
   const Tag = questionType.includes('dots')
@@ -224,9 +220,6 @@ const CreateApp = ({ open, setOpen }) => {
     })
 
     //let b = await makeOPENCHATAIGetRequest(prompt)
-    //test db createQuiz
-    //var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, new Date())
-    //let c = await createQuiz(formatted, '2', '3')
   }
 
   useEffect(() => {
@@ -288,11 +281,11 @@ const CreateApp = ({ open, setOpen }) => {
         let prompt = qaArray.join('/n')
 
         //test db
-        let selectedOptionsStr = selectedOptions.join(',')
 
-        let c = await createSelectedAnswersCurrentQuiz(selectedOptionsStr)
+        let optionsStr = selectedOptions.join(',')
+        let c = await createSelectedAnswersCurrentQuiz(optionsStr)
 
-        console.log('selected answers   ' + c)
+        console.log('selected options   ' + c)
 
         //let b = await makeOPENCHATAIGetRequest(prompt)
       })

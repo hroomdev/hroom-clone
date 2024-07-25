@@ -12,7 +12,9 @@ import Typography from '@mui/material/Typography'
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
-const DashboardRadialBarChart = () => {
+import { binaryFormat } from './../../../../app/server/const'
+
+const DashboardRadialBarChart = ({ stats }) => {
   const radialBarColors = {
     series1: '#56ca00',
     series2: 'rgba(255, 195, 51, 1)',
@@ -20,7 +22,12 @@ const DashboardRadialBarChart = () => {
     series4: 'rgba(138, 141, 147, 0.38)'
   }
 
-  const series = [22, 25, 21, 32]
+  var series = [
+    Math.round(stats[1].toString(binaryFormat)),
+    Math.round(stats[2].toString(binaryFormat)),
+    Math.round(stats[3].toString(binaryFormat)),
+    Math.round(stats[4].toString(binaryFormat))
+  ]
 
   const options = {
     labels: ['Вовлеченные', 'Слабо вовлеченные', 'Невовлеченные', 'Пропустили'],

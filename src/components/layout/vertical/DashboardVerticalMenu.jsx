@@ -20,12 +20,18 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
+import generateDates from '../../dialogs/create-app/GenerateDates'
+
+import { createSelectedAnswersCurrentQuiz, createQuiz } from '@/app/server/actions'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
     <i className='ri-arrow-right-s-line' />
   </StyledVerticalNavExpandIcon>
 )
+
+var format = require('date-format')
 
 const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
   // Hooks
@@ -74,13 +80,39 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           {dictionary['navigation'].analytics}
         </MenuItem>
         <MenuItem
-          href={`${process.env.NEXT_PUBLIC_DOCS_URL}/docs/menu-examples/overview`}
           target='_blank'
           icon={<i className='ri-star-smile-line' />}
+          onClick={async () => {
+            console.log('onclick menuitem')
+            var generatedOptions = generateOptions(20, 10)
+            let optionsStr = generatedOptions.join(',')
+            let c = await createSelectedAnswersCurrentQuiz(optionsStr)
+
+            console.log('options   ' + c)
+          }}
         >
           {dictionary['navigation'].ideas}
         </MenuItem>
-        <MenuItem href='https://themeselection.com/support' target='_blank' icon={<i className='ri-wechat-line' />}>
+        <MenuItem
+          icon={<i className='ri-wechat-line' />}
+          onClick={async () => {
+            var randomDayNum = 6 + getRandomInt(15) //[7,21]
+
+            console.log(' randomDayNum  ' + randomDayNum)
+
+            const dates = generateDates(new Date(2023, 11, randomDayNum), new Date(2023, 11, randomDayNum + 7), 1)
+            const date = dates[0]
+
+            console.log(date)
+
+            var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, date)
+            var quizTypeId = '1'
+            var auditory = '300'
+            let c = await createQuiz(formatted, quizTypeId, auditory)
+
+            console.log('create quiz result ' + c)
+          }}
+        >
           {dictionary['navigation'].commentaries}
         </MenuItem>
         <MenuItem href={`/${locale}/pages/dialog-examples`} icon={<i className='ri-calendar-line' />}>

@@ -15,6 +15,8 @@ import handleChange from './SelectAnswerHandler.jsx'
 
 const stepSize = 10
 
+import ratingMax from './../../../app/server/const.jsx'
+
 let initialMarks = [
   {
     value: 0,
@@ -158,14 +160,14 @@ const SliderStepNew = ({
     <div className='flex flex-col gap-10 '>
       <Slider
         marks
-        defaultValue={50}
+        defaultValue={ratingMax * 5}
         valueLabelDisplay='on'
         getAriaValueText={value => {
           return `${value}`
         }}
         aria-labelledby='label-always-visible-slider'
         onChangeCommitted={(mouseEvent, value) => {
-          handleChange(selectedOptions, activeStep, 100, value)
+          handleChange(selectedOptions, activeStep, ratingMax * 10, value)
         }}
       ></Slider>
       <div className='flex items-center justify-between'>

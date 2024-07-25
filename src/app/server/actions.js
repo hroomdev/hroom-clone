@@ -23,8 +23,23 @@ import { db as faqData } from '@/fake-db/pages/faq'
 import { db as pricingData } from '@/fake-db/pages/pricing'
 import { db as statisticsData } from '@/fake-db/pages/widget-examples'
 import { db as questionsData } from '@/fake-db/pages/quiz'
+import {
+  dbQuizAuditoryIdx,
+  dbQuizGroupGroupIdx,
+  dbQuizGroupTypeIdx,
+  dbQuizIdIdx,
+  dbQuizTimeStartEIdx,
+  dbQuizTimeStartSIdx,
+  dbQuizTypeIdx,
+  dbSelectedAnswersIdIdx,
+  dbSelectedAnswersSelectedOptionsIdx
+} from './dbMapping'
+
+import { ratingMax } from './const'
 
 const { Client } = require('pg')
+
+//todo: refactor current.... to by id etc
 
 //also import questiontype
 export const createSelectedAnswersCurrentQuiz = async selectedOptionsStr => {
@@ -58,7 +73,7 @@ export const createSelectedAnswersCurrentQuiz = async selectedOptionsStr => {
   await client
     .query(query) // your query string here
     .then(result => {
-      r = result
+      r = result.rows[0]
       console.log(result)
     }) // your callback here
     .catch(e => console.error(e.stack)) // your callback here
@@ -88,11 +103,17 @@ export const createQuiz = async (timeStart, type, auditory) => {
     values: values
   }
 
+  var res = ''
+
   await client
     .query(query) // your query string here
-    .then(result => console.log(result)) // your callback here
+    .then(result => {
+      res = result.rows[0]
+    }) // your callback here
     .catch(e => console.error(e.stack)) // your callback here
     .then(() => client.end())
+
+  return res
 }
 
 export const getEcommerceData = async () => {
@@ -135,7 +156,37 @@ export const getStatisticsData = async () => {
   return statisticsData
 }
 
-const getQuestGroup = async questionGroupId => {
+export const getQuestionGroupsBy = async groupId => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryGroup = {
+    text: 'SELECT * FROM "public"."question-groups" WHERE "public"."question-groups"."id" != 0',
+    rowMode: 'array'
+  }
+
+  var resultQuestionGroup = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryGroup)
+
+    resultQuestionGroup = res.rows[groupId - 1] //id of a row less then id of any table by one
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return resultQuestionGroup
+}
+
+export const getQuestGroupGroupBy = async groupId => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -155,7 +206,37 @@ const getQuestGroup = async questionGroupId => {
     await client.connect()
     var res = await client.query(queryGroup)
 
-    resultQuestionGroup = res.rows[questionGroupId - 1]
+    resultQuestionGroup = res.rows[groupId - 1] //id of a row less then id of any table by one
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return resultQuestionGroup
+}
+
+export const getQuestGroupTypeBy = async groupId => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryGroup = {
+    text: 'SELECT "public"."question-groups"."type" FROM "public"."question-groups" WHERE "public"."question-groups"."id" != 0',
+    rowMode: 'array'
+  }
+
+  var resultQuestionGroup = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryGroup)
+
+    resultQuestionGroup = res.rows[groupId - 1] //id of a row less then id of any table by one
   } catch (e) {
     console.error(e.stack)
   } finally {
@@ -291,11 +372,11 @@ const getAnswers = async (questionIdsNums, types) => {
 export const getQuestData = async () => {
   //values for questionGroups is 'A' column here https://docs.google.com/spreadsheets/d/1TbnTMajgWkNOg1-ZeRZJbNwVyfLDTQufz9aYtWjmDAw/edit?gid=1027310322#gid=1027310322
   //data layout @/fake-db/pages/quiz' questionsData
-
+  const maxQuestGroupId = 2
   var quizQuestions = []
 
-  for (var id = 1; id <= 2; id++) {
-    var resultQuestionGroup = await getQuestGroup(id)
+  for (var questionGroupId = 1; questionGroupId <= maxQuestGroupId; questionGroupId++) {
+    var resultQuestionGroup = await getQuestGroupGroupBy(questionGroupId)
 
     var splittedStr = resultQuestionGroup.toString().split(',')
 
@@ -355,11 +436,9 @@ export const getQuestData = async () => {
 export const getCurrentQuizTimeStart = async () => {
   let currentQuiz = await getCurrentQuiz()
 
-  var currentQuizTimeStart = -1
-
   var splittedStr = currentQuiz.toString().split(',')
 
-  currentQuizTimeStart = Date.parse(splittedStr[4])
+  var currentQuizTimeStart = Date.parse(splittedStr[dbQuizTimeStartSIdx] + splittedStr[dbQuizTimeStartEIdx])
 
   return currentQuizTimeStart
 }
@@ -370,24 +449,164 @@ export const getCurrentQuizAuditory = async () => {
   let currentQuizId = currentQuizIdAudi[0]
   let currentQuizAudi = currentQuizIdAudi[1]
 
-  var countSelectedAnswersIds = await getSelectedAnswersIdsCountBy(currentQuizId)
+  var selectedAnswers = await getSelectedAnswersBy(currentQuizId)
 
-  return [countSelectedAnswersIds, currentQuizAudi]
+  return [selectedAnswers.length, currentQuizAudi]
+}
+
+export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, cohortsDistributionPercents) => {
+  //if (cohortsLevelsPercents.length != 3) {
+  //  throw 'ERROR coohorts percent levels MUST BE THREE NOT LOW HIGH '
+  //}
+  //
+  //if (cohortsDistributionPercents.length != cohortsLevelsPercents.length) {
+  //  throw (
+  //    'ERROR coohorts distribution percent levels MUST BE same as levelspercent  which is ' +
+  //    cohortsLevelsPercents.length
+  //  )
+  //}
+
+  console.log(cohortsLevelsPercents.length)
+  console.log(cohortsDistributionPercents.length)
+
+  let quiz = await getQuizOrderByIdDesc(1, 0)
+
+  var quizSplittedStr = quiz.toString().split(',')
+  var quizGroupId = quizSplittedStr[dbQuizTypeIdx]
+
+  //console.log('quizGroupId ' + quizGroupId)
+  let quizGroupType = await getQuestGroupTypeBy(quizGroupId)
+
+  //console.log('quizGroupType ' + quizGroupType)
+  //console.log('quizGroupType len' + quizGroupType.length)
+
+  var quizTypeQuest = quizGroupType.toString().split('-') //   month-20q-1m
+
+  //console.log('quizTypeQuest ' + quizTypeQuest)
+
+  var quizTypeQuestNumSepar = quizTypeQuest[1].toString() //
+
+  //console.log('quizTypeQuestNumSepar ' + quizTypeQuestNumSepar)
+
+  var quizTypeQuestNumStr = quizTypeQuestNumSepar.substring(0, quizTypeQuestNumSepar.length - 1)
+
+  //console.log('quizTypeQuestNumStr ' + quizTypeQuestNumStr)
+
+  var quizCountQuestions = Number.parseInt(quizTypeQuestNumStr) //a
+
+  //console.log('quizCountQuestions ' + quizCountQuestions)
+
+  var quizMaxRating = quizCountQuestions * ratingMax //b
+
+  //console.log('quizMaxRating ' + quizMaxRating)
+
+  let quizId = quizSplittedStr[dbQuizIdIdx]
+
+  //console.log('quizId ' + quizId)
+
+  var selectedAnswers = await getSelectedAnswersBy(quizId)
+
+  //console.log('selectedAnswers ' + selectedAnswers)
+
+  var countParticipators = selectedAnswers.length //c
+
+  //console.log('countParticipators ' + countParticipators)
+
+  var quizSelectedAnswersInCohortNot = 0 //dnot
+  var quizSelectedAnswersInCohortLow = 0 //dlow
+  var quizSelectedAnswersInCohortHigh = 0 //dhigh
+
+  if (countParticipators <= 0) {
+    cohortsDistributionPercents[0] = 0
+    cohortsDistributionPercents[1] = 0
+    cohortsDistributionPercents[2] = 0
+
+    return cohortsDistributionPercents
+  }
+
+  const CountCohort = async selectedAnswer => {
+    //console.log('selectedAnswer ' + selectedAnswer)
+
+    var selectedAnswerSplittedStr = selectedAnswer.toString().split(',')
+
+    //console.log('selectedAnswerSplittedStr ' + selectedAnswerSplittedStr)
+
+    var selectedAnswerId = selectedAnswerSplittedStr[dbSelectedAnswersIdIdx]
+
+    //console.log('selectedAnswerId ' + selectedAnswerId)
+
+    var selectedOptions = await getSelectedOptions(selectedAnswerId)
+
+    var selectedOptionsSplittedStr = selectedOptions.toString().split(',')
+
+    //console.log('selectedOptionsSplittedStr leng ' + selectedOptionsSplittedStr.length)
+
+    var selectedAnswersSummOptions = selectedOptionsSplittedStr
+      .map(str => Number.parseInt(str))
+      .reduce((accumulator, currentValue) => {
+        return accumulator + currentValue
+      }, 0)
+
+    //console.log('selectedAnswersSummOptions  ' + selectedAnswersSummOptions)
+
+    var ratingQuizPercentInt = (selectedAnswersSummOptions / quizMaxRating) * 100 //f
+
+    //console.log(
+    //  '   ratingQuizPercentInt ' +
+    //    ratingQuizPercentInt +
+    //    'level 0 ' +
+    //    cohortsLevelsPercents[0] +
+    //    ' level 1 ' +
+    //    cohortsLevelsPercents[1]
+    //)
+
+    //33 66
+    if (ratingQuizPercentInt <= cohortsLevelsPercents[0]) {
+      quizSelectedAnswersInCohortNot = quizSelectedAnswersInCohortNot + 1
+
+      //console.log('   not  ++' + quizSelectedAnswersInCohortNot)
+    } else if (ratingQuizPercentInt <= cohortsLevelsPercents[1]) {
+      quizSelectedAnswersInCohortLow = quizSelectedAnswersInCohortLow + 1
+
+      //console.log('   low  ++' + quizSelectedAnswersInCohortLow)
+    } else {
+      quizSelectedAnswersInCohortHigh = quizSelectedAnswersInCohortHigh + 1
+
+      //console.log('   high  ++' + quizSelectedAnswersInCohortHigh)
+    }
+  }
+
+  for (var i = 0; i < selectedAnswers.length; i++) {
+    var selectedAnswer = selectedAnswers[i]
+
+    await CountCohort(selectedAnswer)
+  }
+
+  console.log('   not  ' + quizSelectedAnswersInCohortNot)
+  console.log('   low  ' + quizSelectedAnswersInCohortLow)
+  console.log('   high  ' + quizSelectedAnswersInCohortHigh)
+  console.log('   participators  ' + countParticipators)
+
+  var chpnot = quizSelectedAnswersInCohortNot / countParticipators
+  var chplow = quizSelectedAnswersInCohortLow / countParticipators
+  var chphigh = quizSelectedAnswersInCohortHigh / countParticipators
+
+  console.log('   chpnot  ' + chpnot)
+  console.log('   chplow  ' + chplow)
+  console.log('   chphigh  ' + chphigh)
+
+  return [chpnot * 100, chplow * 100, chphigh * 100]
 }
 
 export const getCurrentQuizIdAudi = async () => {
   try {
     let currentQuiz = await getCurrentQuiz()
-
-    var currentQuizId = -1
-    var currentQuizAuditory = -1
-
     var splittedStr = currentQuiz.toString().split(',')
 
     for (var i = 0; i < splittedStr.length; i++) {}
 
-    currentQuizId = Number.parseInt(splittedStr[0])
-    currentQuizAuditory = Number.parseInt(splittedStr[6])
+    var currentQuizId = Number.parseInt(splittedStr[dbQuizIdIdx])
+    var currentQuizAuditory = Number.parseInt(splittedStr[dbQuizAuditoryIdx])
   } catch (e) {
     console.error(e.stack)
   } finally {
@@ -396,7 +615,7 @@ export const getCurrentQuizIdAudi = async () => {
   return [currentQuizId, currentQuizAuditory]
 }
 
-export const getSelectedAnswersIdsCountBy = async quizId => {
+export const getSelectedAnswersBy = async quizId => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -406,28 +625,75 @@ export const getSelectedAnswersIdsCountBy = async quizId => {
   })
 
   const selectedAnswersIds = {
-    text: 'SELECT "public"."selectedAnswers"."id" FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."quizId" = $1',
+    text: 'SELECT * FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."quizId" = $1',
     values: [quizId],
     rowMode: 'array'
   }
 
-  var selectedAnswersIdsCount = 0
+  var selectedAnswers = []
 
   try {
     await client.connect()
     var res = await client.query(selectedAnswersIds)
 
-    selectedAnswersIdsCount = res.rows.length
+    //console.log('res row length selected answers count :actions.js ' + res.rows.length)
+
+    if (res.rows.length <= 0) {
+      //console.log('noone yet participated in  quizId' + quizId)
+
+      return selectedAnswers
+    }
+
+    selectedAnswers = res.rows
   } catch (e) {
     console.error(e.stack)
   } finally {
     client.end()
   }
 
-  return selectedAnswersIdsCount
+  return selectedAnswers
 }
 
-export const getCurrentQuiz = async () => {
+export const getSelectedOptions = async answersId => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const selectedOptionsQuery = {
+    text: 'SELECT "public"."selectedAnswers"."selectedOptions" FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."id" = $1',
+    values: [answersId],
+    rowMode: 'array'
+  }
+
+  var selectedOptions = ''
+
+  try {
+    await client.connect()
+    var res = await client.query(selectedOptionsQuery)
+
+    //console.log('res row length selected answers count :actions.js ' + res.rows.length)
+
+    if (res.rows.length <= 0) {
+      //console.log('noone yet participated in  quizId' + answersId)
+
+      return selectedOptions
+    }
+
+    selectedOptions = res.rows[0]
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return selectedOptions
+}
+
+export const getQuizOrderByIdDesc = async (limit, offset) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -437,7 +703,8 @@ export const getCurrentQuiz = async () => {
   })
 
   const queryCurrentQuizId = {
-    text: 'SELECT * FROM "public"."quiz" ORDER BY "public"."quiz"."id" DESC LIMIT 1',
+    text: 'SELECT * FROM "public"."quiz" ORDER BY "public"."quiz"."id" DESC LIMIT $1 OFFSET $2',
+    values: [limit, offset],
     rowMode: 'array'
   }
 
@@ -455,4 +722,8 @@ export const getCurrentQuiz = async () => {
 
     return currentQuiz
   }
+}
+
+export const getCurrentQuiz = async () => {
+  return await getQuizOrderByIdDesc(1, 0)
 }

@@ -15,6 +15,7 @@ import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
 import handleChange from './SelectAnswerHandler.jsx'
+import ratingMax from './../../../app/server/const.jsx'
 
 const stepSize = 1
 let initialMarks = [
@@ -99,14 +100,14 @@ const SliderScale = ({
       <Slider
         marks
         min={0}
-        max={9}
+        max={ratingMax - 1}
         step={1}
         defaultValue={0}
         valueLabelDisplay='on'
         getAriaValueText={value => `${value}°C`}
         aria-labelledby='label-always-visible-slider'
         onChangeCommitted={(mouseEvent, value) => {
-          handleChange(selectedOptions, activeStep, 10, value)
+          handleChange(selectedOptions, activeStep, ratingMax, value)
         }}
       ></Slider>
       <div className='flex items-center justify-between'>

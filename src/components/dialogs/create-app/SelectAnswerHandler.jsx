@@ -1,3 +1,5 @@
+import ratingMax from './../../../app/server/const.jsx'
+
 const handleChange = (selectedOptions, activeStep, answersCount, answerId) => {
   //console.log(
   //  ' handleChange' +
@@ -16,7 +18,7 @@ const handleChange = (selectedOptions, activeStep, answersCount, answerId) => {
 
   if (typeof answerId === 'number') {
     //console.log(' prop int ' + answerId)
-    var grade = answerId * (10 / (answersCount - 1))
+    var grade = answerId * (ratingMax / (answersCount - 1))
 
     selectedOptions[activeStep] = grade
 

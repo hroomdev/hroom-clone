@@ -28,7 +28,10 @@ import './style.css'
 
 import {
   getCurrentQuizAuditory as currentQuizPassAll,
-  getCurrentQuizTimeStart as currentQuizTimeStart
+  getCurrentQuizTimeStart as currentQuizTimeStart,
+  getCurrentQuiz,
+  getCurrentQuizEngageCohort,
+  getQuizOrderByIdDesc
 } from '@/app/server/actions'
 
 import { useInterval } from './useInterval'
@@ -42,6 +45,13 @@ var currentQuizStarts = new Date(Date.UTC(2024, 6, 17, 3, 10, 0)) //23 мая 20
 var curToNow = 'неделю'
 var nowToNext = '13 дней'
 var nextQuizStarts = new Date(Date.UTC(2024, 7, 5, 7, 12, 6)) // 3 июня 2024
+var totalRevenueStats = [
+  1.5, // процент изменения с последнего опроса
+  21, // статистика тотал по всем метрикам  вовлеченные
+  26, // статистика тотал по всем метрикам  слабо
+  23, // статистика тотал по всем метрикам  невовлеченные
+  30 // статистика тотал по всем метрикам  пропустили
+]
 
 const options = {
   year: 'numeric',
@@ -59,9 +69,10 @@ export const DashboardBuilder = () => {
       participantsQuizPassed = data[0]
       participantsQuizAll = data[1]
 
-      participationPercent = (participantsQuizPassed / participantsQuizAll) * 100
+      participationPercent = Math.round((participantsQuizPassed / participantsQuizAll) * 100)
       console.log('participationPercent' + participationPercent)
-      router.refresh()
+
+      totalRevenueStats[4] = 100 - participationPercent
     })
 
     await currentQuizTimeStart().then(data => {
@@ -69,8 +80,29 @@ export const DashboardBuilder = () => {
 
       curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
       nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
-      router.refresh()
     })
+
+    //console.log('-------------')
+    var engageTest = [totalRevenueStats[3], totalRevenueStats[2], totalRevenueStats[1]]
+    var cohortsLevelsPercents = [33, 66]
+
+    //engageTest.map(item => console.log(item))
+
+    //console.log('cohorts level percents ' + cohortsLevelsPercents.length)
+
+    //console.log('||||||||||||||||||')
+
+    var chp = await getCurrentQuizEngageCohort(cohortsLevelsPercents, engageTest)
+
+    chp.map(item => console.log(item))
+
+    totalRevenueStats[3] = chp[0] //not
+    totalRevenueStats[2] = chp[1] //low
+    totalRevenueStats[1] = chp[2] //high
+
+    //console.log('++++++++++++')
+
+    router.refresh()
   }, [])
 
   function unmount() {
@@ -129,6 +161,7 @@ export const DashboardBuilder = () => {
                   icon='/static/img/icon-29.svg'
                   line='/static/img/line-2.svg'
                   text='8.2'
+                  stats={totalRevenueStats}
                 />
               </Grid>
               <Grid item xs={5}>

@@ -4,30 +4,48 @@
 We're constantly improving the code you see.
 Please share your feedback here: https://form.asana.com/?k=uvp-HPgd3_hyoXRBw1IcNg&d=1152665201300829
 */
-
 import React from 'react'
 
 import PropTypes from 'prop-types'
 
+import { metricsru } from './../../screens/DashboardBuilder/Metrics'
+import { cohortsru } from './../../screens/DashboardBuilder/EngageCohort'
+
 import DashboardRadialBarChart from '@/views/dashboards/dashboard/src/DashboardRadialBarChart'
 import './style.css'
+import { binaryFormat } from './../../../../../../app/server/const'
+
+var percentageDiff = 0
+var percentageHigh = 0
+var percentageLow = 0
+var percentageNot = 0
+var percentageSkip = 0
 
 export const TotalRevenue = ({
   className,
   line = '/static/img/line.svg',
   frameClassName,
   text = '86%',
-  icon = '/static/img/icon-40.svg'
+  icon = '/static/img/icon-40.svg',
+  stats
 }) => {
+  percentageDiff = stats[0]
+  percentageHigh = stats[1]
+  percentageLow = stats[2]
+  percentageNot = stats[3]
+  percentageSkip = stats[4]
+
+  console.log('stats.len : Total ' + stats.length)
+
   return (
     <div className={`total-revenue ${className}`}>
       <div className='title'>
-        <div className='sub-text'>Вовлечённость</div>
+        <div className='sub-text'>{metricsru['engagement']}</div>
       </div>
       <div className='chart'>
         <div className='activitiy-gauge'>
-          <DashboardRadialBarChart />
-          <div className='percentage'>1.5%</div>
+          <DashboardRadialBarChart stats={stats} />
+          <div className='percentage'>{percentageDiff}%</div>
           <img className='vector' alt='Vector' src='/static/img/vector.svg' />
           <div className='overlap-group'></div>
         </div>
@@ -41,20 +59,20 @@ export const TotalRevenue = ({
         </div>
         <div className='frame-2'>
           <p className='name'>
-            <span className='span'>22%</span>
-            <span className='text-wrapper-8'> Вовлечённые</span>
+            <span className='span'>{Math.round(stats[1].toString(binaryFormat))}%</span>
+            <span className='text-wrapper-8'> {cohortsru['high']}</span>
           </p>
           <p className='p'>
-            <span className='span'>25%</span>
-            <span className='text-wrapper-8'> Слабо вовлечённые</span>
+            <span className='span'>{Math.round(stats[2].toString(binaryFormat))}%</span>
+            <span className='text-wrapper-8'> {cohortsru['low']}</span>
           </p>
           <p className='p'>
-            <span className='span'>21%</span>
-            <span className='text-wrapper-8'> Невовлечённые</span>
+            <span className='span'>{Math.round(stats[3].toString(binaryFormat))}%</span>
+            <span className='text-wrapper-8'> {cohortsru['not']}</span>
           </p>
           <p className='p'>
-            <span className='span'>32%</span>
-            <span className='text-wrapper-8'> Пропустили</span>
+            <span className='span'>{Math.round(stats[4].toString(binaryFormat))}%</span>
+            <span className='text-wrapper-8'> {cohortsru['skip']}</span>
           </p>
         </div>
       </div>

@@ -15,6 +15,7 @@ import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
 import handleChange from './SelectAnswerHandler.jsx'
+import binaryFormat from './../../../app/server/const.jsx'
 
 let initialData = [
   {
@@ -67,7 +68,7 @@ const VerticalRadioImage = ({
         //answers.length limited to four
         function readData() {
           for (let i = 0; i < answerCount; i++) {
-            var iS = i.toString(10)
+            var iS = i.toString(binaryFormat)
             var dataElement = {
               value: iS,
               isSelected: false,
