@@ -46,7 +46,7 @@ import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
 
-import { getQuestData as dbData, createQuiz, createSelectedAnswers } from '@/app/server/actions'
+import { getQuestData as dbData, createQuiz, createSelectedAnswersCurrentQuiz } from '@/app/server/actions'
 
 var format = require('date-format')
 
@@ -276,6 +276,8 @@ const CreateApp = ({ open, setOpen }) => {
       await dbData().then(async data => {
         let qaArray = []
 
+        console.log('selected options ' + selectedOptions.length)
+
         for (var i = 0; i < selectedOptions.length; i++) {
           var a = data[Number.parseInt(quizGroupTypeId) - 1][i].answers[selectedOptions[i]]
           var q = data[Number.parseInt(quizGroupTypeId) - 1][i].subtitle
@@ -288,7 +290,9 @@ const CreateApp = ({ open, setOpen }) => {
         //test db
         let selectedOptionsStr = selectedOptions.join(',')
 
-        let c = await createSelectedAnswers(selectedOptionsStr, quizGroupTypeId)
+        let c = await createSelectedAnswersCurrentQuiz(selectedOptionsStr)
+
+        console.log('selected answers   ' + c)
 
         //let b = await makeOPENCHATAIGetRequest(prompt)
       })
@@ -307,11 +311,11 @@ const CreateApp = ({ open, setOpen }) => {
           {activeStep + 1}/{steps}
         </Typography>
       </DialogTitle>
-      <DialogContent className='pbs-0 sm:pli-16 sm:pbe-16'>
+      <DialogContent className='pbs-5 sm:pli-16 sm:pbe-16'>
         <IconButton onClick={handleClose} className='absolute block-start-4 inline-end-4'>
           <i className='ri-close-line text-textSecondary' />
         </IconButton>
-        <div className='flex gap-y-6 pbs-1 flex-col md:flex-row'>
+        <div className='flex gap-y-6 pbs-5 flex-col md:flex-row'>
           <div className='flex-1'>
             {renderStepCount(
               quizGroupTypeId,

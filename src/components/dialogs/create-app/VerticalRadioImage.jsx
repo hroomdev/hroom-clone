@@ -14,6 +14,8 @@ import DirectionalIcon from '@components/DirectionalIcon'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
+import handleChange from './SelectAnswerHandler.jsx'
+
 let initialData = [
   {
     value: 'clock',
@@ -34,6 +36,8 @@ var onClickPrev = (f1, f2) => {
   f2()
 }
 
+const answerCount = 4
+
 const VerticalRadioImage = ({
   quizGroupTypeId,
   activeStep,
@@ -47,19 +51,6 @@ const VerticalRadioImage = ({
   const [selected, setSelected] = useState(initialSelected)
   const [data, setData] = useState(initialData)
   const [isLoading, setLoading] = useState(true)
-
-  const handleChange = prop => {
-    if (typeof prop === 'string') {
-      setSelected(prop)
-      selectedOptions[activeStep] = prop
-    } else if (typeof prop === 'int' || typeof prop === 'number') {
-      setSelected(prop)
-      selectedOptions[activeStep] = prop
-    } else {
-      setSelected(prop.target.value)
-      selectedOptions[activeStep] = prop.target.value
-    }
-  }
 
   useEffect(() => {
     async function fetch() {
@@ -75,7 +66,7 @@ const VerticalRadioImage = ({
 
         //answers.length limited to four
         function readData() {
-          for (let i = 0; i < 4; i++) {
+          for (let i = 0; i < answerCount; i++) {
             var iS = i.toString(10)
             var dataElement = {
               value: iS,
@@ -107,10 +98,11 @@ const VerticalRadioImage = ({
     setLoading(true)
   }
 
-  if (data.length < 2 || isLoading) {
+  if (data.length <= 1 || isLoading) {
     return 'Loading...'
   }
 
+  //
   //todo make dev not descendant of p
 
   return (
@@ -124,7 +116,12 @@ const VerticalRadioImage = ({
               data={item}
               selected={selected}
               name='custom-radios-img'
-              handleChange={handleChange}
+              handleChange={strValue => {
+                setSelected(strValue)
+                var answerId = data.findIndex(item => item.value == strValue)
+
+                handleChange(selectedOptions, activeStep, data.length, answerId)
+              }}
               gridProps={{ sm: 4, xs: 12 }}
             >
               <p class='ft00'></p>

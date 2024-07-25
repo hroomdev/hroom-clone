@@ -14,6 +14,8 @@ import Button from '@mui/material/Button'
 import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
+import handleChange from './SelectAnswerHandler.jsx'
+
 const stepSize = 1
 let initialMarks = [
   {
@@ -46,12 +48,6 @@ const SliderScale = ({
   const [selected, setSelected] = useState(initialSelected)
   const [marks, setMarks] = useState(initialMarks)
   const [isLoading, setLoading] = useState(true)
-
-  const valuetext = value => {
-    selectedOptions[activeStep] = Math.round(value != 0 ? value / stepSize : value)
-
-    return `${value}°C`
-  }
 
   useEffect(() => {
     async function fetch() {
@@ -99,7 +95,7 @@ const SliderScale = ({
 
   //max (marks.length - 1) * stepSize
   return (
-    <div className='flex flex-col gap-4 '>
+    <div className='flex flex-col gap-10 '>
       <Slider
         marks
         min={0}
@@ -107,8 +103,11 @@ const SliderScale = ({
         step={1}
         defaultValue={0}
         valueLabelDisplay='on'
-        getAriaValueText={valuetext}
+        getAriaValueText={value => `${value}°C`}
         aria-labelledby='label-always-visible-slider'
+        onChangeCommitted={(mouseEvent, value) => {
+          handleChange(selectedOptions, activeStep, 10, value)
+        }}
       ></Slider>
       <div className='flex items-center justify-between'>
         <Button

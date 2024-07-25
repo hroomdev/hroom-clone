@@ -19,6 +19,8 @@ import CustomInputVertical from '@core/components/custom-inputs/Vertical'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
+import handleChange from './SelectAnswerHandler.jsx'
+
 const SVGs = [
   {
     asset: (
@@ -71,19 +73,6 @@ const VerticalRadioSVG = ({
   const [selected, setSelected] = useState(initialSelected)
   const [data, setData] = useState(initialData)
   const [isLoading, setLoading] = useState(true)
-
-  const handleChange = prop => {
-    if (typeof prop === 'string') {
-      setSelected(prop)
-      selectedOptions[activeStep] = prop
-    } else if (typeof prop === 'int' || typeof prop === 'number') {
-      setSelected(prop)
-      selectedOptions[activeStep] = prop
-    } else {
-      setSelected(prop.target.value)
-      selectedOptions[activeStep] = prop.target.value
-    }
-  }
 
   useEffect(() => {
     async function fetch() {
@@ -150,7 +139,10 @@ const VerticalRadioSVG = ({
                 data={{ ...item, asset: SVGs[0].asset }}
                 selected={selected}
                 name='custom-radios-icons'
-                handleChange={handleChange}
+                handleChange={answerId => {
+                  setSelected(answerId)
+                  handleChange(selectedOptions, activeStep, data.length, answerId)
+                }}
                 gridProps={{ sm: 4, xs: 12 }}
               />
             )

@@ -27,7 +27,7 @@ import { db as questionsData } from '@/fake-db/pages/quiz'
 const { Client } = require('pg')
 
 //also import questiontype
-export const createSelectedAnswers = async (selectedOptionsStr, quizId) => {
+export const createSelectedAnswersCurrentQuiz = async selectedOptionsStr => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -36,10 +36,15 @@ export const createSelectedAnswers = async (selectedOptionsStr, quizId) => {
     port: 5432
   })
 
+  let currentQuizIdAudi = await getCurrentQuizIdAudi()
+
+  let currentQuizId = currentQuizIdAudi[0]
+  let currentQuizAudi = currentQuizIdAudi[1]
+
   await client.connect()
   const text = 'INSERT INTO "public"."selectedAnswers" ("selectedOptions","quizId") VALUES($1, $2) RETURNING *'
 
-  const values = [selectedOptionsStr, quizId]
+  const values = [selectedOptionsStr, currentQuizId]
 
   const query = {
     // give the query a unique name
@@ -48,13 +53,18 @@ export const createSelectedAnswers = async (selectedOptionsStr, quizId) => {
     values: values
   }
 
+  var r = ''
+
   await client
     .query(query) // your query string here
-    .then(result => console.log(result)) // your callback here
+    .then(result => {
+      r = result
+      console.log(result)
+    }) // your callback here
     .catch(e => console.error(e.stack)) // your callback here
     .then(() => client.end())
 
-  return 'mock'
+  return r
 }
 
 export const createQuiz = async (timeStart, type, auditory) => {

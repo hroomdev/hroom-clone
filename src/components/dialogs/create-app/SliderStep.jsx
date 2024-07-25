@@ -11,6 +11,8 @@ import Button from '@mui/material/Button'
 import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
 
+import handleChange from './SelectAnswerHandler.jsx'
+
 const stepSize = 10
 
 let initialMarks = [
@@ -43,7 +45,7 @@ const SliderStepNew = ({
   setTitle,
   selectedOptions
 }) => {
-  console.log('quiz group type id ' + quizGroupTypeId)
+  //console.log('quiz group type id ' + quizGroupTypeId)
   const initialSelected = 0
 
   const [marks, setMarks] = useState(initialMarks)
@@ -51,12 +53,6 @@ const SliderStepNew = ({
   //States sources
   const [selected, setSelected] = useState(initialSelected)
   const [isLoading, setLoading] = useState(true)
-
-  const valuetext = value => {
-    selectedOptions[activeStep] = Math.round((value = value != 0 ? value / stepSize : value))
-
-    return `${value}`
-  }
 
   useEffect(() => {
     async function fetch() {
@@ -94,7 +90,7 @@ const SliderStepNew = ({
 
   function unmount() {
     // States
-    setTitle('blank')
+    //setTitle('blank')
     setSelected(initialSelected)
 
     //setData(initialData)
@@ -159,13 +155,18 @@ const SliderStepNew = ({
   }))
 
   return (
-    <div className='flex flex-col gap-4 '>
+    <div className='flex flex-col gap-10 '>
       <Slider
         marks
         defaultValue={50}
         valueLabelDisplay='on'
-        getAriaValueText={valuetext}
+        getAriaValueText={value => {
+          return `${value}`
+        }}
         aria-labelledby='label-always-visible-slider'
+        onChangeCommitted={(mouseEvent, value) => {
+          handleChange(selectedOptions, activeStep, 100, value)
+        }}
       ></Slider>
       <div className='flex items-center justify-between'>
         <Button
