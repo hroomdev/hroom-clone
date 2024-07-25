@@ -23,8 +23,6 @@ RUN npm install axios
 RUN ls -l
 # Экспонируем порт 8000 для нашего приложения
 EXPOSE 3000
-# Экспонируем порт 5432 для ответа от базы данных
-EXPOSE 5432
 #RUN npm run dev
 # Declare an argument for the web server
 
