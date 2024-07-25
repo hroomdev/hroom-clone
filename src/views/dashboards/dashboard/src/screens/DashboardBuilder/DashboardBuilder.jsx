@@ -76,8 +76,8 @@ export const DashboardBuilder = () => {
     })
 
     await currentQuizTimeStart().then(data => {
-      console.log('currentQuizTimeStart data : DashboardBuidler ' + data)
-      currentQuizStarts = new Date(data)
+      console.log('currentQuizTimeStart data : DashboardBuidler ' + data.toLocaleDateString('ru-RU', options))
+      currentQuizStarts = new Date(data.toLocaleDateString('ru-RU', options))
       console.log('currentQuizStarts data : DashboardBuidler ' + currentQuizStarts)
       curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
       console.log('curToNow data : DashboardBuidler ' + curToNow)
