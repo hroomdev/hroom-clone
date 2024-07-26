@@ -41,8 +41,8 @@ import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
 
-import { getQuestData as dbData } from '@/app/server/actions'
-import { createSelectedAnswersCurrentQuiz } from '@/app/server/quizstrategy'
+import { getQuestData as dbData, createSelectedAnswersCurrentQuiz } from '@/app/server/actions'
+import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
 const initialSteps = 0
 
@@ -279,9 +279,14 @@ const CreateApp = ({ open, setOpen }) => {
         //test db
 
         let optionsStr = selectedOptions.join(',')
-        let c = await createSelectedAnswersCurrentQuiz(optionsStr)
 
-        console.log('selected options   ' + c)
+        if (checkValidJoinedStr(optionsStr, selectedOptions.length, 1, 10, 0) == false) {
+          console.logerror('generate quiz report error check validity of the slected options answers before send')
+        } else {
+          let c = await createSelectedAnswersCurrentQuiz(optionsStr)
+
+          console.log('selected options   ' + c)
+        }
 
         //let b = await makeOPENCHATAIGetRequest(prompt)
       })

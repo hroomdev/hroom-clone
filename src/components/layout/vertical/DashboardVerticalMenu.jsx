@@ -23,7 +23,8 @@ import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
 import generateDates from '../../dialogs/create-app/GenerateDates'
 
-import { createQuiz, createSelectedAnswersCurrentQuiz } from '@/app/server/quizstrategy'
+import { createQuiz, createSelectedAnswersCurrentQuiz } from '@/app/server/actions'
+import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -84,11 +85,18 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           icon={<i className='ri-star-smile-line' />}
           onClick={async () => {
             console.log('onclick menuitem')
-            var generatedOptions = generateOptions(20, 10)
+            var countGenerated = 20
+            var maximum = 10
+            var generatedOptions = generateOptions(countGenerated, maximum)
             let optionsStr = generatedOptions.join(',')
-            let c = await createSelectedAnswersCurrentQuiz(optionsStr)
 
-            console.log('options   ' + c)
+            if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
+              console.log('generated quiz is not valid! not sending to db')
+            } else {
+              let c = await createSelectedAnswersCurrentQuiz(optionsStr)
+
+              console.log('options   ' + c)
+            }
           }}
         >
           {dictionary['navigation'].ideas}

@@ -111,7 +111,7 @@ const DashboardTransactions = ({ stats, statsDiffs }) => {
                 <div>
                   <Grid container spacing={2} flex justifyContent='flex-start' alignItems='flex-start'>
                     <Grid item xs='auto'>
-                      <Typography variant='h5'>{stats[index]}</Typography>
+                      <Typography variant='h5'>{stats[index].toFixed(1)}</Typography>
                     </Grid>
                     <Grid item xs='auto'>
                       <img className='vector' alt='Vector' src={item.icon2} />

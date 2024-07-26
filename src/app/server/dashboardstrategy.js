@@ -6,15 +6,14 @@ import {
   getQuizOrderByIdDesc,
   getQuestGroupTypeBy,
   getSelectedOptions,
-  getQuestGroupGroupBy
+  getQuestGroupGroupBy,
+  getQuestionMetricBy
 } from './actions'
 
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 
 export const getCurrentQuizAuditory = async () => {
   let currentQuizIdAudi = await getCurrentQuizIdAudi()
-
-  console.log('currentQuizPassAll ' + currentQuizIdAudi)
 
   let currentQuizId = currentQuizIdAudi[0]
   let currentQuizAudi = currentQuizIdAudi[1]
@@ -57,14 +56,8 @@ export const getCurrentQuizIdAudi = async () => {
   return [currentQuizId, currentQuizAuditory]
 }
 
-export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, totalRevenueStats) => {
-  if (cohortsLevelsPercents.length != 2) {
-    console.error('cohortsLevelsPercents.length is NOT 2 code base using two level system in cohort calculation')
-  }
-
-  if (totalRevenueStats.length != 5) {
-    console.error('totalRevenueStats.length is ' + totalRevenueStats.length + ' must be 5 skip hg low not  ')
-  }
+export const getCurrentQuizEngageMetrics = async (cohortsLevelsPercents, totalRevenueStats, metricsStats) => {
+  const midRangeRate = ratingMax / 2
 
   let quiz = await getQuizOrderByIdDesc(1, 0)
 
@@ -74,7 +67,6 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, totalRev
 
   let quizGroupType = await getQuestGroupTypeBy(quizGroupId)
 
-  console.log('quizGroupType' + quizGroupType)
   var quizTypeQuest = quizGroupType.toString().split('-') //   month-20q-1m
 
   var quizTypeQuestNumSepar = quizTypeQuest[1].toString() //
@@ -96,12 +88,47 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, totalRev
   var quizSelectedAnswersInCohortLow = 0 //dlow
   var quizSelectedAnswersInCohortHigh = 0 //dhigh
 
+  //transactions stats START/////////////////////////////////////
+  let quizGroupGroup = await getQuestGroupGroupBy(quizGroupId) //'1,2,3,4,5,6,32'..
+  var questionsIdsStrsArr = quizGroupGroup.toString().split(',') //['1','2','3'..]
+  var questionsIdsArr = questionsIdsStrsArr.map(qIdStr => Number.parseInt(qIdStr)) //[1,2,3..]
+  var questionsMetricsArr = await Promise.all(
+    // eslint-disable-next-line lines-around-comment
+    //['Relationship with Peers','Wellness',..]
+    questionsIdsArr.map(async qId => {
+      var qMetric = await getQuestionMetricBy(qId)
+
+      return qMetric
+    })
+  )
+
+  for (var i = 0; i < metricsStats.length; i++) {
+    //reset test metricStats
+    metricsStats[i] = 0
+  }
+
+  var counterMetricQuiz = [metricsStats.length]
+
+  for (var i = 0; i < metricsStats.length; i++) {
+    var counterMetric = questionsMetricsArr.reduce((accumulator, currentValue) => {
+      if (Object.keys(metricsru).at(i) == currentValue) {
+        return accumulator + 1
+      }
+
+      return accumulator
+    }, 0)
+
+    counterMetricQuiz[i] = counterMetric
+  }
+
+  //transaction stats metrics END///////////////////////////
+
   if (countParticipators <= 0) {
     totalRevenueStats[3] = 0
     totalRevenueStats[2] = 0
     totalRevenueStats[1] = 0
 
-    return totalRevenueStats
+    return [totalRevenueStats, metricsStats]
   }
 
   const CountCohort = async selectedAnswer => {
@@ -114,11 +141,15 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, totalRev
 
     var selectedOptionsSplittedStr = selectedOptions.toString().split(',')
 
-    var selectedAnswersSummOptions = selectedOptionsSplittedStr
-      .map(str => Number.parseInt(str))
-      .reduce((accumulator, currentValue) => {
-        return accumulator + currentValue
-      }, 0)
+    //checks for empty values too
+    var selectedOptionsNumArr = selectedOptionsSplittedStr.map(str => Number.parseInt(str) || midRangeRate)
+
+    //check for db consistency
+    selectedOptionsNumArr = selectedOptionsNumArr.map(num => (num < 0 ? midRangeRate : num))
+
+    var selectedAnswersSummOptions = selectedOptionsNumArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue
+    }, 0)
 
     var ratingQuizPercentInt = (selectedAnswersSummOptions / quizMaxRating) * 100 //f
 
@@ -130,54 +161,45 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, totalRev
     } else {
       quizSelectedAnswersInCohortHigh = quizSelectedAnswersInCohortHigh + 1
     }
+
+    for (var i = 0; i < selectedOptionsNumArr.length; i++) {
+      var metric = questionsMetricsArr[i].toString()
+      var metricIdx = Object.keys(metricsru).findIndex(key => key == metric)
+
+      if (counterMetricQuiz != 0) {
+        metricsStats[metricIdx] = metricsStats[metricIdx] + selectedOptionsNumArr[i] / counterMetricQuiz[metricIdx] // //0+5.2+6.4+..
+      } else
+        console.error(
+          'count of question in quiz id' +
+            quizId +
+            '  selectedAnswers id ' +
+            selectedAnswerId +
+            '  metric ' +
+            metric +
+            ' zero ERROR'
+        )
+    }
   }
 
-  for (var i = 0; i < selectedAnswers.length; i++) {
+  var selAnsLen = selectedAnswers.length
+
+  for (var i = 0; i < selAnsLen; i++) {
     var selectedAnswer = selectedAnswers[i]
 
     await CountCohort(selectedAnswer)
+  }
+
+  metricsStats.map(item => console.log(item))
+
+  for (var i = 0; i < metricsStats.length; i++) {
+    if (metricsStats[i] != 0) {
+      metricsStats[i] = metricsStats[i] / selAnsLen
+    } else console.log('metricsStats [i] ' + i + ' is zero ')
   }
 
   totalRevenueStats[1] = (quizSelectedAnswersInCohortHigh / countParticipators) * 100 //high
   totalRevenueStats[2] = (quizSelectedAnswersInCohortLow / countParticipators) * 100 //low
   totalRevenueStats[3] = (quizSelectedAnswersInCohortNot / countParticipators) * 100 //not
 
-  return totalRevenueStats
-}
-
-export const getCurrentQuizMetricStats = async metricsStats => {
-  if (metricsStats.length != metricsru.length - 1) {
-    console.error('metricsStats length must be metrics length which is ' + (metricsru.length - 1))
-  }
-
-  let quiz = await getQuizOrderByIdDesc(1, 0)
-
-  var quizSplittedStr = quiz.toString().split(',')
-  var quizTypeIdx = await dbQuizTypeIdx()
-  var quizGroupId = quizSplittedStr[quizTypeIdx]
-
-  let quizGroupType = await getQuestGroupTypeBy(quizGroupId) //   'month-20q-1m'
-  var quizTypeQuest = quizGroupType.toString().split('-') //'month' '20q' '1m'
-  var quizTypeQuestNumSepar = quizTypeQuest[1].toString() // '20q'
-  var quizTypeQuestNumStr = quizTypeQuestNumSepar.substring(0, quizTypeQuestNumSepar.length - 1) //'20'
-  var quizCountQuestions = Number.parseInt(quizTypeQuestNumStr) //a 20
-
-  var quizIdIdx = await dbQuizIdIdx()
-  let quizId = quizSplittedStr[quizIdIdx]
-
-  let quizGroupGroup = await getQuestGroupGroupBy(quizGroupId) //'1,2,3,4,5,6,32'..
-  var questionsIdsStrsArr = quizGroupGroup.toString().split(',') //['1','2','3'..]
-  var questionsIdsArr = questionsIdsStrsArr.map(qIdStr => Number.parseInt(qIdStr)) //[1,2,3..]
-  //var questionsIdsMetricsArr = questionsIdsArr.map(qId => {})  //[1,2,3..]
-
-  var questionsIdsMetricsArr = await Promise.all(
-    questionsIdsArr.map(async qId => {
-      //['Relationship with Peers','Wellness',..]
-      await callAsynchronousOperation(qId)
-
-      return item + 1
-    })
-  )
-
-  return metricsStats
+  return [totalRevenueStats, metricsStats]
 }

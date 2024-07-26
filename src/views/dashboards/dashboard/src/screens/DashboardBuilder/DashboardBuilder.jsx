@@ -29,13 +29,13 @@ import './style.css'
 import {
   getCurrentQuizAuditory as currentQuizPassAll,
   getCurrentQuizTimeStart as currentQuizTimeStart,
-  getCurrentQuizEngageCohort,
+  getCurrentQuizEngageMetrics,
   getCurrentQuizMetricStats
 } from '@/app/server/dashboardstrategy'
 
 import { useInterval } from './useInterval'
 
-const intervalDataUpd = 10000
+const intervalDataUpd = 30000
 var participationPercent = 0
 var participantsQuizPassed = 0
 var participantsQuizAll = 0
@@ -51,7 +51,7 @@ var totalRevenueStats = [
   30 // статистика тотал по всем метрикам  пропустили
 ]
 
-var transactionsMetricStats = [5.1, 12.5, 6.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
+var transactionsMetricStats = [1.1, 2.2, 3.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
 
 var transactionsMetricDiffStats = [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.8, 1.2, 0.8]
 
@@ -85,17 +85,33 @@ export const DashboardBuilder = () => {
     })
 
     //widgets engagement data
-    var cohortsLevelsPercents = [33, 66]
-
-    totalRevenueStats = await getCurrentQuizEngageCohort(cohortsLevelsPercents, totalRevenueStats)
-    totalRevenueStats.map(item => console.log(item))
-
     //widgets metrics data transactions
 
-    //transactionsMetricStats = await getCurrentQuizMetricStats(transactionsMetricStats) //todo: logic server
-    console.log('transactionsMetricStats items')
+    var cohortsLevelsPercents = [33, 66]
 
+    //console.log('transactionsMetricStats before')
     //transactionsMetricStats.map(item => console.log(item))
+
+    if (cohortsLevelsPercents.length != 2) {
+      console.error('cohortsLevelsPercents.length is NOT 2 code base using two level system in cohort calculation')
+    }
+
+    if (totalRevenueStats.length != 5) {
+      console.error('totalRevenueStats.length is ' + totalRevenueStats.length + ' must be 5 skip hg low not  ')
+    }
+
+    if (transactionsMetricStats.length != 10) {
+      console.error('metricsStats length is' + metricsru.length + ' must be TEN : Dashboardstrategy')
+    }
+
+    var result = await getCurrentQuizEngageMetrics(cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
+
+    totalRevenueStats = result[0]
+    transactionsMetricStats = result[1]
+
+    transactionsMetricStats.map(item => console.log(item))
+
+    //console.log('transactionsMetricStats after')
 
     //transactionsMetricDiffStats
 

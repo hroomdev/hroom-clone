@@ -27,6 +27,4 @@ export const metricsru = {
   Tip: 'Метрика'
 }
 
-//compile - time dependent constant last 'Tip' sensitive to change order! andd count
-
 export default metricsru
