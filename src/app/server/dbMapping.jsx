@@ -1,7 +1,7 @@
 const locale = Intl.DateTimeFormat().resolvedOptions().locale
-const localeRUsubstr = 'RU'
+const localeRUsubstr = 'ru'
 
-console.log('locale' + locale)
+console.log('locale is ' + locale)
 
 //RU locale javascript node js react instance reads and passed dates with commas so its difference in parsing and queries values
 //between sdifferent node server instances based on locale this db postgresql pg library for nodejs

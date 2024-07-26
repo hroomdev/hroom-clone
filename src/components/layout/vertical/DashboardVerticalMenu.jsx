@@ -23,7 +23,7 @@ import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
 import generateDates from '../../dialogs/create-app/GenerateDates'
 
-import { createSelectedAnswersCurrentQuiz, createQuiz } from '@/app/server/actions'
+import { createQuiz, createSelectedAnswersCurrentQuiz } from '@/app/server/quizstrategy'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>

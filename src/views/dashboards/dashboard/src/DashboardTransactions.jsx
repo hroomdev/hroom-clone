@@ -96,7 +96,7 @@ const data = [
 ]
 
 const DashboardTransactions = ({ stats, statsDiffs }) => {
-  console.log('stats len' + stats.length + 'statsdifflen' + statsDiffs.length)
+  //console.log('stats len' + stats.length + 'statsdifflen' + statsDiffs.length)
 
   return (
     <Card className='bs-full'>

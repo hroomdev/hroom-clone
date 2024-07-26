@@ -66,11 +66,6 @@ const data = [
 
 var selectedEngagementMetricKey = 'Engagement'
 
-//<Card>
-//<CardContent>
-//<img className='icon-2' alt='Icon' src={item.icon} />
-//className='bs-full' className='!pbs-5'
-//<div className='card-header'>
 const TeamsTransactions = propSelectedMetric => {
   propSelectedMetric = selectedEngagementMetricKey
 
@@ -97,13 +92,14 @@ const TeamsTransactions = propSelectedMetric => {
       </FormControl>
       <div></div>
       <div></div>
+
       <Grid container spacing={4} style={{ padding: '2em 0em 0em 0em' }}>
         {data.map((item, index) => (
           <Grid item xs={12} md={12} gap={4} key={index} style={{ padding: '1em 0em 0em 2.5em' }}>
             <div className='flex items-start gap-3'>
               <Grid container spacing={1} flex justifyContent='flex-start' alignItems='center'>
                 <Grid item xs='auto'>
-                  <div class='ellipse-3'></div>
+                  {/*<div class='ellipse-3'></div>*/}
                 </Grid>
                 <Grid item xs='auto'>
                   <Typography>{teamsru[item.title]}</Typography>
@@ -127,7 +123,7 @@ const TeamsTransactions = propSelectedMetric => {
                 </Grid>
                 <Grid item xs='auto'>
                   <div className='percentage' style={{ color: '#56ca00' }}>
-                    {item.diff}
+                    <Typography variant='h7'>{item.diff}</Typography>
                   </div>
                 </Grid>
               </Grid>
@@ -139,7 +135,4 @@ const TeamsTransactions = propSelectedMetric => {
   )
 }
 
-// <Card>
-//<CardContent>
-////</div>
 export default TeamsTransactions

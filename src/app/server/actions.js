@@ -1,13 +1,11 @@
 /**
- * ! The server actions below are used to fetch the static data from the fake-db. If you're using an ORM
+ *  * ! The server actions below are used to fetch the static data from the fake-db. If you're using an ORM
  * ! (Object-Relational Mapping) or a database, you can swap the code below with your own database queries.
  */
 'use server'
 
 // Data Imports
-
 // db.js
-
 import { connect } from 'react-redux'
 
 import { validateSort } from '@formkit/drag-and-drop'
@@ -22,90 +20,11 @@ import { db as profileData } from '@/fake-db/pages/user-profile'
 import { db as faqData } from '@/fake-db/pages/faq'
 import { db as pricingData } from '@/fake-db/pages/pricing'
 import { db as statisticsData } from '@/fake-db/pages/widget-examples'
-import { db as questionsData } from '@/fake-db/pages/quiz'
-import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
-
-import { ratingMax } from './const'
 
 const { Client } = require('pg')
 
 //todo: refactor current.... to by id etc
-
 //also import questiontype
-
-export const createSelectedAnswersCurrentQuiz = async selectedOptionsStr => {
-  let client = new Client({
-    user: 'gen_user',
-    host: '147.45.227.55',
-    database: 'default_db',
-    password: 'j6ukvvX(SS0#&5',
-    port: 5432
-  })
-
-  let currentQuizIdAudi = await getCurrentQuizIdAudi()
-
-  let currentQuizId = currentQuizIdAudi[0]
-  let currentQuizAudi = currentQuizIdAudi[1]
-
-  await client.connect()
-  const text = 'INSERT INTO "public"."selectedAnswers" ("selectedOptions","quizId") VALUES($1, $2) RETURNING *'
-
-  const values = [selectedOptionsStr, currentQuizId]
-
-  const query = {
-    // give the query a unique name
-    text: text,
-    rowMode: 'array',
-    values: values
-  }
-
-  var r = ''
-
-  await client
-    .query(query) // your query string here
-    .then(result => {
-      r = result.rows[0]
-      console.log(result)
-    }) // your callback here
-    .catch(e => console.error(e.stack)) // your callback here
-    .then(() => client.end())
-
-  return r
-}
-
-export const createQuiz = async (timeStart, type, auditory) => {
-  let client = new Client({
-    user: 'gen_user',
-    host: '147.45.227.55',
-    database: 'default_db',
-    password: 'j6ukvvX(SS0#&5',
-    port: 5432
-  })
-
-  await client.connect()
-
-  const text = 'INSERT INTO "public"."quiz" ("timestart","type","auditory") VALUES($1, $2, $3) RETURNING *'
-  const values = [timeStart, type, auditory]
-
-  const query = {
-    // give the query a unique name
-    text: text,
-    rowMode: 'array',
-    values: values
-  }
-
-  var res = ''
-
-  await client
-    .query(query) // your query string here
-    .then(result => {
-      res = result.rows[0]
-    }) // your callback here
-    .catch(e => console.error(e.stack)) // your callback here
-    .then(() => client.end())
-
-  return res
-}
 
 export const getEcommerceData = async () => {
   return eCommerceData
@@ -422,125 +341,6 @@ export const getQuestData = async () => {
   }
 
   return quizQuestions
-}
-
-export const getCurrentQuizTimeStart = async () => {
-  let currentQuiz = await getCurrentQuiz()
-
-  var splittedStr = currentQuiz.toString().split(',')
-  var timeStartIdx = await dbQuizTimeStartSIdx()
-  var currentQuizTimeStart = Date.parse(splittedStr[timeStartIdx])
-
-  return currentQuizTimeStart
-}
-
-export const getCurrentQuizAuditory = async () => {
-  let currentQuizIdAudi = await getCurrentQuizIdAudi()
-
-  let currentQuizId = currentQuizIdAudi[0]
-  let currentQuizAudi = currentQuizIdAudi[1]
-
-  var selectedAnswers = await getSelectedAnswersBy(currentQuizId)
-
-  return [selectedAnswers.length, currentQuizAudi]
-}
-
-export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, totalRevenueStats) => {
-  let quiz = await getQuizOrderByIdDesc(1, 0)
-
-  var quizSplittedStr = quiz.toString().split(',')
-  var quizTypeIdx = await dbQuizTypeIdx()
-  var quizGroupId = quizSplittedStr[quizTypeIdx]
-
-  let quizGroupType = await getQuestGroupTypeBy(quizGroupId)
-
-  var quizTypeQuest = quizGroupType.toString().split('-') //   month-20q-1m
-
-  var quizTypeQuestNumSepar = quizTypeQuest[1].toString() //
-
-  var quizTypeQuestNumStr = quizTypeQuestNumSepar.substring(0, quizTypeQuestNumSepar.length - 1)
-
-  var quizCountQuestions = Number.parseInt(quizTypeQuestNumStr) //a
-
-  var quizMaxRating = quizCountQuestions * ratingMax //b
-
-  var quizIdIdx = await dbQuizIdIdx()
-  let quizId = quizSplittedStr[quizIdIdx]
-
-  var selectedAnswers = await getSelectedAnswersBy(quizId)
-
-  var countParticipators = selectedAnswers.length //c
-
-  var quizSelectedAnswersInCohortNot = 0 //dnot
-  var quizSelectedAnswersInCohortLow = 0 //dlow
-  var quizSelectedAnswersInCohortHigh = 0 //dhigh
-
-  if (countParticipators <= 0) {
-    totalRevenueStats[3] = 0
-    totalRevenueStats[2] = 0
-    totalRevenueStats[1] = 0
-
-    return totalRevenueStats
-  }
-
-  const CountCohort = async selectedAnswer => {
-    var selectedAnswerSplittedStr = selectedAnswer.toString().split(',')
-
-    var selectedAnswersIdx = await dbSelectedAnswersIdIdx()
-    var selectedAnswerId = selectedAnswerSplittedStr[selectedAnswersIdx]
-
-    var selectedOptions = await getSelectedOptions(selectedAnswerId)
-
-    var selectedOptionsSplittedStr = selectedOptions.toString().split(',')
-
-    var selectedAnswersSummOptions = selectedOptionsSplittedStr
-      .map(str => Number.parseInt(str))
-      .reduce((accumulator, currentValue) => {
-        return accumulator + currentValue
-      }, 0)
-
-    var ratingQuizPercentInt = (selectedAnswersSummOptions / quizMaxRating) * 100 //f
-
-    //33 66
-    if (ratingQuizPercentInt <= cohortsLevelsPercents[0]) {
-      quizSelectedAnswersInCohortNot = quizSelectedAnswersInCohortNot + 1
-    } else if (ratingQuizPercentInt <= cohortsLevelsPercents[1]) {
-      quizSelectedAnswersInCohortLow = quizSelectedAnswersInCohortLow + 1
-    } else {
-      quizSelectedAnswersInCohortHigh = quizSelectedAnswersInCohortHigh + 1
-    }
-  }
-
-  for (var i = 0; i < selectedAnswers.length; i++) {
-    var selectedAnswer = selectedAnswers[i]
-
-    await CountCohort(selectedAnswer)
-  }
-
-  totalRevenueStats[1] = (quizSelectedAnswersInCohortHigh / countParticipators) * 100 //high
-  totalRevenueStats[2] = (quizSelectedAnswersInCohortLow / countParticipators) * 100 //low
-  totalRevenueStats[3] = (quizSelectedAnswersInCohortNot / countParticipators) * 100 //not
-
-  return totalRevenueStats
-}
-
-export const getCurrentQuizIdAudi = async () => {
-  try {
-    let currentQuiz = await getCurrentQuiz()
-    var splittedStr = currentQuiz.toString().split(',')
-
-    for (var i = 0; i < splittedStr.length; i++) {}
-
-    var quizIdIdx = await dbQuizIdIdx()
-    var currentQuizId = Number.parseInt(splittedStr[quizIdIdx])
-    var auditoryIdx = await dbQuizAuditoryIdx()
-    var currentQuizAuditory = Number.parseInt(splittedStr[auditoryIdx])
-  } catch (e) {
-    console.error(e.stack)
-  } finally {
-  }
-
-  return [currentQuizId, currentQuizAuditory]
 }
 
 export const getSelectedAnswersBy = async quizId => {

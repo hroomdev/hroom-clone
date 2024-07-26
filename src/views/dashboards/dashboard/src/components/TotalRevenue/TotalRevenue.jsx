@@ -35,7 +35,7 @@ export const TotalRevenue = ({
   percentageNot = stats[3]
   percentageSkip = stats[4]
 
-  console.log('stats.len : Total ' + stats.length)
+  //console.log('stats.len : Total ' + stats.length)
 
   return (
     <div className={`total-revenue ${className}`}>

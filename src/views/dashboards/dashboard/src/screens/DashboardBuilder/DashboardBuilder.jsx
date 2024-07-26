@@ -29,8 +29,9 @@ import './style.css'
 import {
   getCurrentQuizAuditory as currentQuizPassAll,
   getCurrentQuizTimeStart as currentQuizTimeStart,
-  getCurrentQuizEngageCohort
-} from '@/app/server/actions'
+  getCurrentQuizEngageCohort,
+  getCurrentQuizMetricStats
+} from '@/app/server/dashboardstrategy'
 
 import { useInterval } from './useInterval'
 
@@ -76,6 +77,7 @@ export const DashboardBuilder = () => {
     })
 
     //widgets datetimes data fetch
+
     await currentQuizTimeStart().then(data => {
       currentQuizStarts = new Date(data)
       curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
@@ -90,10 +92,15 @@ export const DashboardBuilder = () => {
 
     //widgets metrics data transactions
 
-    //transactionsMetricStats = await getCurrentQuizEngageCohort(cohortsLevelsPercents, totalRevenueStats) //todo: logic server
+    //transactionsMetricStats = await getCurrentQuizMetricStats(transactionsMetricStats) //todo: logic server
+    console.log('transactionsMetricStats items')
+
+    //transactionsMetricStats.map(item => console.log(item))
+
     //transactionsMetricDiffStats
 
     //call refresh all widgets visuals explcitly after data fetch
+    //console.log('innerFetchData  end')
     router.refresh()
   }, [])
 
