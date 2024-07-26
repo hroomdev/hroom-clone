@@ -101,7 +101,7 @@ const Navigation = props => {
   }
 
   useEffect(() => {
-    console.log('settings layout is' + settings.layout + '  isCollapsed' + isCollapsed)
+    //console.log('settings layout is' + settings.layout + '  isCollapsed' + isCollapsed)
 
     //collapseVerticalNav(isCollapsed)
 

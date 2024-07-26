@@ -601,10 +601,10 @@ export const getSelectedOptions = async answersId => {
     await client.connect()
     var res = await client.query(selectedOptionsQuery)
 
-    console.log('res row length selected answers count :actions.js ' + res.rows.length)
+    //console.log('res row length selected answers count :actions.js ' + res.rows.length)
 
     if (res.rows.length <= 0) {
-      console.log('noone yet participated in  quizId' + answersId)
+      console.log('no one yet participated in  quizId' + answersId)
 
       return selectedOptions
     }
@@ -641,7 +641,8 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
     var res = await client.query(queryCurrentQuizId)
 
     currentQuiz = res.rows[0]
-    console.log('res res.rows[0] ' + res.rows[0])
+
+    //console.log('res res.rows[0] ' + res.rows[0])
   } catch (e) {
     console.log('error connect to db ' + e.stack)
     console.error(e.stack)

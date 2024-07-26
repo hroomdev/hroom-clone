@@ -43,6 +43,7 @@ const series = [
   }
 ]
 
+//{ stats, statsDiff }
 const DashboardApexLineChart = () => {
   // Hooks
   const theme = useTheme()

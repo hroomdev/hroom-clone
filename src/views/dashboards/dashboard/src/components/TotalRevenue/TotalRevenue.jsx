@@ -40,7 +40,7 @@ export const TotalRevenue = ({
   return (
     <div className={`total-revenue ${className}`}>
       <div className='title'>
-        <div className='sub-text'>{metricsru['engagement']}</div>
+        <div className='sub-text'>{metricsru['Engagement']}</div>
       </div>
       <div className='chart'>
         <div className='activitiy-gauge'>

@@ -1,16 +1,30 @@
+// bracket notation keys https://stackoverflow.com/questions/8317982/how-can-i-access-a-javascript-object-which-has-spaces-in-the-objects-key
+
+//satisfaction: 'Satisfaction',
+//ambassadorship: 'Ambassadorship',
+//happiness: 'Happiness',
+//relationshipWithManager: 'Relationship with Manager',
+//wellness: 'Wellness',
+//relationshipWithPeers: 'Relationship with Peers',
+//personalGrowth: 'Personal Growth',
+//alignment: 'Alignment',
+//recognition: 'Recognition',
+//feedback: 'Feedback',
+//engagement: 'Вовлеченность'
+
 export const metricsru = {
-  metric: 'Метрика',
-  satisfaction: 'Удовлетворенность',
-  ambassadorship: 'Лояльность',
-  happiness: 'Счастье',
-  relationshipWithManager: 'Отношения с руководителем',
-  wellness: 'Самочувствие',
-  relationshipWithPeers: 'Отношения с коллегами',
-  personalGrowth: 'Личностный рост',
-  alignment: 'Согласованность',
-  recognition: 'Признание',
-  feedback: 'Обратная связь',
-  engagement: 'Вовлеченность'
+  Satisfaction: 'Удовлетворенность',
+  Ambassadorship: 'Лояльность',
+  Happiness: 'Счастье',
+  'Relationship with Manager': 'Отношения с руководителем',
+  Wellness: 'Самочувствие',
+  'Relationship with Peers': 'Отношения с коллегами',
+  'Personal Growth': 'Личностный рост',
+  Alignment: 'Согласованность',
+  Recognition: 'Признание',
+  Feedback: 'Обратная связь',
+  Engagement: 'Вовлеченность',
+  Tip: 'Метрика'
 }
 
 export default metricsru

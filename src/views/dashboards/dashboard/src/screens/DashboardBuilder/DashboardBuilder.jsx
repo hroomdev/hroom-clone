@@ -33,7 +33,6 @@ import {
 } from '@/app/server/actions'
 
 import { useInterval } from './useInterval'
-import { metricsru } from './Metrics'
 
 const intervalDataUpd = 10000
 var participationPercent = 0
@@ -51,6 +50,10 @@ var totalRevenueStats = [
   30 // статистика тотал по всем метрикам  пропустили
 ]
 
+var transactionsMetricStats = [5.1, 12.5, 6.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
+
+var transactionsMetricDiffStats = [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.8, 1.2, 0.8]
+
 const options = {
   year: 'numeric',
   month: 'long',
@@ -63,6 +66,7 @@ export const DashboardBuilder = () => {
   const router = useRouter()
 
   const innerFetchData = useCallback(async () => {
+    //widget progressbar participations data fetch
     await currentQuizPassAll().then(data => {
       participantsQuizPassed = data[0]
       participantsQuizAll = data[1]
@@ -71,18 +75,25 @@ export const DashboardBuilder = () => {
       totalRevenueStats[4] = 100 - participationPercent
     })
 
+    //widgets datetimes data fetch
     await currentQuizTimeStart().then(data => {
       currentQuizStarts = new Date(data)
       curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
       nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
     })
 
+    //widgets engagement data
     var cohortsLevelsPercents = [33, 66]
 
     totalRevenueStats = await getCurrentQuizEngageCohort(cohortsLevelsPercents, totalRevenueStats)
-
     totalRevenueStats.map(item => console.log(item))
 
+    //widgets metrics data transactions
+
+    //transactionsMetricStats = await getCurrentQuizEngageCohort(cohortsLevelsPercents, totalRevenueStats) //todo: logic server
+    //transactionsMetricDiffStats
+
+    //call refresh all widgets visuals explcitly after data fetch
     router.refresh()
   }, [])
 
@@ -149,7 +160,7 @@ export const DashboardBuilder = () => {
                 <DashboardApexLineChart />
               </Grid>
               <Grid item xs>
-                <DashboardTransactions />
+                <DashboardTransactions stats={transactionsMetricStats} statsDiffs={transactionsMetricDiffStats} />
               </Grid>
             </Grid>
           </div>

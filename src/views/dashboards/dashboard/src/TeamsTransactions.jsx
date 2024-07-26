@@ -2,18 +2,11 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 
-//MUI Imports
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 
 // Components Imports
 import MenuItem from '@mui/material/MenuItem'
-
-import OptionMenu from '@core/components/option-menu'
-import CustomAvatar from '@core/components/mui/Avatar'
 
 import { metricsru } from './screens/DashboardBuilder/Metrics'
 import { teamsru } from './screens/DashboardBuilder/Teams'
@@ -71,7 +64,7 @@ const data = [
   }
 ]
 
-var selectedEngagementMetricKey = 'engagement'
+var selectedEngagementMetricKey = 'Engagement'
 
 //<Card>
 //<CardContent>
@@ -90,7 +83,7 @@ const TeamsTransactions = propSelectedMetric => {
   return (
     <div className='transactions-5'>
       <FormControl fullWidth>
-        <InputLabel id='demo-simple-select-label'>{metricsru['metric']}</InputLabel>
+        <InputLabel id='demo-simple-select-label'>{metricsru['Tip']}</InputLabel>
         <Select
           labelId='demo-simple-select-label'
           id='demo-simple-select'
@@ -98,8 +91,8 @@ const TeamsTransactions = propSelectedMetric => {
           label={metricsru[selectedEngagementMetricKey]}
           onChange={e => handleChange(e)}
         >
-          <MenuItem value={metricsru['engagement']}>{metricsru['engagement']}</MenuItem>
-          <MenuItem value={metricsru['satisfaction']}>{metricsru['satisfaction']}</MenuItem>
+          <MenuItem value={metricsru['Engagement']}>{metricsru['Engagement']}</MenuItem>
+          <MenuItem value={metricsru['Satisfaction']}>{metricsru['Satisfaction']}</MenuItem>
         </Select>
       </FormControl>
       <div></div>

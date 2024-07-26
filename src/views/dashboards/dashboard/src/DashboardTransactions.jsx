@@ -15,7 +15,7 @@ import { metricsru } from './screens/DashboardBuilder/Metrics'
 const data = [
   {
     stats: '5.1',
-    title: 'satisfaction',
+    title: 'Satisfaction',
     color: 'warning-opacity-light',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
@@ -23,7 +23,7 @@ const data = [
   },
   {
     stats: '12.5',
-    title: 'ambassadorship',
+    title: 'Ambassadorship',
     color: 'success-opacity-light',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
@@ -32,7 +32,7 @@ const data = [
   {
     stats: '6.3',
     color: 'error-opacity-light',
-    title: 'happiness',
+    title: 'Happiness',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
@@ -40,7 +40,7 @@ const data = [
   {
     stats: '7.7',
     color: 'error-opacity-light',
-    title: 'relationshipWithManager',
+    title: 'Relationship with Manager',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
@@ -48,7 +48,7 @@ const data = [
   {
     stats: '7.7',
     color: 'success-opacity-light',
-    title: 'wellness',
+    title: 'Wellness',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
     diff: '0.4'
@@ -56,7 +56,7 @@ const data = [
   {
     stats: '7.7',
     color: 'success-opacity-light',
-    title: 'relationshipWithPeers',
+    title: 'Relationship with Peers',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
     diff: '0.4'
@@ -64,7 +64,7 @@ const data = [
   {
     stats: '7.7',
     color: 'warning-opacity-light',
-    title: 'personalGrowth',
+    title: 'Personal Growth',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
     diff: '1'
@@ -72,7 +72,7 @@ const data = [
   {
     stats: '7.7',
     color: 'warning-opacity-light',
-    title: 'alignment',
+    title: 'Alignment',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
     diff: '1'
@@ -80,7 +80,7 @@ const data = [
   {
     stats: '7.7',
     color: 'error-opacity-light',
-    title: 'recognition',
+    title: 'Recognition',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
@@ -88,14 +88,16 @@ const data = [
   {
     stats: '7.7',
     color: 'error-opacity-light',
-    title: 'feedback',
+    title: 'Feedback',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
     diff: '1.2'
   }
 ]
 
-const DashboardTransactions = () => {
+const DashboardTransactions = ({ stats, statsDiffs }) => {
+  console.log('stats len' + stats.length + 'statsdifflen' + statsDiffs.length)
+
   return (
     <Card className='bs-full'>
       <CardContent className='!pbs-5'>
@@ -109,14 +111,14 @@ const DashboardTransactions = () => {
                 <div>
                   <Grid container spacing={2} flex justifyContent='flex-start' alignItems='flex-start'>
                     <Grid item xs='auto'>
-                      <Typography variant='h5'>{item.stats}</Typography>
+                      <Typography variant='h5'>{stats[index]}</Typography>
                     </Grid>
                     <Grid item xs='auto'>
                       <img className='vector' alt='Vector' src={item.icon2} />
                     </Grid>
                     <Grid item xs='auto'>
                       <div className='percentage' style={{ color: '#56ca00' }}>
-                        {item.diff}
+                        {statsDiffs[index]}
                       </div>
                     </Grid>
                     <Grid item xs={12}>

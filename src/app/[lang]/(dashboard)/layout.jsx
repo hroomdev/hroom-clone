@@ -36,7 +36,7 @@ const Layout = async ({ children, params }) => {
   //  menu top aligned
   //navbar={<Navbar />}
 
-  console.log('mode ' + mode + 'system  ode' + systemMode + 'paramslang' + params.lang)
+  //console.log('mode ' + mode + 'system  ode' + systemMode + 'paramslang' + params.lang)
 
   return (
     <Providers direction={direction}>
