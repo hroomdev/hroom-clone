@@ -427,12 +427,9 @@ export const getQuestData = async () => {
 export const getCurrentQuizTimeStart = async () => {
   let currentQuiz = await getCurrentQuiz()
 
-  console.log('currentQuiz ' + currentQuiz + ' : actions.js')
   var splittedStr = currentQuiz.toString().split(',')
   var timeStartIdx = await dbQuizTimeStartSIdx()
   var currentQuizTimeStart = Date.parse(splittedStr[timeStartIdx])
-
-  console.log('parsed getCurrentQuizTimeStart ' + currentQuizTimeStart + ' : actions.js')
 
   return currentQuizTimeStart
 }
@@ -448,93 +445,53 @@ export const getCurrentQuizAuditory = async () => {
   return [selectedAnswers.length, currentQuizAudi]
 }
 
-export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, cohortsDistributionPercents) => {
-  //if (cohortsLevelsPercents.length != 3) {
-  //  throw 'ERROR coohorts percent levels MUST BE THREE NOT LOW HIGH '
-  //}
-  //
-  //if (cohortsDistributionPercents.length != cohortsLevelsPercents.length) {
-  //  throw (
-  //    'ERROR coohorts distribution percent levels MUST BE same as levelspercent  which is ' +
-  //    cohortsLevelsPercents.length
-  //  )
-  //}
-
-  console.log(cohortsLevelsPercents.length)
-  console.log(cohortsDistributionPercents.length)
-
+export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, totalRevenueStats) => {
   let quiz = await getQuizOrderByIdDesc(1, 0)
 
   var quizSplittedStr = quiz.toString().split(',')
   var quizTypeIdx = await dbQuizTypeIdx()
   var quizGroupId = quizSplittedStr[quizTypeIdx]
 
-  //console.log('quizGroupId ' + quizGroupId)
   let quizGroupType = await getQuestGroupTypeBy(quizGroupId)
-
-  //console.log('quizGroupType ' + quizGroupType)
-  //console.log('quizGroupType len' + quizGroupType.length)
 
   var quizTypeQuest = quizGroupType.toString().split('-') //   month-20q-1m
 
-  //console.log('quizTypeQuest ' + quizTypeQuest)
-
   var quizTypeQuestNumSepar = quizTypeQuest[1].toString() //
-
-  //console.log('quizTypeQuestNumSepar ' + quizTypeQuestNumSepar)
 
   var quizTypeQuestNumStr = quizTypeQuestNumSepar.substring(0, quizTypeQuestNumSepar.length - 1)
 
-  //console.log('quizTypeQuestNumStr ' + quizTypeQuestNumStr)
-
   var quizCountQuestions = Number.parseInt(quizTypeQuestNumStr) //a
-
-  //console.log('quizCountQuestions ' + quizCountQuestions)
 
   var quizMaxRating = quizCountQuestions * ratingMax //b
 
-  //console.log('quizMaxRating ' + quizMaxRating)
   var quizIdIdx = await dbQuizIdIdx()
   let quizId = quizSplittedStr[quizIdIdx]
 
-  //console.log('quizId ' + quizId)
-
   var selectedAnswers = await getSelectedAnswersBy(quizId)
 
-  //console.log('selectedAnswers ' + selectedAnswers)
-
   var countParticipators = selectedAnswers.length //c
-
-  //console.log('countParticipators ' + countParticipators)
 
   var quizSelectedAnswersInCohortNot = 0 //dnot
   var quizSelectedAnswersInCohortLow = 0 //dlow
   var quizSelectedAnswersInCohortHigh = 0 //dhigh
 
   if (countParticipators <= 0) {
-    cohortsDistributionPercents[0] = 0
-    cohortsDistributionPercents[1] = 0
-    cohortsDistributionPercents[2] = 0
+    totalRevenueStats[3] = 0
+    totalRevenueStats[2] = 0
+    totalRevenueStats[1] = 0
 
-    return cohortsDistributionPercents
+    return totalRevenueStats
   }
 
   const CountCohort = async selectedAnswer => {
-    //console.log('selectedAnswer ' + selectedAnswer)
-
     var selectedAnswerSplittedStr = selectedAnswer.toString().split(',')
 
-    //console.log('selectedAnswerSplittedStr ' + selectedAnswerSplittedStr)
     var selectedAnswersIdx = await dbSelectedAnswersIdIdx()
     var selectedAnswerId = selectedAnswerSplittedStr[selectedAnswersIdx]
-
-    //console.log('selectedAnswerId ' + selectedAnswerId)
 
     var selectedOptions = await getSelectedOptions(selectedAnswerId)
 
     var selectedOptionsSplittedStr = selectedOptions.toString().split(',')
-
-    //console.log('selectedOptionsSplittedStr leng ' + selectedOptionsSplittedStr.length)
 
     var selectedAnswersSummOptions = selectedOptionsSplittedStr
       .map(str => Number.parseInt(str))
@@ -542,32 +499,15 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, cohortsD
         return accumulator + currentValue
       }, 0)
 
-    //console.log('selectedAnswersSummOptions  ' + selectedAnswersSummOptions)
-
     var ratingQuizPercentInt = (selectedAnswersSummOptions / quizMaxRating) * 100 //f
-
-    //console.log(
-    //  '   ratingQuizPercentInt ' +
-    //    ratingQuizPercentInt +
-    //    'level 0 ' +
-    //    cohortsLevelsPercents[0] +
-    //    ' level 1 ' +
-    //    cohortsLevelsPercents[1]
-    //)
 
     //33 66
     if (ratingQuizPercentInt <= cohortsLevelsPercents[0]) {
       quizSelectedAnswersInCohortNot = quizSelectedAnswersInCohortNot + 1
-
-      //console.log('   not  ++' + quizSelectedAnswersInCohortNot)
     } else if (ratingQuizPercentInt <= cohortsLevelsPercents[1]) {
       quizSelectedAnswersInCohortLow = quizSelectedAnswersInCohortLow + 1
-
-      //console.log('   low  ++' + quizSelectedAnswersInCohortLow)
     } else {
       quizSelectedAnswersInCohortHigh = quizSelectedAnswersInCohortHigh + 1
-
-      //console.log('   high  ++' + quizSelectedAnswersInCohortHigh)
     }
   }
 
@@ -577,20 +517,11 @@ export const getCurrentQuizEngageCohort = async (cohortsLevelsPercents, cohortsD
     await CountCohort(selectedAnswer)
   }
 
-  console.log('   not  ' + quizSelectedAnswersInCohortNot)
-  console.log('   low  ' + quizSelectedAnswersInCohortLow)
-  console.log('   high  ' + quizSelectedAnswersInCohortHigh)
-  console.log('   participators  ' + countParticipators)
+  totalRevenueStats[1] = (quizSelectedAnswersInCohortHigh / countParticipators) * 100 //high
+  totalRevenueStats[2] = (quizSelectedAnswersInCohortLow / countParticipators) * 100 //low
+  totalRevenueStats[3] = (quizSelectedAnswersInCohortNot / countParticipators) * 100 //not
 
-  var chpnot = quizSelectedAnswersInCohortNot / countParticipators
-  var chplow = quizSelectedAnswersInCohortLow / countParticipators
-  var chphigh = quizSelectedAnswersInCohortHigh / countParticipators
-
-  console.log('   chpnot  ' + chpnot)
-  console.log('   chplow  ' + chplow)
-  console.log('   chphigh  ' + chphigh)
-
-  return [chpnot * 100, chplow * 100, chphigh * 100]
+  return totalRevenueStats
 }
 
 export const getCurrentQuizIdAudi = async () => {
@@ -633,10 +564,8 @@ export const getSelectedAnswersBy = async quizId => {
     await client.connect()
     var res = await client.query(selectedAnswersIds)
 
-    //console.log('res row length selected answers count :actions.js ' + res.rows.length)
-
     if (res.rows.length <= 0) {
-      //console.log('noone yet participated in  quizId' + quizId)
+      console.log('noone yet participated in  quizId' + quizId)
 
       return selectedAnswers
     }
@@ -672,10 +601,10 @@ export const getSelectedOptions = async answersId => {
     await client.connect()
     var res = await client.query(selectedOptionsQuery)
 
-    //console.log('res row length selected answers count :actions.js ' + res.rows.length)
+    console.log('res row length selected answers count :actions.js ' + res.rows.length)
 
     if (res.rows.length <= 0) {
-      //console.log('noone yet participated in  quizId' + answersId)
+      console.log('noone yet participated in  quizId' + answersId)
 
       return selectedOptions
     }
@@ -721,8 +650,6 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
 
     return currentQuiz
   }
-
-  console.log('get QUIZZ RETURN no result ' + currentQuiz + '')
 }
 
 export const getCurrentQuiz = async () => {

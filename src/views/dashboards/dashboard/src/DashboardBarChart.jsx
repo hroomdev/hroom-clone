@@ -29,8 +29,6 @@ const perioudru = 'Период'
 var selectedTimeInterval = 'quarter'
 
 const DashboardBarChart = () => {
-  //console.log('propSelectedMetric' + propSelectedMetric)
-
   const handleChange = event => {
     var key = Object.keys(intervalsru).find(key => intervalsru[key] === event.target.value)
 

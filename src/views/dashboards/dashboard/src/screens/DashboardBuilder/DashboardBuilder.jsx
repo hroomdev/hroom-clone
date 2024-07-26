@@ -68,40 +68,20 @@ export const DashboardBuilder = () => {
       participantsQuizAll = data[1]
 
       participationPercent = Math.round((participantsQuizPassed / participantsQuizAll) * 100)
-      console.log('participationPercent' + participationPercent)
-
       totalRevenueStats[4] = 100 - participationPercent
     })
 
     await currentQuizTimeStart().then(data => {
-      console.log('currentQuizTimeStart data : DashboardBuidler ' + data)
       currentQuizStarts = new Date(data)
-      console.log('currentQuizStarts data : DashboardBuidler ' + currentQuizStarts)
       curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
-      console.log('curToNow data : DashboardBuidler ' + curToNow)
       nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
-      console.log('nowToNext data : DashboardBuidler ' + nowToNext)
     })
 
-    //console.log('-------------')
-    var engageTest = [totalRevenueStats[3], totalRevenueStats[2], totalRevenueStats[1]]
     var cohortsLevelsPercents = [33, 66]
 
-    //engageTest.map(item => console.log(item))
+    totalRevenueStats = await getCurrentQuizEngageCohort(cohortsLevelsPercents, totalRevenueStats)
 
-    //console.log('cohorts level percents ' + cohortsLevelsPercents.length)
-
-    //console.log('||||||||||||||||||')
-
-    var chp = await getCurrentQuizEngageCohort(cohortsLevelsPercents, engageTest)
-
-    chp.map(item => console.log(item))
-
-    totalRevenueStats[3] = chp[0] //not
-    totalRevenueStats[2] = chp[1] //low
-    totalRevenueStats[1] = chp[2] //high
-
-    //console.log('++++++++++++')
+    totalRevenueStats.map(item => console.log(item))
 
     router.refresh()
   }, [])
