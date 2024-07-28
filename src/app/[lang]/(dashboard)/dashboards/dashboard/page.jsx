@@ -5,34 +5,37 @@ import DashboardWelcomeCard from '@views/dashboards/dashboard/src/DashboardWelco
 
 import { DashboardBuilder } from '@views/dashboards/dashboard/src/screens/DashboardBuilder'
 
-/**
- * ! If you need data using an API call, uncomment the below API code, update the `process.env.API_URL` variable in the
- * ! `.env` file found at root of your project and also update the API endpoints like `/apps/invoice` in below example.
- * ! Also, remove the above server action import and the action itself from the `src/app/server/actions.ts` file to clean up unused code
- * ! because we've used the server action for getting our static data.
- */
-/* const getInvoiceData = async () => {
-  // Vars
-  const res = await fetch(`${process.env.API_URL}/apps/invoice`)
+import { GET } from '@/app/api/apps/dashboard/route'
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch invoice data')
-  }
+import {
+  getDashboardData,
+  getCurrentQuizAuditory as currentQuizPassAll,
+  getCurrentQuizTimeStart as currentQuizTimeStart,
+  getEngageMetrics as getEngageMetrics,
+  companyId
+} from '@/app/server/dashboardstrategy'
 
-  return res.json()
-} */
+const Dashboard = async () => {
+  var dashboardData = await getDashboardData()
 
-const Dashboard = () => {
-  return (
+  //console.log('db : page ' + JSON.stringify(dashboardData))
+
+  //const filteredData = dashboardData?.filter(companyStats => companyStats.id === companyId)
+
+  //if (!filteredData) {
+  //  redirect('/not-found')
+  //}
+
+  return dashboardData ? (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <DashboardWelcomeCard />
       </Grid>
       <Grid item>
-        <DashboardBuilder />
+        <DashboardBuilder dashboardData={dashboardData[companyId - 1]} />
       </Grid>
     </Grid>
-  )
+  ) : null
 }
 
 export default Dashboard

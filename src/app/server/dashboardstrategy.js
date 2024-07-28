@@ -1,3 +1,7 @@
+import ruLocale from 'date-fns/locale/ru'
+
+import { formatDistanceToNow, intervalToDuration } from 'date-fns'
+
 import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
 import { ratingMax } from './const'
 import {
@@ -10,7 +14,166 @@ import {
   getQuestionMetricBy
 } from './actions'
 
+// Data Imports
+
+export var companyId = 1
+
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
+
+const local = 'ru-RU'
+
+export const getDashboardData = async () => {
+  var participantsQuizPassed
+  var participantsQuizAll
+  var participationPercent
+
+  var currentQuizStarts = new Date(Date.UTC(2024, 6, 17, 3, 10, 0)) //23 мая 2024
+  var curToNow = 'неделю'
+  var nowToNext = '13 дней'
+  var nextQuizStarts = new Date(Date.UTC(2024, 7, 5, 7, 12, 6)) // 3 июня 2024
+  var totalRevenueStats = [
+    1.5, // процент изменения с последнего опроса
+    21, // статистика тотал по всем метрикам  вовлеченные
+    26, // статистика тотал по всем метрикам  слабо
+    23, // статистика тотал по всем метрикам  невовлеченные
+    30 // статистика тотал по всем метрикам  пропустили
+  ]
+
+  var transactionsMetricStats = [1.1, 2.2, 3.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
+
+  var transactionsMetricDiffStats = [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.8, 1.2, 0.8]
+
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }
+
+  // Vars
+  var seriesApexLineMetrics = [
+    {
+      data: [5.5, 1.0, 4.5]
+    },
+    {
+      data: [4.5, 2.0, 4.5]
+    },
+    {
+      data: [3.5, 3.0, 4.5]
+    },
+    {
+      data: [2.5, 4.0, 4.5]
+    },
+    {
+      data: [1.5, 5.0, 4.5]
+    },
+    {
+      data: [0.5, 6.0, 4.5]
+    },
+    {
+      data: [9.5, 7.0, 4.5]
+    },
+    {
+      data: [8.5, 8.0, 4.5]
+    },
+    {
+      data: [7.5, 9.0, 4.5]
+    },
+    {
+      data: [6.5, 10.0, 4.5]
+    }
+  ]
+
+  var categoriesApexLineMetrics = ['7/12', '8/12', '9/12']
+
+  var timeStart = Date.now()
+
+  await getCurrentQuizAuditory().then(data => {
+    participantsQuizPassed = data[0]
+
+    participantsQuizAll = data[1]
+
+    participationPercent = Math.round((participantsQuizPassed / participantsQuizAll) * 100)
+
+    totalRevenueStats[4] = 100 - participationPercent
+  })
+
+  await getCurrentQuizTimeStart().then(data => {
+    currentQuizStarts = new Date(data)
+    curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
+    nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
+  })
+
+  var cohortsLevelsPercents = [33, 66]
+
+  for (var i = 0; i < totalRevenueStats.length; i++) {
+    totalRevenueStats[i] = 0
+  }
+
+  for (var i = 0; i < transactionsMetricStats.length; i++) {
+    transactionsMetricStats[i] = 0
+    transactionsMetricDiffStats[i] = 0
+  }
+
+  let quizes = await getQuizOrderByIdDesc(2, 0)
+
+  var diffStats = transactionsMetricDiffStats
+
+  for (var i = quizes.length - 1; i > -1; i--) {
+    var quiz = quizes[i]
+
+    var result = await getEngageMetrics(quiz, cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
+
+    var revStats = result[0]
+    var metStats = result[1]
+
+    diffStats = diffStats.map(function (item, index) {
+      var res = metStats[index] - item
+
+      return res
+    })
+
+    if (i == 0) {
+      totalRevenueStats = revStats
+      transactionsMetricStats = metStats
+      transactionsMetricDiffStats = diffStats
+      break
+    }
+  }
+
+  var timeEnd = Date.now()
+
+  console.log(
+    'interval ' +
+      intervalToDuration({
+        start: timeStart,
+        end: timeEnd
+      })
+  )
+
+  var dbase = []
+
+  var db = {}
+
+  db.id = companyId
+
+  db.participationPercent = participationPercent
+  db.participantsQuizPassed = participantsQuizPassed
+  db.participantsQuizAll = participantsQuizAll
+
+  db.currentQuizStarts = currentQuizStarts.toLocaleDateString(local, options)
+  db.curToNow = curToNow
+  db.nowToNext = nowToNext
+  db.nextQuizStarts = nextQuizStarts.toLocaleDateString(local, options)
+  db.totalRevenueStats = totalRevenueStats //[]
+  db.transactionsMetricStats = transactionsMetricStats //[]
+  db.transactionsMetricDiffStats = transactionsMetricDiffStats //[]
+  db.seriesApexLineMetrics = seriesApexLineMetrics //[]
+  db.categoriesApexLineMetrics = categoriesApexLineMetrics //[]
+
+  dbase.push(db)
+
+  return dbase
+}
 
 export const getCurrentQuizAuditory = async () => {
   let currentQuizIdAudi = await getCurrentQuizIdAudi()
@@ -184,7 +347,7 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
     await CountCohort(selectedAnswer)
   }
 
-  metricsStats.map(item => console.log('selAnsLen ' + selAnsLen + ' item ' + item))
+  //metricsStats.map(item => console.log('selAnsLen ' + selAnsLen + ' item ' + item))
 
   for (var i = 0; i < metricsStats.length; i++) {
     if (metricsStats[i] != 0) {

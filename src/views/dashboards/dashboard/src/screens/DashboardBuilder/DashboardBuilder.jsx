@@ -1,7 +1,5 @@
 'use client'
 
-import React, { useEffect, useState, useCallback } from 'react'
-
 import { useRouter } from 'next/navigation'
 
 import { Truculenta } from 'next/font/google'
@@ -9,11 +7,6 @@ import { Truculenta } from 'next/font/google'
 import Grid from '@mui/material/Grid'
 
 import { formatDistanceToNow, subDays, intervalToDuration } from 'date-fns'
-
-import enLocale from 'date-fns/locale/en-US'
-import ruLocale from 'date-fns/locale/ru'
-
-import { getQuizOrderByIdDesc } from '@/app/server/actions'
 
 import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
 import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
@@ -30,34 +23,6 @@ import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineS
 import { RemixIconsLineSystemErrorWarningLine1 } from '../../icons/RemixIconsLineSystemErrorWarningLine1'
 import './style.css'
 
-import {
-  getCurrentQuizAuditory as currentQuizPassAll,
-  getCurrentQuizTimeStart as currentQuizTimeStart,
-  getEngageMetrics as getEngageMetrics
-} from '@/app/server/dashboardstrategy'
-
-import { useInterval } from './useInterval'
-
-const intervalDataUpd = 30000
-var participationPercent = 0
-var participantsQuizPassed = 0
-var participantsQuizAll = 0
-var currentQuizStarts = new Date(Date.UTC(2024, 6, 17, 3, 10, 0)) //23 мая 2024
-var curToNow = 'неделю'
-var nowToNext = '13 дней'
-var nextQuizStarts = new Date(Date.UTC(2024, 7, 5, 7, 12, 6)) // 3 июня 2024
-var totalRevenueStats = [
-  1.5, // процент изменения с последнего опроса
-  21, // статистика тотал по всем метрикам  вовлеченные
-  26, // статистика тотал по всем метрикам  слабо
-  23, // статистика тотал по всем метрикам  невовлеченные
-  30 // статистика тотал по всем метрикам  пропустили
-]
-
-var transactionsMetricStats = [1.1, 2.2, 3.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
-
-var transactionsMetricDiffStats = [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.8, 1.2, 0.8]
-
 const options = {
   year: 'numeric',
   month: 'long',
@@ -66,164 +31,23 @@ const options = {
 
 var selectedMetricByTeam = 'engagement'
 
-// Vars
-var seriesApexLineMetrics = [
-  {
-    data: [5.5, 1.0, 4.5]
-  },
-  {
-    data: [4.5, 2.0, 4.5]
-  },
-  {
-    data: [3.5, 3.0, 4.5]
-  },
-  {
-    data: [2.5, 4.0, 4.5]
-  },
-  {
-    data: [1.5, 5.0, 4.5]
-  },
-  {
-    data: [0.5, 6.0, 4.5]
-  },
-  {
-    data: [9.5, 7.0, 4.5]
-  },
-  {
-    data: [8.5, 8.0, 4.5]
-  },
-  {
-    data: [7.5, 9.0, 4.5]
-  },
-  {
-    data: [6.5, 10.0, 4.5]
-  }
-]
+export const DashboardBuilder = ({ dashboardData }) => {
+  //console.log('dashboardData : DashboardBuilder  ' + JSON.stringify(dashboardData))
 
-var categoriesApexLineMetrics = ['7/12', '8/12', '9/12']
-var refreshing = false
+  var participantsQuizPassed = dashboardData.participantsQuizPassed
+  var participantsQuizAll = dashboardData.participantsQuizAll
+  var participationPercent = dashboardData.participationPercent
 
-export const DashboardBuilder = () => {
-  const router = useRouter()
+  var currentQuizStarts = dashboardData.currentQuizStarts
+  var nextQuizStarts = dashboardData.nextQuizStarts
+  var curToNow = dashboardData.curToNow
+  var nowToNext = dashboardData.nowToNext
 
-  const innerFetchData = useCallback(async () => {
-    if (refreshing) {
-      return
-    }
-
-    refreshing = true
-    var timeStart = Date.now()
-
-    //widget progressbar participations data fetch
-    //await currentQuizPassAll().then(data => {
-    //  participantsQuizPassed = data[0]
-    //  participantsQuizAll = data[1]
-    //
-    //  participationPercent = Math.round((participantsQuizPassed / participantsQuizAll) * 100)
-    //  totalRevenueStats[4] = 100 - participationPercent
-    //})
-    //
-    ////widgets datetimes data fetch
-    //
-    //await currentQuizTimeStart().then(data => {
-    //  currentQuizStarts = new Date(data)
-    //  curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
-    //  nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
-    //})
-
-    //widgets engagement data
-    //widgets metrics data transactions
-
-    var cohortsLevelsPercents = [33, 66]
-
-    //console.log('transactionsMetricStats before')
-    //transactionsMetricStats.map(item => console.log(item))
-
-    //if (cohortsLevelsPercents.length != 2) {
-    //  console.error('cohortsLevelsPercents.length is NOT 2 code base using two level system in cohort calculation')
-    //}
-    //
-    //if (totalRevenueStats.length != 5) {
-    //  console.error('totalRevenueStats.length is ' + totalRevenueStats.length + ' must be 5 skip hg low not  ')
-    //}
-    //
-    //if (transactionsMetricStats.length != 10) {
-    //  console.error('metricsStats length is' + metricsru.length + ' must be TEN : Dashboardstrategy')
-    //}
-    //
-
-    //reset totals
-    for (var i = 0; i < totalRevenueStats.length; i++) {
-      //reset test metricStats
-      totalRevenueStats[i] = 0
-    }
-
-    for (var i = 0; i < transactionsMetricStats.length; i++) {
-      //reset test metricStats
-      transactionsMetricStats[i] = 0
-      transactionsMetricDiffStats[i] = 0
-    }
-
-    //console.log('before  end')
-    //transactionsMetricDiffStats.map(item => console.log(item))
-
-    let quizes = await getQuizOrderByIdDesc(2, 0)
-
-    var diffStats = transactionsMetricDiffStats
-
-    for (var i = quizes.length - 1; i > -1; i--) {
-      var quiz = quizes[i]
-
-      var result = await getEngageMetrics(quiz, cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
-
-      //read global stat var values
-      var revStats = result[0]
-      var metStats = result[1]
-
-      diffStats = diffStats.map(function (item, index) {
-        // In this case item correspond to currentValue of array a,
-        // using index to get value from array b
-        var res = metStats[index] - item
-
-        return res
-      })
-
-      if (i == 0) {
-        totalRevenueStats = revStats
-        transactionsMetricStats = metStats
-        transactionsMetricDiffStats = diffStats
-        break
-      }
-    }
-
-    //transactionsMetricDiffStats.map(item => console.log(item))
-
-    //call refresh all widgets visuals explcitly after data fetch
-    //console.log('innerFetchData  end')
-    var timeEnd = Date.now()
-    var periuod = timeEnd - timeStart
-
-    var interval = intervalToDuration({
-      start: timeStart,
-      end: timeEnd
-    })
-
-    //console.log('minus unformatted ')
-    console.log('interval ' + interval.seconds)
-
-    router.refresh()
-
-    refreshing = false
-  }, [])
-
-  function unmount() {
-    return () => {}
-  }
-
-  // runs every `interval`
-  useInterval(() => {
-    innerFetchData()
-  }, intervalDataUpd)
+  var totalRevenueStats = dashboardData.totalRevenueStats
+  var transactionsMetricStats = dashboardData.transactionsMetricStats
+  var transactionsMetricDiffStats = dashboardData.transactionsMetricDiffStats
+  var seriesApexLineMetrics = dashboardData.seriesApexLineMetrics
+  var categoriesApexLineMetrics = dashboardData.categoriesApexLineMetrics
 
   return (
     <div className='dashboard-builder'>
@@ -242,12 +66,12 @@ export const DashboardBuilder = () => {
               <p className='element-2'>
                 Последний опрос
                 <br />
-                {curToNow} назад / {currentQuizStarts.toLocaleDateString('ru-RU', options)}
+                {curToNow} назад / {currentQuizStarts}
               </p>
               <p className='element-2'>
                 Следующий опрос
                 <br />
-                через {nowToNext} / {nextQuizStarts.toLocaleDateString('ru-RU', options)}
+                через {nowToNext} / {nextQuizStarts}
               </p>
               <div className='frame-5'>
                 <div className='frame-6'>
