@@ -1,9 +1,33 @@
 // Next Imports
 import { NextResponse } from 'next/server'
 
+import {
+  Item,
+  getDashboardData,
+  getCurrentQuizAuditory as currentQuizPassAll,
+  getCurrentQuizTimeStart as currentQuizTimeStart,
+  getEngageMetrics as getEngageMetrics,
+  preload,
+  checkIsAvailable
+} from '@/app/server/dashboardstrategy'
+
+const companyId = 1
 
 export async function GET() {
-  throw 'get NOT IMPLEMENTED EXCEPTION : route.js dashboard'
+  preload(companyId)
 
-  return null
+  const isAvailable = checkIsAvailable(companyId)
+
+  //console.log('db : page ' + JSON.stringify(dashboardData))
+
+  //const filteredData = dashboardData?.filter(companyStats => companyStats.id === companyId)
+
+  //if (!filteredData) {
+  //  redirect('/not-found')
+  //}
+  var db = isAvailable ? Item(companyId) : null
+
+  //return isAvailable ? Item(companyId) : null
+
+  return NextResponse.json(db)
 }
