@@ -1,6 +1,15 @@
+// MUI Imports
+import React, { useCallback, cache } from 'react'
+
+import Grid from '@mui/material/Grid'
+
 import ruLocale from 'date-fns/locale/ru'
 
 import { formatDistanceToNow, intervalToDuration } from 'date-fns'
+
+import { DashboardBuilder } from '@views/dashboards/dashboard/src/screens/DashboardBuilder'
+
+import DashboardWelcomeCard from '@views/dashboards/dashboard/src/DashboardWelcomeCard'
 
 import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
 import { ratingMax } from './const'
@@ -16,13 +25,63 @@ import {
 
 // Data Imports
 
-export var companyId = 1
+const intervalDataUpd = 1000
 
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 
 const local = 'ru-RU'
 
-export const getDashboardData = async () => {
+export async function preload(id) {
+  // void evaluates the given expression and returns undefined
+  // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/void
+  //https://nextjs.org/docs/app/building-your-application/data-fetching/patterns#parallel-and-sequential-data-fetching
+  await getDashboardData(id)
+}
+
+export async function Item(id) {
+  const result = await getDashboardData(id)
+
+  return (
+    <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <DashboardWelcomeCard />
+      </Grid>
+      <Grid item>
+        <DashboardBuilder dashboardData={result} />
+      </Grid>
+    </Grid>
+  )
+}
+
+var resultAllIds = []
+
+async function waitUntil(f) {
+  return await new Promise(resolve => {
+    const interval = setInterval(async () => {
+      var result = await f()
+
+      //console.log(' isavailabel ' + result)
+
+      if (result) {
+        resolve('foo')
+        clearInterval(interval)
+      }
+    }, intervalDataUpd)
+  })
+}
+
+export async function checkIsAvailable(id) {
+  const isAvailable = async () => {
+    return resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
+  }
+
+  await waitUntil(isAvailable)
+
+  return true
+}
+
+export const getDashboardData = cache(async id => {
+  //set cache renewal conditionscheck is available on each new user data must be set false
   var participantsQuizPassed
   var participantsQuizAll
   var participationPercent
@@ -121,10 +180,24 @@ export const getDashboardData = async () => {
   for (var i = quizes.length - 1; i > -1; i--) {
     var quiz = quizes[i]
 
-    var result = await getEngageMetrics(quiz, cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
+    //console.log(
+    //  'q' +
+    //    JSON.stringify(quiz) +
+    //    ' cohortsLevelsPercents ' +
+    //    cohortsLevelsPercents +
+    //    ' totalRevenueStats ' +
+    //    totalRevenueStats
+    //)
 
-    var revStats = result[0]
-    var metStats = result[1]
+    //console.log(' transactionsMetricStats ' + transactionsMetricStats)
+
+    var engageResult = await getEngageMetrics(quiz, cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
+
+    var revStats = engageResult[0]
+    var metStats = engageResult[1]
+
+    //console.log('result0' + JSON.stringify(engageResult[0]))
+    //console.log('result1' + JSON.stringify(engageResult[1]))
 
     diffStats = diffStats.map(function (item, index) {
       var res = metStats[index] - item
@@ -142,38 +215,35 @@ export const getDashboardData = async () => {
 
   var timeEnd = Date.now()
 
-  console.log(
-    'interval ' +
-      intervalToDuration({
-        start: timeStart,
-        end: timeEnd
-      })
-  )
+  //console.log(
+  //  'interval ' +
+  //    intervalToDuration({
+  //      start: timeStart,
+  //      end: timeEnd
+  //    })
+  //)
 
-  var dbase = []
+  var db = {
+    id: id,
+    participationPercent: participationPercent,
+    participantsQuizPassed: participantsQuizPassed,
+    participantsQuizAll: participantsQuizAll,
 
-  var db = {}
+    currentQuizStarts: currentQuizStarts.toLocaleDateString(local, options),
+    curToNow: curToNow,
+    nowToNext: nowToNext,
+    nextQuizStarts: nextQuizStarts.toLocaleDateString(local, options),
+    totalRevenueStats: totalRevenueStats, //[],
+    transactionsMetricStats: transactionsMetricStats, //[]
+    transactionsMetricDiffStats: transactionsMetricDiffStats, //[]
+    seriesApexLineMetrics: seriesApexLineMetrics, //[]
+    categoriesApexLineMetrics: categoriesApexLineMetrics //[]
+  }
 
-  db.id = companyId
+  resultAllIds[id] = db
 
-  db.participationPercent = participationPercent
-  db.participantsQuizPassed = participantsQuizPassed
-  db.participantsQuizAll = participantsQuizAll
-
-  db.currentQuizStarts = currentQuizStarts.toLocaleDateString(local, options)
-  db.curToNow = curToNow
-  db.nowToNext = nowToNext
-  db.nextQuizStarts = nextQuizStarts.toLocaleDateString(local, options)
-  db.totalRevenueStats = totalRevenueStats //[]
-  db.transactionsMetricStats = transactionsMetricStats //[]
-  db.transactionsMetricDiffStats = transactionsMetricDiffStats //[]
-  db.seriesApexLineMetrics = seriesApexLineMetrics //[]
-  db.categoriesApexLineMetrics = categoriesApexLineMetrics //[]
-
-  dbase.push(db)
-
-  return dbase
-}
+  return db
+})
 
 export const getCurrentQuizAuditory = async () => {
   let currentQuizIdAudi = await getCurrentQuizIdAudi()
@@ -220,8 +290,12 @@ export const getCurrentQuizIdAudi = async () => {
 }
 
 export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenueStats, metricsStats) => {
+  //console.log('getEngageMetrics enter ')
+
   var revStats = totalRevenueStats
   var metStats = metricsStats
+
+  metStats.map(item => console.log('ENTER getEngageMetrics selAnsLen item ' + item))
 
   const midRangeRate = ratingMax / 2
   var quizSplittedStr = quiz.toString().split(',')
@@ -325,7 +399,7 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
       var metricIdx = Object.keys(metricsru).findIndex(key => key == metric)
 
       if (counterMetricQuiz != 0) {
-        metricsStats[metricIdx] = metricsStats[metricIdx] + selectedOptionsNumArr[i] / counterMetricQuiz[metricIdx] // //0+5.2+6.4+..
+        metStats[metricIdx] = metStats[metricIdx] + selectedOptionsNumArr[i] / counterMetricQuiz[metricIdx] // //0+5.2+6.4+..
       } else
         console.error(
           'count of question in quiz id' +
@@ -347,17 +421,18 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
     await CountCohort(selectedAnswer)
   }
 
-  //metricsStats.map(item => console.log('selAnsLen ' + selAnsLen + ' item ' + item))
+  //metStats.map(item => console.log('selAnsLen ' + selAnsLen + ' item ' + item))
 
-  for (var i = 0; i < metricsStats.length; i++) {
-    if (metricsStats[i] != 0) {
-      metricsStats[i] = metricsStats[i] / selAnsLen
-    } else console.log('metricsStats [i] ' + i + ' is zero ')
+  for (var i = 0; i < metStats.length; i++) {
+    if (metStats[i] != 0) {
+      //console.log('metStats [i] ' + i + ' is cluclulating  ' + metStats[i])
+      metStats[i] = metStats[i] / selAnsLen
+    } else console.log('metStats [i] ' + i + ' is zero ')
   }
 
-  totalRevenueStats[1] = (quizSelectedAnswersInCohortHigh / quizCountParticipators) * 100 //high
-  totalRevenueStats[2] = (quizSelectedAnswersInCohortLow / quizCountParticipators) * 100 //low
-  totalRevenueStats[3] = (quizSelectedAnswersInCohortNot / quizCountParticipators) * 100 //not
+  revStats[1] = (quizSelectedAnswersInCohortHigh / quizCountParticipators) * 100 //high
+  revStats[2] = (quizSelectedAnswersInCohortLow / quizCountParticipators) * 100 //low
+  revStats[3] = (quizSelectedAnswersInCohortNot / quizCountParticipators) * 100 //not
 
-  return [totalRevenueStats, metricsStats]
+  return [revStats, metStats]
 }

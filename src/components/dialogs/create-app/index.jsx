@@ -238,7 +238,7 @@ const CreateApp = ({ open, setOpen }) => {
     await fetch(-1)
 
     router.push('/ru//dashboards/dashboard') //
-    router.prefetch('/ru//dashboards/dashboard')
+    //router.prefetch('/ru//dashboards/dashboard')
     router.refresh() //instantly calls hide through  collapseVerticalNav(true) useEffect Navigation
 
     await delay(1000)

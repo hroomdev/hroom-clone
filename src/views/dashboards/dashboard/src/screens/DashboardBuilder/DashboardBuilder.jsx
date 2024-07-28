@@ -32,7 +32,7 @@ const options = {
 var selectedMetricByTeam = 'engagement'
 
 export const DashboardBuilder = ({ dashboardData }) => {
-  //console.log('dashboardData : DashboardBuilder  ' + JSON.stringify(dashboardData))
+  console.log('dashboardData : DashboardBuilder  ' + JSON.stringify(dashboardData))
 
   var participantsQuizPassed = dashboardData.participantsQuizPassed
   var participantsQuizAll = dashboardData.participantsQuizAll

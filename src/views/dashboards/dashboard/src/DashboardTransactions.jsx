@@ -98,6 +98,8 @@ const data = [
 const DashboardTransactions = ({ stats, statsDiffs }) => {
   //console.log('stats len' + stats.length + 'statsdifflen' + statsDiffs.length)
 
+  //'#43ca00'
+
   return (
     <Card className='bs-full'>
       <CardContent className='!pbs-5'>
@@ -117,9 +119,13 @@ const DashboardTransactions = ({ stats, statsDiffs }) => {
                       <img className='vector' alt='Vector' src={item.icon2} />
                     </Grid>
                     <Grid item xs='auto'>
-                      <div className='percentage' style={{ color: '#56ca00' }}>
-                        {statsDiffs[index].toFixed(1)}
-                      </div>
+                      <div
+                        className='percentage'
+                        style={{
+                          color: '#56ca00'
+                        }}
+                      ></div>
+                      <div>{statsDiffs[index].toFixed(1)}</div>
                     </Grid>
                     <Grid item xs={12}>
                       {' '}
