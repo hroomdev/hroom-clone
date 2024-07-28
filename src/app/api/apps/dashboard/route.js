@@ -1,15 +1,7 @@
 // Next Imports
 import { NextResponse } from 'next/server'
 
-import {
-  Item,
-  getDashboardData,
-  getCurrentQuizAuditory as currentQuizPassAll,
-  getCurrentQuizTimeStart as currentQuizTimeStart,
-  getEngageMetrics as getEngageMetrics,
-  preload,
-  checkIsAvailable
-} from '@/app/server/dashboardstrategy'
+import { Item, preload, checkIsAvailable } from '@/app/server/dashboardstrategy'
 
 const companyId = 1
 

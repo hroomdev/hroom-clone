@@ -16,21 +16,21 @@ import { binaryFormat } from './../../../../app/server/const'
 
 const DashboardRadialBarChart = ({ stats }) => {
   const radialBarColors = {
-    series1: '#56ca00',
-    series2: 'rgba(255, 195, 51, 1)',
-    series3: 'rgba(239, 83, 80, 1)',
-    series4: 'rgba(138, 141, 147, 0.38)'
+    series1: '#56ca00'
   }
 
-  var series = [
-    Math.round(stats[1].toString(binaryFormat)),
-    Math.round(stats[2].toString(binaryFormat)),
-    Math.round(stats[3].toString(binaryFormat)),
-    Math.round(stats[4].toString(binaryFormat))
-  ]
+  //series2: 'rgba(255, 195, 51, 1)',
+  //series3: 'rgba(239, 83, 80, 1)',
+  //series4: 'rgba(138, 141, 147, 0.38)'
+
+  var series = [Math.round(stats[5])]
+
+  //Math.round(stats[2].toString(binaryFormat)),
+  //Math.round(stats[3].toString(binaryFormat)),
+  //Math.round(stats[4].toString(binaryFormat))
 
   const options = {
-    labels: ['Вовлеченные', 'Слабо вовлеченные', 'Невовлеченные', 'Пропустили'],
+    labels: [''], //, Вовлеченные 'Слабо вовлеченные', 'Невовлеченные', 'Пропустили'
     chart: {
       sparkline: { enabled: true }
     },
@@ -44,11 +44,11 @@ const DashboardRadialBarChart = ({ stats }) => {
       lineCap: 'square',
       curve: 'straight'
     },
-    colors: [radialBarColors.series1, radialBarColors.series2, radialBarColors.series3, radialBarColors.series4],
+    colors: [radialBarColors.series1], //, radialBarColors.series2, radialBarColors.series3, radialBarColors.series4
     plotOptions: {
       radialBar: {
-        endAngle: 90,
-        startAngle: -90,
+        endAngle: 135,
+        startAngle: -135,
         hollow: { size: '60%' },
         track: { background: 'var(--mui-palette-customColors-trackBg)' },
         dataLabels: {
@@ -60,6 +60,19 @@ const DashboardRadialBarChart = ({ stats }) => {
             color: 'var(--mui-palette-text-secondary)'
           }
         }
+      }
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'dark',
+        type: 'horizontal',
+        shadeIntensity: 0.5,
+        gradientToColors: ['#ABE5A1'],
+        inverseColors: true,
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [0, 100]
       }
     },
     responsive: [

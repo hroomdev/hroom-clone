@@ -95,7 +95,8 @@ export const getDashboardData = cache(async id => {
     21, // статистика тотал по всем метрикам  вовлеченные
     26, // статистика тотал по всем метрикам  слабо
     23, // статистика тотал по всем метрикам  невовлеченные
-    30 // статистика тотал по всем метрикам  пропустили
+    30, // статистика тотал по всем метрикам  пропустили
+    1.1 //абсолютное значение вовлеченности
   ]
 
   var transactionsMetricStats = [1.1, 2.2, 3.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
@@ -108,41 +109,46 @@ export const getDashboardData = cache(async id => {
     day: 'numeric'
   }
 
+  const optionsChart = {
+    day: 'numeric',
+    hour: 'numeric'
+  }
+
   // Vars
   var seriesApexLineMetrics = [
     {
-      data: [5.5, 1.0, 4.5]
+      data: [] //5.5, 1.0, 4.5
     },
     {
-      data: [4.5, 2.0, 4.5]
+      data: []
     },
     {
-      data: [3.5, 3.0, 4.5]
+      data: []
     },
     {
-      data: [2.5, 4.0, 4.5]
+      data: []
     },
     {
-      data: [1.5, 5.0, 4.5]
+      data: []
     },
     {
-      data: [0.5, 6.0, 4.5]
+      data: []
     },
     {
-      data: [9.5, 7.0, 4.5]
+      data: []
     },
     {
-      data: [8.5, 8.0, 4.5]
+      data: []
     },
     {
-      data: [7.5, 9.0, 4.5]
+      data: []
     },
     {
-      data: [6.5, 10.0, 4.5]
+      data: []
     }
   ]
 
-  var categoriesApexLineMetrics = ['7/12', '8/12', '9/12']
+  var categoriesApexLineMetrics = [] //'7/12', '8/12', '9/12'
 
   var timeStart = Date.now()
 
@@ -165,7 +171,7 @@ export const getDashboardData = cache(async id => {
   var cohortsLevelsPercents = [33, 66]
 
   for (var i = 0; i < totalRevenueStats.length; i++) {
-    totalRevenueStats[i] = 0
+    if (i != 4) totalRevenueStats[i] = 0
   }
 
   for (var i = 0; i < transactionsMetricStats.length; i++) {
@@ -173,44 +179,62 @@ export const getDashboardData = cache(async id => {
     transactionsMetricDiffStats[i] = 0
   }
 
-  let quizes = await getQuizOrderByIdDesc(2, 0)
+  let quizes = await getQuizOrderByIdDesc(12, 0)
 
   var diffStats = transactionsMetricDiffStats
 
   for (var i = quizes.length - 1; i > -1; i--) {
     var quiz = quizes[i]
 
-    //console.log(
-    //  'q' +
-    //    JSON.stringify(quiz) +
-    //    ' cohortsLevelsPercents ' +
-    //    cohortsLevelsPercents +
-    //    ' totalRevenueStats ' +
-    //    totalRevenueStats
-    //)
-
-    //console.log(' transactionsMetricStats ' + transactionsMetricStats)
-
     var engageResult = await getEngageMetrics(quiz, cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
+
+    console.log('quiz ' + JSON.stringify(quiz) + 'len - 1 ' + (quizes.length - 1) + ' i ' + i)
 
     var revStats = engageResult[0]
     var metStats = engageResult[1]
 
-    //console.log('result0' + JSON.stringify(engageResult[0]))
-    //console.log('result1' + JSON.stringify(engageResult[1]))
+    if (i == 1) {
+      diffStats = diffStats.map(function (item, index) {
+        var res = metStats[index]
 
-    diffStats = diffStats.map(function (item, index) {
-      var res = metStats[index] - item
+        return res
+      })
 
-      return res
-    })
+      //console.log('engage current ' + totalRevenueStats[5])
+    }
+
+    if (i == 0) {
+      diffStats = diffStats.map(function (item, index) {
+        var res = metStats[index] - item
+
+        return res
+      })
+      var engageLast = diffStats.reduce((partialSum, a) => partialSum + a, 0) / 10
+
+      totalRevenueStats[0] = (engageLast / 10) * 100
+    }
 
     if (i == 0) {
       totalRevenueStats = revStats
       transactionsMetricStats = metStats
       transactionsMetricDiffStats = diffStats
-      break
+      totalRevenueStats[5] = metStats.reduce((partialSum, a) => partialSum + a, 0) / 10
     }
+
+    seriesApexLineMetrics = seriesApexLineMetrics.map((item, index) => {
+      item.data.push(metStats[index].toFixed(2))
+
+      return item
+    })
+
+    var quizSplittedStr = quiz.toString().split(',')
+    var quizStartsAtDateIdx = await dbQuizTimeStartSIdx()
+    var quizStartsAtDate = quizSplittedStr[quizStartsAtDateIdx]
+    var dateParsed = Date.parse(quizStartsAtDate)
+    var dateToLocal = new Date(dateParsed).toLocaleString(local, options)
+
+    categoriesApexLineMetrics.push(dateToLocal)
+    console.log('push ' + dateToLocal)
   }
 
   var timeEnd = Date.now()
@@ -290,12 +314,8 @@ export const getCurrentQuizIdAudi = async () => {
 }
 
 export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenueStats, metricsStats) => {
-  //console.log('getEngageMetrics enter ')
-
   var revStats = totalRevenueStats
   var metStats = metricsStats
-
-  metStats.map(item => console.log('ENTER getEngageMetrics selAnsLen item ' + item))
 
   const midRangeRate = ratingMax / 2
   var quizSplittedStr = quiz.toString().split(',')
@@ -327,7 +347,9 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
 
   //transactions stats START/////////////////////////////////////
   let quizGroupGroup = await getQuestGroupGroupBy(quizGroupId) //'1,2,3,4,5,6,32'..
+
   var questionsIdsStrsArr = quizGroupGroup.toString().split(',') //['1','2','3'..]
+
   var questionsIdsArr = questionsIdsStrsArr.map(qIdStr => Number.parseInt(qIdStr)) //[1,2,3..]
   var questionsMetricsArr = await Promise.all(
     // eslint-disable-next-line lines-around-comment
@@ -342,6 +364,7 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
   var counterMetricQuiz = [metStats.length]
 
   for (var i = 0; i < metStats.length; i++) {
+    metStats[i] = midRangeRate
     var counterMetric = questionsMetricsArr.reduce((accumulator, currentValue) => {
       if (Object.keys(metricsru).at(i) == currentValue) {
         return accumulator + 1
@@ -394,13 +417,14 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
       quizSelectedAnswersInCohortHigh = quizSelectedAnswersInCohortHigh + 1
     }
 
-    for (var i = 0; i < selectedOptionsNumArr.length; i++) {
+    //some selectedOptions generated more than max length todo swap remove or update to match
+    for (var i = 0; i < questionsMetricsArr.length; i++) {
       var metric = questionsMetricsArr[i].toString()
       var metricIdx = Object.keys(metricsru).findIndex(key => key == metric)
 
-      if (counterMetricQuiz != 0) {
+      if (counterMetricQuiz != 0)
         metStats[metricIdx] = metStats[metricIdx] + selectedOptionsNumArr[i] / counterMetricQuiz[metricIdx] // //0+5.2+6.4+..
-      } else
+      else {
         console.error(
           'count of question in quiz id' +
             quizId +
@@ -410,6 +434,7 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
             metric +
             ' zero ERROR'
         )
+      }
     }
   }
 
@@ -425,8 +450,8 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
 
   for (var i = 0; i < metStats.length; i++) {
     if (metStats[i] != 0) {
-      //console.log('metStats [i] ' + i + ' is cluclulating  ' + metStats[i])
       metStats[i] = metStats[i] / selAnsLen
+      console.log('metStats [i] ' + i + ' selAnsLen  ' + selAnsLen)
     } else console.log('metStats [i] ' + i + ' is zero ')
   }
 

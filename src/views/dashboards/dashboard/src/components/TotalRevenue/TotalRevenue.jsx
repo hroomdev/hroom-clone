@@ -20,6 +20,7 @@ var percentageHigh = 0
 var percentageLow = 0
 var percentageNot = 0
 var percentageSkip = 0
+var engageAbs = 8.2
 
 export const TotalRevenue = ({
   className,
@@ -34,6 +35,7 @@ export const TotalRevenue = ({
   percentageLow = stats[2]
   percentageNot = stats[3]
   percentageSkip = stats[4]
+  engageAbs = stats[5]
 
   //console.log('stats.len : Total ' + stats.length)
 
@@ -45,7 +47,7 @@ export const TotalRevenue = ({
       <div className='chart'>
         <div className='activitiy-gauge'>
           <DashboardRadialBarChart stats={stats} />
-          <div className='percentage'>{percentageDiff}%</div>
+          <div className='percentage'>{percentageDiff.toFixed(1)}%</div>
           <img className='vector' alt='Vector' src='/static/img/vector.svg' />
           <div className='overlap-group'></div>
         </div>

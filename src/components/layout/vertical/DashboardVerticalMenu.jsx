@@ -85,6 +85,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           icon={<i className='ri-star-smile-line' />}
           onClick={async () => {
             console.log('onclick menuitem')
+
             var countGenerated = 20
             var maximum = 10
             var generatedOptions = generateOptions(countGenerated, maximum)
@@ -104,16 +105,19 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem
           icon={<i className='ri-wechat-line' />}
           onClick={async () => {
-            var randomDayNum = 6 + getRandomInt(15) //[7,21]
+            //var randomDayNum = 6 + getRandomInt(15) //[7,21]
 
-            console.log(' randomDayNum  ' + randomDayNum)
+            //console.log(' randomDayNum  ' + randomDayNum)
 
-            const dates = generateDates(new Date(2023, 11, randomDayNum), new Date(2023, 11, randomDayNum + 7), 1)
-            const date = dates[0]
+            //const dates = generateDates(new Date(2024, 6, randomDayNum), new Date(2023, 6, randomDayNum + 7), 1)
+            //const date = dates[0]
+            const dateNow = new Date()
 
-            console.log(date)
+            //const date = dateNow.getDate()
 
-            var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, date)
+            console.log(dateNow)
+
+            var formatted = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, dateNow)
             var quizTypeId = '1'
             var auditory = '300'
             let c = await createQuiz(formatted, quizTypeId, auditory)

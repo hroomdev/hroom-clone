@@ -98,7 +98,11 @@ const data = [
 const DashboardTransactions = ({ stats, statsDiffs }) => {
   //console.log('stats len' + stats.length + 'statsdifflen' + statsDiffs.length)
 
-  //'#43ca00'
+  //'#8a8d9361' color grey
+  //'#56ca00' color green
+  //'#ef5350' color red
+
+  //upside down transform: scaleX(-1)
 
   return (
     <Card className='bs-full'>
