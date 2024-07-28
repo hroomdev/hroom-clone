@@ -4,12 +4,16 @@ import React, { useEffect, useState, useCallback } from 'react'
 
 import { useRouter } from 'next/navigation'
 
+import { Truculenta } from 'next/font/google'
+
 import Grid from '@mui/material/Grid'
 
-import { formatDistanceToNow, subDays } from 'date-fns'
+import { formatDistanceToNow, subDays, intervalToDuration } from 'date-fns'
 
 import enLocale from 'date-fns/locale/en-US'
 import ruLocale from 'date-fns/locale/ru'
+
+import { getQuizOrderByIdDesc } from '@/app/server/actions'
 
 import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
 import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
@@ -29,8 +33,7 @@ import './style.css'
 import {
   getCurrentQuizAuditory as currentQuizPassAll,
   getCurrentQuizTimeStart as currentQuizTimeStart,
-  getCurrentQuizEngageMetrics,
-  getCurrentQuizMetricStats
+  getEngageMetrics as getEngageMetrics
 } from '@/app/server/dashboardstrategy'
 
 import { useInterval } from './useInterval'
@@ -63,26 +66,70 @@ const options = {
 
 var selectedMetricByTeam = 'engagement'
 
+// Vars
+var seriesApexLineMetrics = [
+  {
+    data: [5.5, 1.0, 4.5]
+  },
+  {
+    data: [4.5, 2.0, 4.5]
+  },
+  {
+    data: [3.5, 3.0, 4.5]
+  },
+  {
+    data: [2.5, 4.0, 4.5]
+  },
+  {
+    data: [1.5, 5.0, 4.5]
+  },
+  {
+    data: [0.5, 6.0, 4.5]
+  },
+  {
+    data: [9.5, 7.0, 4.5]
+  },
+  {
+    data: [8.5, 8.0, 4.5]
+  },
+  {
+    data: [7.5, 9.0, 4.5]
+  },
+  {
+    data: [6.5, 10.0, 4.5]
+  }
+]
+
+var categoriesApexLineMetrics = ['7/12', '8/12', '9/12']
+var refreshing = false
+
 export const DashboardBuilder = () => {
   const router = useRouter()
 
   const innerFetchData = useCallback(async () => {
+    if (refreshing) {
+      return
+    }
+
+    refreshing = true
+    var timeStart = Date.now()
+
     //widget progressbar participations data fetch
-    await currentQuizPassAll().then(data => {
-      participantsQuizPassed = data[0]
-      participantsQuizAll = data[1]
-
-      participationPercent = Math.round((participantsQuizPassed / participantsQuizAll) * 100)
-      totalRevenueStats[4] = 100 - participationPercent
-    })
-
-    //widgets datetimes data fetch
-
-    await currentQuizTimeStart().then(data => {
-      currentQuizStarts = new Date(data)
-      curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
-      nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
-    })
+    //await currentQuizPassAll().then(data => {
+    //  participantsQuizPassed = data[0]
+    //  participantsQuizAll = data[1]
+    //
+    //  participationPercent = Math.round((participantsQuizPassed / participantsQuizAll) * 100)
+    //  totalRevenueStats[4] = 100 - participationPercent
+    //})
+    //
+    ////widgets datetimes data fetch
+    //
+    //await currentQuizTimeStart().then(data => {
+    //  currentQuizStarts = new Date(data)
+    //  curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
+    //  nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
+    //})
 
     //widgets engagement data
     //widgets metrics data transactions
@@ -92,32 +139,81 @@ export const DashboardBuilder = () => {
     //console.log('transactionsMetricStats before')
     //transactionsMetricStats.map(item => console.log(item))
 
-    if (cohortsLevelsPercents.length != 2) {
-      console.error('cohortsLevelsPercents.length is NOT 2 code base using two level system in cohort calculation')
+    //if (cohortsLevelsPercents.length != 2) {
+    //  console.error('cohortsLevelsPercents.length is NOT 2 code base using two level system in cohort calculation')
+    //}
+    //
+    //if (totalRevenueStats.length != 5) {
+    //  console.error('totalRevenueStats.length is ' + totalRevenueStats.length + ' must be 5 skip hg low not  ')
+    //}
+    //
+    //if (transactionsMetricStats.length != 10) {
+    //  console.error('metricsStats length is' + metricsru.length + ' must be TEN : Dashboardstrategy')
+    //}
+    //
+
+    //reset totals
+    for (var i = 0; i < totalRevenueStats.length; i++) {
+      //reset test metricStats
+      totalRevenueStats[i] = 0
     }
 
-    if (totalRevenueStats.length != 5) {
-      console.error('totalRevenueStats.length is ' + totalRevenueStats.length + ' must be 5 skip hg low not  ')
+    for (var i = 0; i < transactionsMetricStats.length; i++) {
+      //reset test metricStats
+      transactionsMetricStats[i] = 0
+      transactionsMetricDiffStats[i] = 0
     }
 
-    if (transactionsMetricStats.length != 10) {
-      console.error('metricsStats length is' + metricsru.length + ' must be TEN : Dashboardstrategy')
+    //console.log('before  end')
+    //transactionsMetricDiffStats.map(item => console.log(item))
+
+    let quizes = await getQuizOrderByIdDesc(2, 0)
+
+    var diffStats = transactionsMetricDiffStats
+
+    for (var i = quizes.length - 1; i > -1; i--) {
+      var quiz = quizes[i]
+
+      var result = await getEngageMetrics(quiz, cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
+
+      //read global stat var values
+      var revStats = result[0]
+      var metStats = result[1]
+
+      diffStats = diffStats.map(function (item, index) {
+        // In this case item correspond to currentValue of array a,
+        // using index to get value from array b
+        var res = metStats[index] - item
+
+        return res
+      })
+
+      if (i == 0) {
+        totalRevenueStats = revStats
+        transactionsMetricStats = metStats
+        transactionsMetricDiffStats = diffStats
+        break
+      }
     }
 
-    var result = await getCurrentQuizEngageMetrics(cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
-
-    totalRevenueStats = result[0]
-    transactionsMetricStats = result[1]
-
-    transactionsMetricStats.map(item => console.log(item))
-
-    //console.log('transactionsMetricStats after')
-
-    //transactionsMetricDiffStats
+    //transactionsMetricDiffStats.map(item => console.log(item))
 
     //call refresh all widgets visuals explcitly after data fetch
     //console.log('innerFetchData  end')
+    var timeEnd = Date.now()
+    var periuod = timeEnd - timeStart
+
+    var interval = intervalToDuration({
+      start: timeStart,
+      end: timeEnd
+    })
+
+    //console.log('minus unformatted ')
+    console.log('interval ' + interval.seconds)
+
     router.refresh()
+
+    refreshing = false
   }, [])
 
   function unmount() {
@@ -180,7 +276,7 @@ export const DashboardBuilder = () => {
                 />
               </Grid>
               <Grid item xs={5}>
-                <DashboardApexLineChart />
+                <DashboardApexLineChart series={seriesApexLineMetrics} categories={categoriesApexLineMetrics} />
               </Grid>
               <Grid item xs>
                 <DashboardTransactions stats={transactionsMetricStats} statsDiffs={transactionsMetricDiffStats} />

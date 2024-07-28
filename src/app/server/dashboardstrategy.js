@@ -56,11 +56,11 @@ export const getCurrentQuizIdAudi = async () => {
   return [currentQuizId, currentQuizAuditory]
 }
 
-export const getCurrentQuizEngageMetrics = async (cohortsLevelsPercents, totalRevenueStats, metricsStats) => {
+export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenueStats, metricsStats) => {
+  var revStats = totalRevenueStats
+  var metStats = metricsStats
+
   const midRangeRate = ratingMax / 2
-
-  let quiz = await getQuizOrderByIdDesc(1, 0)
-
   var quizSplittedStr = quiz.toString().split(',')
   var quizTypeIdx = await dbQuizTypeIdx()
   var quizGroupId = quizSplittedStr[quizTypeIdx]
@@ -82,7 +82,7 @@ export const getCurrentQuizEngageMetrics = async (cohortsLevelsPercents, totalRe
 
   var selectedAnswers = await getSelectedAnswersBy(quizId)
 
-  var countParticipators = selectedAnswers.length //c
+  var quizCountParticipators = selectedAnswers.length //c
 
   var quizSelectedAnswersInCohortNot = 0 //dnot
   var quizSelectedAnswersInCohortLow = 0 //dlow
@@ -102,14 +102,9 @@ export const getCurrentQuizEngageMetrics = async (cohortsLevelsPercents, totalRe
     })
   )
 
-  for (var i = 0; i < metricsStats.length; i++) {
-    //reset test metricStats
-    metricsStats[i] = 0
-  }
+  var counterMetricQuiz = [metStats.length]
 
-  var counterMetricQuiz = [metricsStats.length]
-
-  for (var i = 0; i < metricsStats.length; i++) {
+  for (var i = 0; i < metStats.length; i++) {
     var counterMetric = questionsMetricsArr.reduce((accumulator, currentValue) => {
       if (Object.keys(metricsru).at(i) == currentValue) {
         return accumulator + 1
@@ -123,12 +118,12 @@ export const getCurrentQuizEngageMetrics = async (cohortsLevelsPercents, totalRe
 
   //transaction stats metrics END///////////////////////////
 
-  if (countParticipators <= 0) {
-    totalRevenueStats[3] = 0
-    totalRevenueStats[2] = 0
-    totalRevenueStats[1] = 0
+  if (quizCountParticipators <= 0) {
+    revStats[3] = 0
+    revStats[2] = 0
+    revStats[1] = 0
 
-    return [totalRevenueStats, metricsStats]
+    return [revStats, metStats]
   }
 
   const CountCohort = async selectedAnswer => {
@@ -189,7 +184,7 @@ export const getCurrentQuizEngageMetrics = async (cohortsLevelsPercents, totalRe
     await CountCohort(selectedAnswer)
   }
 
-  metricsStats.map(item => console.log(item))
+  metricsStats.map(item => console.log('selAnsLen ' + selAnsLen + ' item ' + item))
 
   for (var i = 0; i < metricsStats.length; i++) {
     if (metricsStats[i] != 0) {
@@ -197,9 +192,9 @@ export const getCurrentQuizEngageMetrics = async (cohortsLevelsPercents, totalRe
     } else console.log('metricsStats [i] ' + i + ' is zero ')
   }
 
-  totalRevenueStats[1] = (quizSelectedAnswersInCohortHigh / countParticipators) * 100 //high
-  totalRevenueStats[2] = (quizSelectedAnswersInCohortLow / countParticipators) * 100 //low
-  totalRevenueStats[3] = (quizSelectedAnswersInCohortNot / countParticipators) * 100 //not
+  totalRevenueStats[1] = (quizSelectedAnswersInCohortHigh / quizCountParticipators) * 100 //high
+  totalRevenueStats[2] = (quizSelectedAnswersInCohortLow / quizCountParticipators) * 100 //low
+  totalRevenueStats[3] = (quizSelectedAnswersInCohortNot / quizCountParticipators) * 100 //not
 
   return [totalRevenueStats, metricsStats]
 }

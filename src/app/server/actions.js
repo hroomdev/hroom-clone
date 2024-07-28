@@ -21,8 +21,9 @@ import { db as faqData } from '@/fake-db/pages/faq'
 import { db as pricingData } from '@/fake-db/pages/pricing'
 import { db as statisticsData } from '@/fake-db/pages/widget-examples'
 
-const { Client } = require('pg')
 import { getCurrentQuizIdAudi } from './dashboardstrategy'
+
+const { Client } = require('pg')
 
 //todo: refactor current.... to by id etc
 //also import questiontype
@@ -509,13 +510,13 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
     rowMode: 'array'
   }
 
-  let currentQuiz = 'empty'
+  let quizes = 'empty'
 
   try {
     await client.connect()
     var res = await client.query(queryCurrentQuizId)
 
-    currentQuiz = res.rows[0]
+    quizes = res.rows
 
     //console.log('res res.rows[0] ' + res.rows[0])
   } catch (e) {
@@ -524,12 +525,16 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
   } finally {
     client.end()
 
-    return currentQuiz
+    return quizes
   }
 }
 
 export const getCurrentQuiz = async () => {
-  return await getQuizOrderByIdDesc(1, 0)
+  var quizesLast = await getQuizOrderByIdDesc(1, 0)
+
+  var currentQuiz = quizesLast[0]
+
+  return currentQuiz
 }
 
 export const getQuestionMetricBy = async questionId => {

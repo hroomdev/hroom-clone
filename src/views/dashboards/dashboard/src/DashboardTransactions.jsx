@@ -118,7 +118,7 @@ const DashboardTransactions = ({ stats, statsDiffs }) => {
                     </Grid>
                     <Grid item xs='auto'>
                       <div className='percentage' style={{ color: '#56ca00' }}>
-                        {statsDiffs[index]}
+                        {statsDiffs[index].toFixed(1)}
                       </div>
                     </Grid>
                     <Grid item xs={12}>

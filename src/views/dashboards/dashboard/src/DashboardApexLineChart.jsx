@@ -12,41 +12,12 @@ import CardContent from '@mui/material/CardContent'
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
-// Vars
-const series = [
-  {
-    data: [280, 200, 220, 180, 270, 250, 70, 90, 200, 150, 5, 100, 2, 100, 50]
-  },
-  {
-    data: [180, 100, 120, 80, 26, 50, 30, 30, 100, 50, 60, 10, 15, 1, 5]
-  },
-  {
-    data: [80, 200, 26, 180, 270, 250, 70, 90, 200, 150, 160, 100, 150, 19, 50]
-  },
-  {
-    data: [40, 100, 120, 80, 80, 50, 30, 15, 100, 50, 60, 10, 15, 10, 5]
-  },
-  {
-    data: [20, 300, 93, 180, 69, 250, 70, 30, 200, 150, 16, 200, 150, 100, 50]
-  },
-  {
-    data: [8, 100, 6, 80, 80, 26, 30, 30, 100, 50, 60, 10, 15, 10, 5]
-  },
-  {
-    data: [2, 200, 220, 64, 39, 250, 70, 49, 11, 200, 160, 100, 150, 100, 50]
-  },
-  {
-    data: [150, 12, 120, 80, 80, 50, 30, 30, 2, 88, 60, 10, 15, 10, 5]
-  },
-  {
-    data: [33, 100, 120, 30, 80, 15, 30, 30, 100, 50, 78, 10, 15, 10, 5]
-  }
-]
-
 //{ stats, statsDiff }
-const DashboardApexLineChart = () => {
+const DashboardApexLineChart = ({ series, categories }) => {
   // Hooks
   const theme = useTheme()
+  var seriesLocal = series
+  var categoriesLocal = categories
 
   // Vars
   //colors purple teal green pink bordeu greenlight red orange yellow
@@ -91,7 +62,7 @@ const DashboardApexLineChart = () => {
     tooltip: {
       custom(data) {
         return `<div class='bar-chart'>
-          <span>${data.series[data.seriesIndex][data.dataPointIndex]}%</span>
+          <span>${data.series[data.seriesIndex][data.dataPointIndex]}</span>
         </div>`
       }
     },
@@ -109,23 +80,7 @@ const DashboardApexLineChart = () => {
       labels: {
         style: { colors: disabledText, fontSize: '13px' }
       },
-      categories: [
-        '7/12',
-        '8/12',
-        '9/12',
-        '10/12',
-        '11/12',
-        '12/12',
-        '13/12',
-        '14/12',
-        '15/12',
-        '16/12',
-        '17/12',
-        '18/12',
-        '19/12',
-        '20/12',
-        '21/12'
-      ]
+      categories: categoriesLocal
     }
   }
 
@@ -142,7 +97,7 @@ const DashboardApexLineChart = () => {
         }}
       />
       <CardContent>
-        <AppReactApexCharts type='line' width='100%' height={337} options={options} series={series} />
+        <AppReactApexCharts type='line' width='100%' height={337} options={options} series={seriesLocal} />
       </CardContent>
     </Card>
   )
