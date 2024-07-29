@@ -9,8 +9,22 @@ import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
+import colorsOrd, { colorsRGBA } from '@/views/dashboards/dashboard/src/MetricsColors'
+import { metricsru } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
+
+const dayjs = require('dayjs')
+
+const ruLocale = require('dayjs/locale/ru')
+
+//,                         Invalid Date https://day.js.org/docs/en/display/format
+//        formatter: function (val) {
+//          return dayjs(val).format('MMM DD HH:mm')
+//        }
+
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
+
+//item.color
 
 //{ stats, statsDiff }
 const DashboardApexLineChart = ({ series, categories }) => {
@@ -23,6 +37,13 @@ const DashboardApexLineChart = ({ series, categories }) => {
   //colors purple teal green pink bordeu greenlight red orange yellow
   const divider = 'var(--mui-palette-divider)'
   const disabledText = 'var(--mui-palette-text-disabled)'
+
+  //['#666EE8', '#66E8E8', '#1B9E0F', '#FF49F8', '#580354', '#35FF02', '#FF4961', '#FFC702', '#FFE802'],
+  var colorsA = []
+
+  for (var key in colorsRGBA) {
+    colorsA.push(colorsRGBA[key])
+  }
 
   const options = {
     legend: {
@@ -43,7 +64,8 @@ const DashboardApexLineChart = ({ series, categories }) => {
       toolbar: { show: false },
       offsetX: theme.direction === 'rtl' ? 10 : -10
     },
-    colors: ['#666EE8', '#66E8E8', '#1B9E0F', '#FF49F8', '#580354', '#35FF02', '#FF4961', '#FFC702', '#FFE802'],
+
+    colors: colorsA,
     stroke: { curve: 'straight' },
     dataLabels: { enabled: false },
     markers: {

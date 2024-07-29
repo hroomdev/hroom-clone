@@ -10,13 +10,15 @@ import OptionMenu from '@core/components/option-menu'
 import CustomAvatar from '@core/components/mui/Avatar'
 
 import { metricsru } from './screens/DashboardBuilder/Metrics'
+import colorsOrd, { colorsRGBA } from './MetricsColors'
+import { binaryFormat, midRangeRating } from '@/app/server/const'
+import { getVectorFileName, getScaleVec, getColor } from './../src/components/VectorUtils'
 
 // Vars
 const data = [
   {
     stats: '5.1',
     title: 'Satisfaction',
-    color: 'warning-opacity-light',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
     diff: '1'
@@ -24,14 +26,12 @@ const data = [
   {
     stats: '12.5',
     title: 'Ambassadorship',
-    color: 'success-opacity-light',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
     diff: '0.4'
   },
   {
     stats: '6.3',
-    color: 'error-opacity-light',
     title: 'Happiness',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
@@ -39,7 +39,6 @@ const data = [
   },
   {
     stats: '7.7',
-    color: 'error-opacity-light',
     title: 'Relationship with Manager',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
@@ -47,7 +46,6 @@ const data = [
   },
   {
     stats: '7.7',
-    color: 'success-opacity-light',
     title: 'Wellness',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
@@ -55,7 +53,6 @@ const data = [
   },
   {
     stats: '7.7',
-    color: 'success-opacity-light',
     title: 'Relationship with Peers',
     icon: '/static/img/icon-38.svg',
     icon2: '/static/img/vector.svg',
@@ -63,7 +60,6 @@ const data = [
   },
   {
     stats: '7.7',
-    color: 'warning-opacity-light',
     title: 'Personal Growth',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
@@ -71,7 +67,6 @@ const data = [
   },
   {
     stats: '7.7',
-    color: 'warning-opacity-light',
     title: 'Alignment',
     icon: '/static/img/icon-41.svg',
     icon2: '/static/img/vector.svg',
@@ -79,7 +74,6 @@ const data = [
   },
   {
     stats: '7.7',
-    color: 'error-opacity-light',
     title: 'Recognition',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
@@ -87,7 +81,6 @@ const data = [
   },
   {
     stats: '7.7',
-    color: 'error-opacity-light',
     title: 'Feedback',
     icon: '/static/img/icon-42.svg',
     icon2: '/static/img/vector.svg',
@@ -111,7 +104,7 @@ const DashboardTransactions = ({ stats, statsDiffs }) => {
           {data.map((item, index) => (
             <Grid item xs={6} md={6} key={index}>
               <div className='flex items-center gap-3'>
-                <CustomAvatar variant='rounded' color={item.color} className='shadow-xs'>
+                <CustomAvatar variant='rounded' className='shadow-xs' sx={{ bgcolor: colorsRGBA[item.title] }}>
                   <img className='icon-2' alt='Icon' src={item.icon} />
                 </CustomAvatar>
                 <div>
@@ -120,16 +113,24 @@ const DashboardTransactions = ({ stats, statsDiffs }) => {
                       <Typography variant='h5'>{stats[index].toFixed(1)}</Typography>
                     </Grid>
                     <Grid item xs='auto'>
-                      <img className='vector' alt='Vector' src={item.icon2} />
+                      <img
+                        className='vector'
+                        alt='Vector'
+                        src={getVectorFileName(
+                          statsDiffs[index],
+                          '/static/img/',
+                          'vector.svg',
+                          'vectorred.svg',
+                          'vectorgrey.svg'
+                        )}
+                        style={{ transform: getScaleVec(statsDiffs[index]) }}
+                      />
                     </Grid>
                     <Grid item xs='auto'>
-                      <div
-                        className='percentage'
-                        style={{
-                          color: '#56ca00'
-                        }}
-                      ></div>
-                      <div>{statsDiffs[index].toFixed(1)}</div>
+                      <div className='percentage' style={{ color: getColor(statsDiffs[index]) }}>
+                        {statsDiffs[index].toFixed(1)}
+                      </div>
+                      <div></div>
                     </Grid>
                     <Grid item xs={12}>
                       {' '}

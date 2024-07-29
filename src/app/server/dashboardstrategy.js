@@ -12,7 +12,7 @@ import { DashboardBuilder } from '@views/dashboards/dashboard/src/screens/Dashbo
 import DashboardWelcomeCard from '@views/dashboards/dashboard/src/DashboardWelcomeCard'
 
 import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
-import { ratingMax } from './const'
+import { ratingMax, midRangeRating } from './const'
 import {
   getSelectedAnswersBy,
   getCurrentQuiz,
@@ -110,8 +110,9 @@ export const getDashboardData = cache(async id => {
   }
 
   const optionsChart = {
-    day: 'numeric',
-    hour: 'numeric'
+    //day: 'numeric',
+    //hour: 'numeric'
+    month: 'short'
   }
 
   // Vars
@@ -231,7 +232,7 @@ export const getDashboardData = cache(async id => {
     var quizStartsAtDateIdx = await dbQuizTimeStartSIdx()
     var quizStartsAtDate = quizSplittedStr[quizStartsAtDateIdx]
     var dateParsed = Date.parse(quizStartsAtDate)
-    var dateToLocal = new Date(dateParsed).toLocaleString(local, options)
+    var dateToLocal = new Date(dateParsed).toLocaleString(local, optionsChart)
 
     categoriesApexLineMetrics.push(dateToLocal)
     console.log('push ' + dateToLocal)
@@ -317,7 +318,6 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
   var revStats = totalRevenueStats
   var metStats = metricsStats
 
-  const midRangeRate = ratingMax / 2
   var quizSplittedStr = quiz.toString().split(',')
   var quizTypeIdx = await dbQuizTypeIdx()
   var quizGroupId = quizSplittedStr[quizTypeIdx]
@@ -364,7 +364,7 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
   var counterMetricQuiz = [metStats.length]
 
   for (var i = 0; i < metStats.length; i++) {
-    metStats[i] = midRangeRate
+    metStats[i] = midRangeRating
     var counterMetric = questionsMetricsArr.reduce((accumulator, currentValue) => {
       if (Object.keys(metricsru).at(i) == currentValue) {
         return accumulator + 1
@@ -397,10 +397,10 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
     var selectedOptionsSplittedStr = selectedOptions.toString().split(',')
 
     //checks for empty values too
-    var selectedOptionsNumArr = selectedOptionsSplittedStr.map(str => Number.parseInt(str) || midRangeRate)
+    var selectedOptionsNumArr = selectedOptionsSplittedStr.map(str => Number.parseInt(str) || midRangeRating)
 
     //check for db consistency
-    selectedOptionsNumArr = selectedOptionsNumArr.map(num => (num < 0 ? midRangeRate : num))
+    selectedOptionsNumArr = selectedOptionsNumArr.map(num => (num < 0 ? midRangeRating : num))
 
     var selectedAnswersSummOptions = selectedOptionsNumArr.reduce((accumulator, currentValue) => {
       return accumulator + currentValue

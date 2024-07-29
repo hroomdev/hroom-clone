@@ -13,7 +13,7 @@ import { cohortsru } from './../../screens/DashboardBuilder/EngageCohort'
 
 import DashboardRadialBarChart from '@/views/dashboards/dashboard/src/DashboardRadialBarChart'
 import './style.css'
-import { binaryFormat } from './../../../../../../app/server/const'
+import { binaryFormat, midRangeRating } from './../../../../../../app/server/const'
 import { getVectorFileName, getScaleVec, getColor } from './../VectorUtils'
 
 var percentageDiff = 0
@@ -38,6 +38,29 @@ export const TotalRevenue = ({
   percentageSkip = stats[4]
   engageAbs = stats[5]
 
+  function UserBadgeAboveMarket() {
+    if (engageAbs > midRangeRating) {
+      return (
+        <div className='frame-wrapper'>
+          <div className='overlap-group-wrapper'>
+            <div className='overlap-group-2'>
+              <div className='badge-wrapper'>
+                <div className='badge-base-wrapper'>
+                  <div className='badge-base'>
+                    <div className='text'>Выше рынка</div>
+                  </div>
+                </div>
+              </div>
+              <img className='icon' alt='Icon' src={icon} />
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    return ''
+  }
+
   //console.log('stats.len : Total ' + stats.length)
 
   return (
@@ -48,6 +71,7 @@ export const TotalRevenue = ({
       <div className='chart'>
         <div className='activitiy-gauge'>
           <DashboardRadialBarChart stats={stats} />
+
           <div className='percentage' style={{ color: getColor(percentageDiff) }}>
             {percentageDiff.toFixed(1)}%
           </div>
@@ -86,20 +110,7 @@ export const TotalRevenue = ({
           </p>
         </div>
       </div>
-      <div className='frame-wrapper'>
-        <div className='overlap-group-wrapper'>
-          <div className='overlap-group-2'>
-            <div className='badge-wrapper'>
-              <div className='badge-base-wrapper'>
-                <div className='badge-base'>
-                  <div className='text'>Выше рынка</div>
-                </div>
-              </div>
-            </div>
-            <img className='icon' alt='Icon' src={icon} />
-          </div>
-        </div>
-      </div>
+      <UserBadgeAboveMarket />
     </div>
   )
 }
