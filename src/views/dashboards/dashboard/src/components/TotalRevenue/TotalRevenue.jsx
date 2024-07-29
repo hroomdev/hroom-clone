@@ -14,6 +14,7 @@ import { cohortsru } from './../../screens/DashboardBuilder/EngageCohort'
 import DashboardRadialBarChart from '@/views/dashboards/dashboard/src/DashboardRadialBarChart'
 import './style.css'
 import { binaryFormat } from './../../../../../../app/server/const'
+import { getVectorFileName, getScaleVec, getColor } from './../VectorUtils'
 
 var percentageDiff = 0
 var percentageHigh = 0
@@ -26,7 +27,7 @@ export const TotalRevenue = ({
   className,
   line = '/static/img/line.svg',
   frameClassName,
-  text = '86%',
+  text = '86',
   icon = '/static/img/icon-40.svg',
   stats
 }) => {
@@ -47,8 +48,15 @@ export const TotalRevenue = ({
       <div className='chart'>
         <div className='activitiy-gauge'>
           <DashboardRadialBarChart stats={stats} />
-          <div className='percentage'>{percentageDiff.toFixed(1)}%</div>
-          <img className='vector' alt='Vector' src='/static/img/vector.svg' />
+          <div className='percentage' style={{ color: getColor(percentageDiff) }}>
+            {percentageDiff.toFixed(1)}%
+          </div>
+          <img
+            className='vector'
+            alt='Vector'
+            src={getVectorFileName(percentageDiff, '/static/img/', 'vector.svg', 'vectorred.svg', 'vectorgrey.svg')}
+            style={{ transform: getScaleVec(percentageDiff) }}
+          />
           <div className='overlap-group'></div>
         </div>
       </div>

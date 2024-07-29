@@ -41,7 +41,7 @@ const DashboardRadialBarChart = ({ stats }) => {
       }
     },
     stroke: {
-      lineCap: 'square',
+      lineCap: 'round',
       curve: 'straight'
     },
     colors: [radialBarColors.series1], //, radialBarColors.series2, radialBarColors.series3, radialBarColors.series4
