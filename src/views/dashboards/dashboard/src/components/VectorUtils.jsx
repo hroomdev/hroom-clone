@@ -10,7 +10,7 @@ export const getVectorFileName = (metricValue, pathPrefix, namePos, nameNeg, nam
 
 export const getColor = metricValue => {
   if (metricValue > 0) {
-    return 'green'
+    return '#56CA00'
   } else if (metricValue < 0) {
     return 'red'
   }

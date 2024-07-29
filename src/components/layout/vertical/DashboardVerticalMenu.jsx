@@ -22,7 +22,7 @@ import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
 import generateDates from '../../dialogs/create-app/GenerateDates'
-
+import teamsru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
 import { createQuiz, createSelectedAnswersCurrentQuiz } from '@/app/server/actions'
 import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
@@ -91,10 +91,12 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             var generatedOptions = generateOptions(countGenerated, maximum)
             let optionsStr = generatedOptions.join(',')
 
+            var teamId = getRandomInt(Reflect.ownKeys(teamsru).length - 1)
+
             if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
               console.log('generated quiz is not valid! not sending to db')
             } else {
-              let c = await createSelectedAnswersCurrentQuiz(optionsStr)
+              let c = await createSelectedAnswersCurrentQuiz(optionsStr, teamId)
 
               console.log('options   ' + c)
             }

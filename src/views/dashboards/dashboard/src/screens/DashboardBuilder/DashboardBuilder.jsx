@@ -1,4 +1,5 @@
 'use client'
+import React, { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -29,9 +30,17 @@ const options = {
   day: 'numeric'
 }
 
-var selectedMetricByTeam = 'engagement'
+var selectedMetricByTeam = 'Ambassadorship'
 
 export const DashboardBuilder = ({ dashboardData }) => {
+  const [selectedEngagementMetricKey, setSelected] = useState(selectedMetricByTeam) // Declare a state variable...
+
+  const setSelectedHandle = value => {
+    setSelected(value)
+  }
+
+  console.log('setSelectedHandle :DashboardBuilder' + setSelectedHandle)
+
   console.log('dashboardData : DashboardBuilder  ' + JSON.stringify(dashboardData))
 
   var participantsQuizPassed = dashboardData.participantsQuizPassed
@@ -48,6 +57,8 @@ export const DashboardBuilder = ({ dashboardData }) => {
   var transactionsMetricDiffStats = dashboardData.transactionsMetricDiffStats
   var seriesApexLineMetrics = dashboardData.seriesApexLineMetrics
   var categoriesApexLineMetrics = dashboardData.categoriesApexLineMetrics
+  var teamsMetricStats = dashboardData.teamsMetricStats
+  var teamDiffMetricStats = dashboardData.teamsMetricDiffStats
 
   return (
     <div className='dashboard-builder'>
@@ -230,10 +241,15 @@ export const DashboardBuilder = ({ dashboardData }) => {
           <div className='row-2'>
             <Grid container spacing={6} flex>
               <Grid item xs='auto'>
-                <TeamsTransactions />
+                <TeamsTransactions
+                  propSelectedMetric={selectedEngagementMetricKey}
+                  setSelectedHandle={setSelectedHandle}
+                  teamStats={teamsMetricStats}
+                  teamStatsDiff={teamDiffMetricStats}
+                />
               </Grid>
               <Grid item xs={5}>
-                <DashboardBarChart />
+                <DashboardBarChart propSelectedMetric={selectedEngagementMetricKey} />
               </Grid>
               <Grid item xs>
                 <div className='col'>

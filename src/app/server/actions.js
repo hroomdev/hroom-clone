@@ -102,7 +102,7 @@ export const createQuiz = async (timeStart, type, auditory) => {
   return res
 }
 
-export const createSelectedAnswersCurrentQuiz = async selectedOptionsStr => {
+export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, team) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -117,9 +117,11 @@ export const createSelectedAnswersCurrentQuiz = async selectedOptionsStr => {
   let currentQuizAudi = currentQuizIdAudi[1]
 
   await client.connect()
-  const text = 'INSERT INTO "public"."selectedAnswers" ("selectedOptions","quizId") VALUES($1, $2) RETURNING *'
 
-  const values = [selectedOptionsStr, currentQuizId]
+  const text =
+    'INSERT INTO "public"."selectedAnswers" ("selectedOptions","quizId","team") VALUES($1, $2,$3) RETURNING *'
+
+  const values = [selectedOptionsStr, currentQuizId, team]
 
   const query = {
     // give the query a unique name
@@ -419,7 +421,7 @@ export const getQuestData = async () => {
   return quizQuestions
 }
 
-export const getSelectedAnswersBy = async quizId => {
+export const getSelectedAnswersByQuizId = async id => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -430,7 +432,44 @@ export const getSelectedAnswersBy = async quizId => {
 
   const selectedAnswersIds = {
     text: 'SELECT * FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."quizId" = $1',
-    values: [quizId],
+    values: [id],
+    rowMode: 'array'
+  }
+
+  var selectedAnswers = []
+
+  try {
+    await client.connect()
+    var res = await client.query(selectedAnswersIds)
+
+    if (res.rows.length <= 0) {
+      console.log('noone yet participated in  quizId' + id)
+
+      return selectedAnswers
+    }
+
+    selectedAnswers = res.rows
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return selectedAnswers
+}
+
+export const getSelectedAnswersByTeamId = async id => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const selectedAnswersIds = {
+    text: 'SELECT * FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."team" = $1',
+    values: [teamId],
     rowMode: 'array'
   }
 
@@ -493,6 +532,40 @@ export const getSelectedOptions = async answersId => {
   }
 
   return selectedOptions
+}
+
+export const getQuizById = async id => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryQuizId = {
+    text: 'SELECT * FROM "public"."quiz" WHERE "public"."quiz"."id" = $1',
+    values: [id],
+    rowMode: 'array'
+  }
+
+  let quizes = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryQuizId)
+
+    quizes = res.rows[0]
+
+    //console.log('res res.rows[0] ' + res.rows[0])
+  } catch (e) {
+    console.log('error connect to db ' + e.stack)
+    console.error(e.stack)
+  } finally {
+    client.end()
+
+    return quizes
+  }
 }
 
 export const getQuizOrderByIdDesc = async (limit, offset) => {

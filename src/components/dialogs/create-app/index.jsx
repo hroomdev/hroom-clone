@@ -24,6 +24,9 @@ import {
 // Third-party Imports
 import classnames from 'classnames'
 
+import teamsru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
+import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
+
 import { hideVerticalMenu, showVerticalMenu } from './../../../components/layout/vertical/Navigation'
 
 import Details from './Details'
@@ -280,10 +283,12 @@ const CreateApp = ({ open, setOpen }) => {
 
         let optionsStr = selectedOptions.join(',')
 
+        var teamId = getRandomInt(Reflect.ownKeys(teamsru).length - 1)
+
         if (checkValidJoinedStr(optionsStr, selectedOptions.length, 1, 10, 0) == false) {
           console.logerror('generate quiz report error check validity of the slected options answers before send')
         } else {
-          let c = await createSelectedAnswersCurrentQuiz(optionsStr)
+          let c = await createSelectedAnswersCurrentQuiz(optionsStr, teamId)
 
           console.log('selected options   ' + c)
         }

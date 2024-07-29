@@ -12,15 +12,20 @@ import { DashboardBuilder } from '@views/dashboards/dashboard/src/screens/Dashbo
 import DashboardWelcomeCard from '@views/dashboards/dashboard/src/DashboardWelcomeCard'
 
 import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
+
+import { teamsru } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
+
 import { ratingMax, midRangeRating } from './const'
 import {
-  getSelectedAnswersBy,
+  getSelectedAnswersByTeamId,
+  getSelectedAnswersByQuizId,
   getCurrentQuiz,
   getQuizOrderByIdDesc,
   getQuestGroupTypeBy,
   getSelectedOptions,
   getQuestGroupGroupBy,
-  getQuestionMetricBy
+  getQuestionMetricBy,
+  getQuizById
 } from './actions'
 
 // Data Imports
@@ -80,7 +85,11 @@ export async function checkIsAvailable(id) {
   return true
 }
 
+var loading = false
+
 export const getDashboardData = cache(async id => {
+  console.log('loading false -> set loading true : getDashboardData... ')
+
   //set cache renewal conditionscheck is available on each new user data must be set false
   var participantsQuizPassed
   var participantsQuizAll
@@ -102,6 +111,34 @@ export const getDashboardData = cache(async id => {
   var transactionsMetricStats = [1.1, 2.2, 3.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
 
   var transactionsMetricDiffStats = [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.8, 1.2, 0.8]
+
+  var teamsMetricStats = [
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3]
+  ]
+
+  var teamsMetricDiffStats = [
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
+    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3]
+  ]
 
   const options = {
     year: 'numeric',
@@ -184,15 +221,27 @@ export const getDashboardData = cache(async id => {
 
   var diffStats = transactionsMetricDiffStats
 
+  console.log('quizes length ' + quizes.length)
+
+  quizes = quizes.filter(q => q != undefined)
+
   for (var i = quizes.length - 1; i > -1; i--) {
+    console.log('for  ' + i + ' start')
     var quiz = quizes[i]
 
-    var engageResult = await getEngageMetrics(quiz, cohortsLevelsPercents, totalRevenueStats, transactionsMetricStats)
+    var engageResult = await getEngageMetrics(
+      quiz,
+      cohortsLevelsPercents,
+      totalRevenueStats,
+      transactionsMetricStats,
+      teamsMetricStats
+    )
 
-    console.log('quiz ' + JSON.stringify(quiz) + 'len - 1 ' + (quizes.length - 1) + ' i ' + i)
+    //console.log('quiz ' + JSON.stringify(quiz) + 'len - 1 ' + (quizes.length - 1) + ' i ' + i)
 
     var revStats = engageResult[0]
     var metStats = engageResult[1]
+    var teamStats = engageResult[2]
 
     if (i == 1) {
       diffStats = diffStats.map(function (item, index) {
@@ -200,6 +249,14 @@ export const getDashboardData = cache(async id => {
 
         return res
       })
+
+      for (var j = 0; j < teamStats.length; j++) {
+        teamsMetricDiffStats[j] = teamsMetricDiffStats[j].map(function (item, index) {
+          var res = teamStats[j][index]
+
+          return res
+        })
+      }
 
       //console.log('engage current ' + totalRevenueStats[5])
     }
@@ -210,15 +267,26 @@ export const getDashboardData = cache(async id => {
 
         return res
       })
+
+      for (var j = 0; j < teamStats.length; j++) {
+        teamsMetricDiffStats[j] = teamsMetricDiffStats[j].map(function (item, index) {
+          var res = teamStats[j][index] - item
+
+          return res
+        })
+      }
+
       var engageLast = diffStats.reduce((partialSum, a) => partialSum + a, 0) / 10
 
       totalRevenueStats[0] = (engageLast / 10) * 100
     }
 
     if (i == 0) {
+      console.log('i == 0 ')
       totalRevenueStats = revStats
       transactionsMetricStats = metStats
       transactionsMetricDiffStats = diffStats
+      teamsMetricStats = teamStats
       totalRevenueStats[5] = metStats.reduce((partialSum, a) => partialSum + a, 0) / 10
     }
 
@@ -235,7 +303,9 @@ export const getDashboardData = cache(async id => {
     var dateToLocal = new Date(dateParsed).toLocaleString(local, optionsChart)
 
     categoriesApexLineMetrics.push(dateToLocal)
-    console.log('push ' + dateToLocal)
+
+    //console.log('push ' + dateToLocal)
+    console.log('for  ' + i + ' end')
   }
 
   var timeEnd = Date.now()
@@ -262,10 +332,24 @@ export const getDashboardData = cache(async id => {
     transactionsMetricStats: transactionsMetricStats, //[]
     transactionsMetricDiffStats: transactionsMetricDiffStats, //[]
     seriesApexLineMetrics: seriesApexLineMetrics, //[]
-    categoriesApexLineMetrics: categoriesApexLineMetrics //[]
+    categoriesApexLineMetrics: categoriesApexLineMetrics, //[]
+    teamsMetricStats: teamsMetricStats,
+    teamsMetricDiffStats: teamsMetricDiffStats
   }
 
   resultAllIds[id] = db
+
+  for (var i = 0; i < teamsMetricStats.length; i++) {
+    for (var j = 0; j < teamsMetricStats[i].length; j++) {
+      //console.log('i ' + i + 'j' + j + ' teamsMetricStats ' + teamsMetricStats[i][j])
+    }
+  }
+
+  for (var i = 0; i < teamsMetricDiffStats.length; i++) {
+    for (var j = 0; j < teamsMetricDiffStats[i].length; j++) {
+      //console.log('i ' + i + 'j' + j + ' teamsMetricDiffStats ' + teamsMetricDiffStats[i][j])
+    }
+  }
 
   return db
 })
@@ -276,7 +360,7 @@ export const getCurrentQuizAuditory = async () => {
   let currentQuizId = currentQuizIdAudi[0]
   let currentQuizAudi = currentQuizIdAudi[1]
 
-  var selectedAnswers = await getSelectedAnswersBy(currentQuizId)
+  var selectedAnswers = await getSelectedAnswersByQuizId(currentQuizId)
 
   return [selectedAnswers.length, currentQuizAudi]
 }
@@ -314,11 +398,19 @@ export const getCurrentQuizIdAudi = async () => {
   return [currentQuizId, currentQuizAuditory]
 }
 
-export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenueStats, metricsStats) => {
+export const getEngageMetrics = async (
+  quiz,
+  cohortsLevelsPercents,
+  totalRevenueStats,
+  metricsStats,
+  teamsMetricStats
+) => {
   var revStats = totalRevenueStats
   var metStats = metricsStats
+  var teamStats = teamsMetricStats
 
   var quizSplittedStr = quiz.toString().split(',')
+
   var quizTypeIdx = await dbQuizTypeIdx()
   var quizGroupId = quizSplittedStr[quizTypeIdx]
 
@@ -337,7 +429,7 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
   var quizIdIdx = await dbQuizIdIdx()
   let quizId = quizSplittedStr[quizIdIdx]
 
-  var selectedAnswers = await getSelectedAnswersBy(quizId)
+  var selectedAnswers = await getSelectedAnswersByQuizId(quizId)
 
   var quizCountParticipators = selectedAnswers.length //c
 
@@ -376,6 +468,26 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
     counterMetricQuiz[i] = counterMetric
   }
 
+  //.fill(0)
+  var counterTeamMetricQuiz = Array(teamStats[0].length) //[3,7,2,1,8..] число участвующих в этом опросе от каждой команды начиная с 0 до 7ой
+
+  for (var i = 0; i < counterTeamMetricQuiz.length; i++) {
+    counterTeamMetricQuiz[i] = 0
+  }
+
+  for (var i = 0; i < teamStats.length; i++) {
+    for (var j = 0; j < teamStats[i].length; j++) {
+      teamStats[i][j] = 0
+    }
+  }
+
+  for (var i = 0; i < selectedAnswers.length; i++) {
+    var selectedAnswerSplittedStr = selectedAnswers[i].toString().split(',')
+    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 1]) //hack count
+
+    counterTeamMetricQuiz[selectedAnswerTeamId - 1] = counterTeamMetricQuiz[selectedAnswerTeamId - 1] + 1
+  }
+
   //transaction stats metrics END///////////////////////////
 
   if (quizCountParticipators <= 0) {
@@ -383,7 +495,7 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
     revStats[2] = 0
     revStats[1] = 0
 
-    return [revStats, metStats]
+    return [revStats, metStats, teamStats]
   }
 
   const CountCohort = async selectedAnswer => {
@@ -391,6 +503,8 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
 
     var selectedAnswersIdx = await dbSelectedAnswersIdIdx()
     var selectedAnswerId = selectedAnswerSplittedStr[selectedAnswersIdx]
+
+    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 1]) //hack count columns selectedAnswers table Depenent
 
     var selectedOptions = await getSelectedOptions(selectedAnswerId)
 
@@ -435,6 +549,21 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
             ' zero ERROR'
         )
       }
+
+      for (var j = 0; j < teamStats.length; j++) {
+        var teamMetric = Object.keys(metricsru).at(j)
+
+        if (teamMetric === metric || teamMetric === 'Engagement') {
+          if (teamMetric === 'Engagement') {
+            teamStats[j][selectedAnswerTeamId - 1] =
+              teamStats[j][selectedAnswerTeamId - 1] +
+              selectedOptionsNumArr[i] / counterMetricQuiz.reduce((partialSum, a) => partialSum + a, 0)
+          } else {
+            teamStats[j][selectedAnswerTeamId - 1] =
+              teamStats[j][selectedAnswerTeamId - 1] + selectedOptionsNumArr[i] / counterMetricQuiz[metricIdx]
+          }
+        }
+      }
     }
   }
 
@@ -446,18 +575,31 @@ export const getEngageMetrics = async (quiz, cohortsLevelsPercents, totalRevenue
     await CountCohort(selectedAnswer)
   }
 
-  //metStats.map(item => console.log('selAnsLen ' + selAnsLen + ' item ' + item))
-
   for (var i = 0; i < metStats.length; i++) {
     if (metStats[i] != 0) {
       metStats[i] = metStats[i] / selAnsLen
-      console.log('metStats [i] ' + i + ' selAnsLen  ' + selAnsLen)
-    } else console.log('metStats [i] ' + i + ' is zero ')
+    }
+  }
+
+  for (var i = 0; i < teamStats.length; i++) {
+    for (var j = 0; j < teamStats[i].length; j++) {
+      if (i == teamStats.length - 1) {
+        //engagement summ all other metrics
+        if (teamStats[i][j] != 0) {
+          teamStats[i][j] = teamStats[i][j] / counterMetricQuiz.reduce((partialSum, a) => partialSum + a, 0)
+        }
+      } else {
+        if (teamStats[i][j] != 0) {
+          teamStats[i][j] = teamStats[i][j] / counterTeamMetricQuiz[j]
+        }
+      }
+    }
   }
 
   revStats[1] = (quizSelectedAnswersInCohortHigh / quizCountParticipators) * 100 //high
   revStats[2] = (quizSelectedAnswersInCohortLow / quizCountParticipators) * 100 //low
   revStats[3] = (quizSelectedAnswersInCohortNot / quizCountParticipators) * 100 //not
+  //console.log('return for quiz ' + quiz)
 
-  return [revStats, metStats]
+  return [revStats, metStats, teamStats]
 }

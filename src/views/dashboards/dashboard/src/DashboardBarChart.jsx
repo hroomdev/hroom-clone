@@ -1,4 +1,5 @@
 'use client'
+import React, { useState } from 'react'
 
 import dynamic from 'next/dynamic'
 
@@ -26,13 +27,14 @@ import { intervalsru } from './screens/DashboardBuilder/TimeIntervals'
 const byTeamru = 'по командам'
 const perioudru = 'Период'
 
-var selectedTimeInterval = 'quarter'
+const DashboardBarChart = ({ propSelectedMetric }) => {
+  const [selectedTimeInterval, setSelected] = useState('quarter') // Declare a state variable...
 
-const DashboardBarChart = () => {
   const handleChange = event => {
     var key = Object.keys(intervalsru).find(key => intervalsru[key] === event.target.value)
 
-    selectedTimeInterval = key
+    setSelected(key)
+    console.log('metric is ' + key)
   }
 
   // Hooks
@@ -84,8 +86,8 @@ const DashboardBarChart = () => {
 
   return (
     <Card>
-      <FormControl className='infoi'>
-        <InputLabel id='demo-simple-select-label'>{''}</InputLabel>
+      <FormControl className='infoi' style={{ paddingLeft: '450px', width: '20%', alignItems: 'end' }}>
+        {/*<InputLabel id='demo-simple-select-label'>{'Период'}</InputLabel>*/}
         <Select
           labelId='demo-simple-select-label'
           id='demo-simple-select'
@@ -102,7 +104,7 @@ const DashboardBarChart = () => {
       </FormControl>
 
       <CardHeader
-        title={metricsru['engagement']}
+        title={metricsru[propSelectedMetric]}
         subheader={byTeamru}
         sx={{
           flexDirection: ['column', 'row'],

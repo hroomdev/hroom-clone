@@ -1,14 +1,6 @@
 import { GET } from '@/app/api/apps/dashboard/route'
 
-import {
-  Item,
-  getDashboardData,
-  getCurrentQuizAuditory as currentQuizPassAll,
-  getCurrentQuizTimeStart as currentQuizTimeStart,
-  getEngageMetrics as getEngageMetrics,
-  preload,
-  checkIsAvailable
-} from '@/app/server/dashboardstrategy'
+import { Item, preload, checkIsAvailable } from '@/app/server/dashboardstrategy'
 
 const companyId = 1
 
