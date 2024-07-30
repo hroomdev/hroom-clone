@@ -102,14 +102,12 @@ const Navigation = props => {
 
   useEffect(() => {
     //console.log('settings layout is' + settings.layout + '  isCollapsed' + isCollapsed)
-
     //collapseVerticalNav(isCollapsed)
-
-    if (settings.layout === 'collapsed') {
-      collapseVerticalNav(true)
-    } else {
-      collapseVerticalNav(false)
-    }
+    //if (settings.layout === 'collapsed') {
+    //  collapseVerticalNav(true)
+    //} else {
+    //  collapseVerticalNav(false)
+    //}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.layout])
 

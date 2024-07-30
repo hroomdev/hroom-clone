@@ -82,7 +82,7 @@ let quizGroupTypeId = '1'
 const CreateApp = ({ open, setOpen }) => {
   const router = useRouter()
 
-  hideVerticalMenu()
+  //hideVerticalMenu()
 
   const theme = extendTheme({
     shape: {
@@ -227,10 +227,10 @@ const CreateApp = ({ open, setOpen }) => {
     return unmount
   }, [])
 
-  if (activeStep < 0) return <p>Loading...</p>
-  if (steps < 2) return <p>Loading...</p>
-  if (isLoading) return <p>Loading...</p>
-  if (questionType == '') return <p>Loading...</p>
+  if (activeStep < 0) return <p></p>
+  if (steps < 2) return <p></p>
+  if (isLoading) return <p></p>
+  if (questionType == '') return <p></p>
 
   const delay = time => new Promise(res => setTimeout(res, time))
 
@@ -240,12 +240,12 @@ const CreateApp = ({ open, setOpen }) => {
     await unmount()
     await fetch(-1)
 
-    router.push('/ru//dashboards/dashboard') //
+    //router.push('/ru//dashboards/dashboard') //
     //router.prefetch('/ru//dashboards/dashboard')
-    router.refresh() //instantly calls hide through  collapseVerticalNav(true) useEffect Navigation
+    //router.refresh() //instantly calls hide through  collapseVerticalNav(true) useEffect Navigation
 
-    await delay(1000)
-    showVerticalMenu() //calls show through  collapseVerticalNav(false)navCollapseVerticalNav
+    //await delay(1000)
+    //showVerticalMenu() //calls show through  collapseVerticalNav(false)navCollapseVerticalNav
   }
 
   const handlePrev = async () => {
