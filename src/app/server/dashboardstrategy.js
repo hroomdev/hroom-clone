@@ -589,7 +589,7 @@ export const getEngageMetrics = async (
   for (var i = 0; i < teamStats.length; i++) {
     for (var j = 0; j < teamStats[i].length; j++) {
       if (j == teamStats[i].length - 1) {
-        console.log('j teamstats last team seven j ' + j + ' not zero IS ' + (teamStats[i][j] != 0))
+        // console.log('j teamstats last team seven j ' + j + ' not zero IS ' + (teamStats[i][j] != 0))
       }
 
       if (i == teamStats.length - 1) {

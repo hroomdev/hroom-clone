@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
-import colorsOrd, { colorsRGBA } from '@/views/dashboards/dashboard/src/MetricsColors'
+import colorsOrd, { colorsRGBAChart } from '@/views/dashboards/dashboard/src/MetricsColors'
 import { metricsru } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 
 const dayjs = require('dayjs')
@@ -41,8 +41,8 @@ const DashboardApexLineChart = ({ series, categories }) => {
   //['#666EE8', '#66E8E8', '#1B9E0F', '#FF49F8', '#580354', '#35FF02', '#FF4961', '#FFC702', '#FFE802'],
   var colorsA = []
 
-  for (var key in colorsRGBA) {
-    colorsA.push(colorsRGBA[key])
+  for (var key in colorsRGBAChart) {
+    colorsA.push(colorsRGBAChart[key])
   }
 
   const options = {
@@ -66,7 +66,7 @@ const DashboardApexLineChart = ({ series, categories }) => {
     },
 
     colors: colorsA,
-    stroke: { curve: 'straight' },
+    stroke: { curve: 'smooth' },
     dataLabels: { enabled: false },
     markers: {
       strokeWidth: 7,
