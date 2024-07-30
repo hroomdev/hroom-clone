@@ -249,7 +249,7 @@ export const DashboardBuilder = ({ dashboardData }) => {
                 />
               </Grid>
               <Grid item xs={5}>
-                <DashboardBarChart propSelectedMetric={selectedEngagementMetricKey} />
+                <DashboardBarChart propSelectedMetric={selectedEngagementMetricKey} teamStats={teamsMetricStats} />
               </Grid>
               <Grid item xs>
                 <div className='col'>

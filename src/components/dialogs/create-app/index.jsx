@@ -283,7 +283,7 @@ const CreateApp = ({ open, setOpen }) => {
 
         let optionsStr = selectedOptions.join(',')
 
-        var teamId = getRandomInt(Reflect.ownKeys(teamsru).length - 1)
+        var teamId = getRandomInt(Reflect.ownKeys(teamsru).length)
 
         if (checkValidJoinedStr(optionsStr, selectedOptions.length, 1, 10, 0) == false) {
           console.logerror('generate quiz report error check validity of the slected options answers before send')

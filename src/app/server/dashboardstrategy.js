@@ -140,6 +140,9 @@ export const getDashboardData = cache(async id => {
     [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3]
   ]
 
+  var teamMetricsDateStart = new Date(Date.UTC(2024, 6, 17, 3, 10, 0))
+  var teamMetricsDateEnd = new Date(Date.UTC(2024, 6, 17, 3, 10, 0))
+
   const options = {
     year: 'numeric',
     month: 'long',
@@ -506,6 +509,8 @@ export const getEngageMetrics = async (
 
     var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 1]) //hack count columns selectedAnswers table Depenent
 
+    if (selectedAnswerTeamId == 7) console.log('selectedAnswerTeamId SEVEN')
+
     var selectedOptions = await getSelectedOptions(selectedAnswerId)
 
     var selectedOptionsSplittedStr = selectedOptions.toString().split(',')
@@ -583,6 +588,10 @@ export const getEngageMetrics = async (
 
   for (var i = 0; i < teamStats.length; i++) {
     for (var j = 0; j < teamStats[i].length; j++) {
+      if (j == teamStats[i].length - 1) {
+        console.log('j teamstats last team seven j ' + j + ' not zero IS ' + (teamStats[i][j] != 0))
+      }
+
       if (i == teamStats.length - 1) {
         //engagement summ all other metrics
         if (teamStats[i][j] != 0) {

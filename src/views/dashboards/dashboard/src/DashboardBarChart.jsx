@@ -22,20 +22,50 @@ const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexChart
 
 import { metricsru } from './screens/DashboardBuilder/Metrics'
 import { teamsru } from './screens/DashboardBuilder/Teams'
+import { binaryFormat, midRangeRating } from '@/app/server/const'
 import { intervalsru } from './screens/DashboardBuilder/TimeIntervals'
 
 const byTeamru = 'по командам'
 const perioudru = 'Период'
 
-const DashboardBarChart = ({ propSelectedMetric }) => {
+var seriesData = [] //700, 350, 480, 600, 210, 550, 150
+var xAxisCategories = [] //'Mon, 11', 'Thu, 14', 'Fri, 15', 'Mon, 18', 'Wed, 20', 'Fri, 21', 'Mon, 23'
+
+const DashboardBarChart = ({ propSelectedMetric, teamStats }) => {
   const [selectedTimeInterval, setSelected] = useState('quarter') // Declare a state variable...
+
+  const refreshText = select => {
+    var idSel = Object.keys(metricsru).findIndex(key => metricsru[key] == metricsru[select])
+
+    console.log('select :DashboardBarChart' + select)
+    console.log('idSel : DashboardBarChart' + idSel)
+
+    //reset data
+    xAxisCategories = []
+    seriesData = []
+
+    //hack seven teams on the chart
+    for (var i = 0; i < 7; i++) {
+      var categoryStatTeam = teamStats[idSel][i].toFixed(1)
+
+      seriesData.push(categoryStatTeam)
+      var keyTeamName = Reflect.ownKeys(teamsru)[i]
+      var teamName = teamsru[keyTeamName]
+
+      xAxisCategories.push(teamName)
+    }
+  }
 
   const handleChange = event => {
     var key = Object.keys(intervalsru).find(key => intervalsru[key] === event.target.value)
 
     setSelected(key)
     console.log('metric is ' + key)
+    refreshText(key)
   }
+
+  //initialise refresh
+  refreshText(propSelectedMetric)
 
   // Hooks
   const theme = useTheme()
@@ -77,7 +107,7 @@ const DashboardBarChart = ({ propSelectedMetric }) => {
     },
     xaxis: {
       axisTicks: { show: false },
-      categories: ['Mon, 11', 'Thu, 14', 'Fri, 15', 'Mon, 18', 'Wed, 20', 'Fri, 21', 'Mon, 23'],
+      categories: xAxisCategories,
       labels: {
         style: { colors: disabledText, fontSize: '13px' }
       }
@@ -115,13 +145,7 @@ const DashboardBarChart = ({ propSelectedMetric }) => {
       />
 
       <CardContent>
-        <AppReactApexCharts
-          type='bar'
-          width='100%'
-          height={400}
-          options={options}
-          series={[{ data: [700, 350, 480, 600, 210, 550, 150] }]}
-        />
+        <AppReactApexCharts type='bar' width='100%' height={400} options={options} series={[{ data: seriesData }]} />
       </CardContent>
     </Card>
   )

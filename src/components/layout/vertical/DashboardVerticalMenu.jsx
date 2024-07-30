@@ -91,7 +91,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             var generatedOptions = generateOptions(countGenerated, maximum)
             let optionsStr = generatedOptions.join(',')
 
-            var teamId = getRandomInt(Reflect.ownKeys(teamsru).length - 1)
+            var teamId = getRandomInt(Reflect.ownKeys(teamsru).length)
 
             if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
               console.log('generated quiz is not valid! not sending to db')
