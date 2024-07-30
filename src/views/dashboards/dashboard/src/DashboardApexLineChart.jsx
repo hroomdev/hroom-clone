@@ -66,10 +66,13 @@ const DashboardApexLineChart = ({ series, categories }) => {
     },
 
     colors: colorsA,
-    stroke: { curve: 'smooth' },
+    stroke: {
+      curve: 'smooth',
+      width: '3'
+    },
     dataLabels: { enabled: false },
     markers: {
-      strokeWidth: 7,
+      strokeWidth: 5,
       strokeOpacity: 1,
       colors: ['#ff9f43'],
       strokeColors: ['#fff']

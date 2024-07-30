@@ -1,11 +1,12 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 import { useRouter } from 'next/navigation'
-
 import { Truculenta } from 'next/font/google'
 
 import Grid from '@mui/material/Grid'
+
+const local = 'ru-RU'
 
 import { formatDistanceToNow, subDays, intervalToDuration } from 'date-fns'
 
@@ -22,7 +23,13 @@ import { Icon13 } from '../../icons/Icon13'
 import { RemixIconsLineMapCarLine3 } from '../../icons/RemixIconsLineMapCarLine3'
 import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineSystemArrowRightLine1'
 import { RemixIconsLineSystemErrorWarningLine1 } from '../../icons/RemixIconsLineSystemErrorWarningLine1'
+import { Item, preload, checkIsAvailable, getDashboardData, loading } from '@/app/server/dashboardstrategy'
+
 import './style.css'
+import './DashboardBuilder.css'
+
+import companyId from './../../../../../../../src/app/[lang]/(dashboard)/dashboards/dashboard/page'
+import { getMockDashboardData } from './../../../../../../../src/app/server/MockData'
 
 const options = {
   year: 'numeric',
@@ -32,39 +39,79 @@ const options = {
 
 var selectedMetricByTeam = 'Ambassadorship'
 
-export const DashboardBuilder = ({ dashboardData }) => {
+export const DashboardBuilder = () => {
+  var depVar = 1
+  var mockData = getMockDashboardData(companyId)
+
+  //test mock
+  mockData.currentQuizStarts = mockData.currentQuizStarts.toLocaleDateString(local, options)
+  mockData.nextQuizStarts = mockData.nextQuizStarts.toLocaleDateString(local, options)
+
+  //console.log(JSON.stringify(mockData))
+
   const [selectedEngagementMetricKey, setSelected] = useState(selectedMetricByTeam) // Declare a state variable...
+
+  const [d, setData] = useState(mockData) // Declare a state variable...
+
+  const [curToNow, setCurToNow] = useState(mockData.curToNow) // Declare a state variable...
+  const [nowToNext, setNowToNext] = useState(mockData.nowToNext) // Declare a state variable...
+  const [currentQuizStarts, setCurrentQuizStarts] = useState(mockData.currentQuizStarts) // Declare a state variable...
+  const [nextQuizStarts, setNextQuizStarts] = useState(mockData.nextQuizStarts) // Declare a state variable...
+  const [participationPercent, setParticipationPercent] = useState(mockData.participationPercent) // Declare a state variable...
+  const [participantsQuizPassed, setParticipantsQuizPassed] = useState(mockData.participantsQuizPassed) // Declare a state variable...
+  const [participantsQuizAll, setParticipantsQuizAll] = useState(mockData.participantsQuizAll) // Declare a state variable...
+  const [totalRevenueStats, setTotalRevenueStats] = useState(mockData.totalRevenueStats) // Declare a state variable...
+  const [seriesApexLineMetrics, setSeriesApexLineMetrics] = useState(mockData.seriesApexLineMetrics) // Declare a state variable...
+  const [categoriesApexLineMetrics, setCategoriesApexLineMetrics] = useState(mockData.categoriesApexLineMetrics) // Declare a state variable...
+  const [transactionsMetricStats, setTransactionsMetricStats] = useState(mockData.transactionsMetricStats) // Declare a state variable...
+  const [transactionsMetricDiffStats, setTransactionsMetricDiffStats] = useState(mockData.transactionsMetricDiffStats) // Declare a state variable...
+  const [teamsMetricStats, setTeamsMetricStats] = useState(mockData.teamsMetricStats) // Declare a state variable...
+  const [teamsMetricDiffStats, setTeamsMetricDiffStats] = useState(mockData.teamsMetricDiffStats) // Declare a state variable...
 
   const setSelectedHandle = value => {
     setSelected(value)
   }
 
-  console.log('setSelectedHandle :DashboardBuilder' + setSelectedHandle)
+  useEffect(() => {
+    const f = async () => {
+      if (loading) return
 
-  console.log('dashboardData : DashboardBuilder  ' + JSON.stringify(dashboardData))
+      var data = await getDashboardData(companyId)
 
-  var participantsQuizPassed = dashboardData.participantsQuizPassed
-  var participantsQuizAll = dashboardData.participantsQuizAll
-  var participationPercent = dashboardData.participationPercent
+      if (data == undefined) return
 
-  var currentQuizStarts = dashboardData.currentQuizStarts
-  var nextQuizStarts = dashboardData.nextQuizStarts
-  var curToNow = dashboardData.curToNow
-  var nowToNext = dashboardData.nowToNext
+      setCurToNow(data.curToNow)
+      setNowToNext(data.nowToNext)
+      setCurrentQuizStarts(data.currentQuizStarts)
+      setNextQuizStarts(data.nextQuizStarts)
+      setParticipationPercent(data.participationPercent)
+      setParticipantsQuizPassed(data.participantsQuizPassed)
+      setParticipantsQuizAll(data.participantsQuizAll)
+      setTotalRevenueStats(data.totalRevenueStats)
+      setSeriesApexLineMetrics(data.seriesApexLineMetrics)
+      setCategoriesApexLineMetrics(data.categoriesApexLineMetrics)
+      setTransactionsMetricStats(data.transactionsMetricStats)
+      setTransactionsMetricDiffStats(data.transactionsMetricDiffStats)
+      setTeamsMetricStats(data.teamsMetricStats)
+      setTeamsMetricDiffStats(data.teamsMetricDiffStats)
 
-  var totalRevenueStats = dashboardData.totalRevenueStats
-  var transactionsMetricStats = dashboardData.transactionsMetricStats
-  var transactionsMetricDiffStats = dashboardData.transactionsMetricDiffStats
-  var seriesApexLineMetrics = dashboardData.seriesApexLineMetrics
-  var categoriesApexLineMetrics = dashboardData.categoriesApexLineMetrics
-  var teamsMetricStats = dashboardData.teamsMetricStats
-  var teamDiffMetricStats = dashboardData.teamsMetricDiffStats
+      console.log(JSON.stringify(data))
+    }
+
+    f()
+
+    return () => {}
+  }, [depVar])
 
   return (
     <div className='dashboard-builder'>
       <div className='container-2'>
         <div className='body-2'>
           <div className='row'>
+            <p className='div-6'>
+              <span className='atext-wrapper-9'>С возвращением, </span>
+              <span className='atext-wrapper-10'>Константин 👋🏻</span>
+            </p>
             <div className='frame-4'>
               <div className='text-3'>
                 <p className='text-wrapper-11'>
@@ -245,7 +292,7 @@ export const DashboardBuilder = ({ dashboardData }) => {
                   propSelectedMetric={selectedEngagementMetricKey}
                   setSelectedHandle={setSelectedHandle}
                   teamStats={teamsMetricStats}
-                  teamStatsDiff={teamDiffMetricStats}
+                  teamStatsDiff={teamsMetricDiffStats}
                 />
               </Grid>
               <Grid item xs={5}>

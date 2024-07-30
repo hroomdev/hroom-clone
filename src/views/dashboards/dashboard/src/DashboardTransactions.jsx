@@ -5,6 +5,12 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 
+//styles
+//import styles from './DashboardTransactions.module.css'
+//import './DashboardTransactions.css'
+
+import './components/Transactions/style.css'
+
 // Components Imports
 import OptionMenu from '@core/components/option-menu'
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -13,6 +19,8 @@ import { metricsru } from './screens/DashboardBuilder/Metrics'
 import colorsOrd, { colorsRGBA } from './MetricsColors'
 import { binaryFormat, midRangeRating } from '@/app/server/const'
 import { getVectorFileName, getScaleVec, getColor } from './../src/components/VectorUtils'
+
+var styleClassPrefixTransactions = '.transactions '
 
 // Vars
 const data = [
@@ -134,7 +142,8 @@ const DashboardTransactions = ({ stats, statsDiffs }) => {
                     </Grid>
                     <Grid item xs={12}>
                       {' '}
-                      <Typography>{metricsru[item.title]}</Typography>
+                      <div className='name-3'>{metricsru[item.title]}</div>
+                      {/*<Typography>{metricsru[item.title]}</Typography>*/}
                     </Grid>
                   </Grid>
                 </div>

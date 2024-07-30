@@ -37,8 +37,8 @@ const DashboardBarChart = ({ propSelectedMetric, teamStats }) => {
   const refreshText = select => {
     var idSel = Object.keys(metricsru).findIndex(key => metricsru[key] == metricsru[select])
 
-    console.log('select :DashboardBarChart' + select)
-    console.log('idSel : DashboardBarChart' + idSel)
+    //console.log('select :DashboardBarChart' + select)
+    //console.log('idSel : DashboardBarChart' + idSel)
 
     //reset data
     xAxisCategories = []

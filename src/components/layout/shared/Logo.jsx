@@ -59,7 +59,7 @@ const Logo = ({ color }) => {
   return (
     <div className='flex items-center min-bs-[24px]'>
       {/*    <MaterioLogo className='text-[22px] text-primary' />                  LOGO BRANDING SVG M*/}
-      <img className='icon-2' alt='Icon' src={'/static/img/union.svg'} />
+      <img alt='Icon' src={'/static/img/union.svg'} />
       {/*<LogoText
         color={color}
         ref={logoTextRef}

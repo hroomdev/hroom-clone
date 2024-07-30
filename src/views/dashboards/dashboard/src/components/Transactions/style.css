@@ -1,4 +1,4 @@
-.transactions {
+      {
   align-items: flex-start;
   background-color: var(--variables-misc-paper);
   border-radius: var(--variables-border-radius-border-radius-md);
@@ -8,7 +8,7 @@
   position: relative;
 }
 
-.transactions .frame-3 {
+      .frame-3 {
   align-items: flex-start;
   display: inline-flex;
   flex: 0 0 auto;
@@ -16,7 +16,7 @@
   position: relative;
 }
 
-.transactions .body {
+      .body {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
@@ -27,7 +27,7 @@
   width: 212px;
 }
 
-.transactions .list {
+      .list {
   align-items: center;
   align-self: stretch;
   display: flex;
@@ -36,7 +36,7 @@
   width: 100%;
 }
 
-.transactions .name-2 {
+      .name-2 {
   align-items: center;
   display: flex;
   flex: 1;
@@ -45,13 +45,13 @@
   position: relative;
 }
 
-.transactions .icon-2 {
+      .icon-2 {
   height: 40px;
   position: relative;
   width: 40px;
 }
 
-.transactions .text-2 {
+      .text-2 {
   align-items: flex-start;
   display: flex;
   flex: 1;
@@ -60,16 +60,16 @@
   position: relative;
 }
 
-.transactions .stats {
+      .stats {
   align-items: center;
   display: inline-flex;
   flex: 0 0 auto;
   position: relative;
 }
 
-.transactions .element {
+      .element {
   color: #2e263de6;
-  font-family: "Inter", Helvetica;
+  font-family: 'Inter', Helvetica;
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 0;
@@ -80,15 +80,15 @@
   width: fit-content;
 }
 
-.transactions .icon-13 {
+      .icon-13 {
   height: 24px !important;
   position: relative !important;
   width: 24px !important;
 }
 
-.transactions .percentage-2 {
+      .percentage-2 {
   color: #56ca00;
-  font-family: "Inter", Helvetica;
+  font-family: 'Inter', Helvetica;
   font-size: 15px;
   font-weight: 400;
   letter-spacing: 0;
@@ -98,7 +98,7 @@
   width: fit-content;
 }
 
-.transactions .name-3 {
+      .name-3 {
   color: #2e263db2;
   font-family: var(--basic-typography-body-2-font-family);
   font-size: var(--basic-typography-body-2-font-size);
@@ -112,7 +112,21 @@
   width: fit-content;
 }
 
-.transactions .name-4 {
+.name-3 {
+  color: #2e263db2;
+  font-family: var(--basic-typography-body-2-font-family);
+  font-size: var(--basic-typography-body-2-font-size);
+  font-style: var(--basic-typography-body-2-font-style);
+  font-weight: var(--basic-typography-body-2-font-weight);
+  letter-spacing: var(--basic-typography-body-2-letter-spacing);
+  line-height: var(--basic-typography-body-2-line-height);
+  margin-right: -12px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+      .name-4 {
   color: #2e263db2;
   font-family: var(--basic-typography-body-2-font-family);
   font-size: var(--basic-typography-body-2-font-size);
@@ -125,7 +139,7 @@
   width: fit-content;
 }
 
-.transactions .name-5 {
+      .name-5 {
   color: #2e263db2;
   font-family: var(--basic-typography-body-2-font-family);
   font-size: var(--basic-typography-body-2-font-size);
@@ -138,7 +152,7 @@
   width: 160px;
 }
 
-.transactions .name-6 {
+      .name-6 {
   color: #2e263db2;
   font-family: var(--basic-typography-body-2-font-family);
   font-size: var(--basic-typography-body-2-font-size);

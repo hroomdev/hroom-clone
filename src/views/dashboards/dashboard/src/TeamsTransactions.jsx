@@ -76,8 +76,10 @@ const TeamsTransactions = ({ propSelectedMetric, setSelectedHandle, teamStats, t
   const refreshText = select => {
     var idSel = Object.keys(metricsru).findIndex(key => metricsru[key] == metricsru[select])
 
-    console.log('select ' + select)
-    console.log('idSel ' + idSel)
+    //console.log('select ' + select)
+    //console.log('idSel ' + idSel)
+    //console.log(JSON.stringify(teamStats))
+    //console.log(JSON.stringify(teamStatsDiff))
 
     for (var i = 0; i < data.length; i++) {
       data[i].stats = teamStats[idSel][i].toFixed(1)

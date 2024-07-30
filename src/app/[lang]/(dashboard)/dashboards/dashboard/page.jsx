@@ -1,13 +1,31 @@
 import { GET } from '@/app/api/apps/dashboard/route'
 
-import { Item, preload, checkIsAvailable } from '@/app/server/dashboardstrategy'
+const local = 'ru-RU'
 
-const companyId = 1
+import { Item, preload, checkIsAvailable, getDashboardData } from '@/app/server/dashboardstrategy'
+
+export const companyId = 1
+
+import { getMockDashboardData } from '@/app/server/MockData'
+
+import { DashboardBuilder } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/DashboardBuilder'
+
+const options = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}
+
+const optionsChart = {
+  //day: 'numeric',
+  //hour: 'numeric'
+  month: 'short'
+}
 
 const Dashboard = async () => {
-  preload(companyId)
+  console.log('Enter Dashboard : page.jsx')
 
-  const isAvailable = checkIsAvailable(companyId)
+  //preload(companyId)
 
   //console.log('db : page ' + JSON.stringify(dashboardData))
 
@@ -17,7 +35,7 @@ const Dashboard = async () => {
   //  redirect('/not-found')
   //}
 
-  return isAvailable ? Item(companyId) : null
+  return <DashboardBuilder />
 }
 
 export default Dashboard

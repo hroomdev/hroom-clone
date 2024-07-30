@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid'
 
 import ruLocale from 'date-fns/locale/ru'
 
-import { formatDistanceToNow, intervalToDuration } from 'date-fns'
+import { formatDistanceToNow, intervalToDuration, format } from 'date-fns'
 
 import { DashboardBuilder } from '@views/dashboards/dashboard/src/screens/DashboardBuilder'
 
@@ -28,6 +28,8 @@ import {
   getQuizById
 } from './actions'
 
+import { getMockDashboardData } from './MockData'
+
 // Data Imports
 
 const intervalDataUpd = 1000
@@ -37,161 +39,73 @@ import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens
 const local = 'ru-RU'
 
 export async function preload(id) {
+  console.log(id + 'preload id : getDashboardData... ')
+
   // void evaluates the given expression and returns undefined
   // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/void
   //https://nextjs.org/docs/app/building-your-application/data-fetching/patterns#parallel-and-sequential-data-fetching
   await getDashboardData(id)
 }
 
-export async function Item(id) {
-  const result = await getDashboardData(id)
-
-  return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <DashboardWelcomeCard />
-      </Grid>
-      <Grid item>
-        <DashboardBuilder dashboardData={result} />
-      </Grid>
-    </Grid>
-  )
-}
+export async function Item(id, mockData) {}
 
 var resultAllIds = []
 
-async function waitUntil(f) {
-  return await new Promise(resolve => {
-    const interval = setInterval(async () => {
-      var result = await f()
-
-      //console.log(' isavailabel ' + result)
-
-      if (result) {
-        resolve('foo')
-        clearInterval(interval)
-      }
-    }, intervalDataUpd)
-  })
-}
-
 export async function checkIsAvailable(id) {
-  const isAvailable = async () => {
-    return resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
-  }
-
-  await waitUntil(isAvailable)
-
-  return true
+  return resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
 }
 
-var loading = false
+export var loading = false
 
-export const getDashboardData = cache(async id => {
+//cache for server calls only this is called from client
+export const getDashboardData = async id => {
   console.log('loading false -> set loading true : getDashboardData... ')
 
+  if (loading) {
+    console.log('twice call loading quit : dashboardstrategy')
+
+    return undefined
+  }
+
+  loading = true
+
+  //if (isAvailable(id)) {
+  //}
+
+  var mockData = getMockDashboardData(id)
+
+  mockData.seriesApexLineMetrics = mockData.seriesApexLineMetrics.map((item, index) => {
+    item.data = []
+
+    return item
+  })
+
+  mockData.categoriesApexLineMetrics = []
+
   //set cache renewal conditionscheck is available on each new user data must be set false
-  var participantsQuizPassed
-  var participantsQuizAll
-  var participationPercent
-
-  var currentQuizStarts = new Date(Date.UTC(2024, 6, 17, 3, 10, 0)) //23 мая 2024
-  var curToNow = 'неделю'
-  var nowToNext = '13 дней'
-  var nextQuizStarts = new Date(Date.UTC(2024, 7, 5, 7, 12, 6)) // 3 июня 2024
-  var totalRevenueStats = [
-    1.5, // процент изменения с последнего опроса
-    21, // статистика тотал по всем метрикам  вовлеченные
-    26, // статистика тотал по всем метрикам  слабо
-    23, // статистика тотал по всем метрикам  невовлеченные
-    30, // статистика тотал по всем метрикам  пропустили
-    1.1 //абсолютное значение вовлеченности
-  ]
-
-  var transactionsMetricStats = [1.1, 2.2, 3.3, 7.7, 7.8, 7.9, 8.0, 3.3, 5.0, 8.8]
-
-  var transactionsMetricDiffStats = [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.8, 1.2, 0.8]
-
-  var teamsMetricStats = [
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3]
-  ]
-
-  var teamsMetricDiffStats = [
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3],
-    [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3]
-  ]
-
-  var teamMetricsDateStart = new Date(Date.UTC(2024, 6, 17, 3, 10, 0))
-  var teamMetricsDateEnd = new Date(Date.UTC(2024, 6, 17, 3, 10, 0))
-
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }
-
-  const optionsChart = {
-    //day: 'numeric',
-    //hour: 'numeric'
-    month: 'short'
-  }
+  var participantsQuizPassed = mockData.participantsQuizPassed
+  var participantsQuizAll = mockData.participantsQuizPassed
+  var participationPercent = mockData.participationPercent
+  var currentQuizStarts = mockData.currentQuizStarts
+  var curToNow = mockData.curToNow
+  var nowToNext = mockData.nowToNext
+  var nextQuizStarts = mockData.nextQuizStarts
+  var totalRevenueStats = mockData.totalRevenueStats
+  var transactionsMetricStats = mockData.transactionsMetricStats
+  var transactionsMetricDiffStats = mockData.transactionsMetricDiffStats
+  var teamsMetricStats = mockData.teamsMetricStats
+  var teamsMetricDiffStats = mockData.teamsMetricDiffStats
+  var teamMetricsDateStart = mockData.teamMetricsDateStart
+  var teamMetricsDateEnd = mockData.teamMetricsDateEnd
+  var options = mockData.options
+  var optionsChart = mockData.optionsChart
 
   // Vars
-  var seriesApexLineMetrics = [
-    {
-      data: [] //5.5, 1.0, 4.5
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    }
-  ]
+  var seriesApexLineMetrics = mockData.seriesApexLineMetrics
 
-  var categoriesApexLineMetrics = [] //'7/12', '8/12', '9/12'
+  var categoriesApexLineMetrics = mockData.categoriesApexLineMetrics
 
-  var timeStart = Date.now()
+  var timeStart = mockData.timeStart
 
   await getCurrentQuizAuditory().then(data => {
     participantsQuizPassed = data[0]
@@ -342,20 +256,10 @@ export const getDashboardData = cache(async id => {
 
   resultAllIds[id] = db
 
-  for (var i = 0; i < teamsMetricStats.length; i++) {
-    for (var j = 0; j < teamsMetricStats[i].length; j++) {
-      //console.log('i ' + i + 'j' + j + ' teamsMetricStats ' + teamsMetricStats[i][j])
-    }
-  }
-
-  for (var i = 0; i < teamsMetricDiffStats.length; i++) {
-    for (var j = 0; j < teamsMetricDiffStats[i].length; j++) {
-      //console.log('i ' + i + 'j' + j + ' teamsMetricDiffStats ' + teamsMetricDiffStats[i][j])
-    }
-  }
+  loading = false
 
   return db
-})
+}
 
 export const getCurrentQuizAuditory = async () => {
   let currentQuizIdAudi = await getCurrentQuizIdAudi()
@@ -459,7 +363,7 @@ export const getEngageMetrics = async (
   var counterMetricQuiz = [metStats.length]
 
   for (var i = 0; i < metStats.length; i++) {
-    metStats[i] = midRangeRating
+    metStats[i] = 0
     var counterMetric = questionsMetricsArr.reduce((accumulator, currentValue) => {
       if (Object.keys(metricsru).at(i) == currentValue) {
         return accumulator + 1
