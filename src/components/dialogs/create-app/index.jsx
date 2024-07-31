@@ -62,7 +62,13 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
           ? StarRate
           : questionType.includes('scale')
             ? SliderScale
-            : console.log('unknown question type ' + questionType)
+            : 'unknown'
+
+  if (activeStep < 0) return <p></p>
+
+  //if (steps < 2) return <p></p>
+  //if (isLoading) return <p></p>
+  if (questionType == '') return <p></p>
 
   return (
     <Tag
@@ -77,111 +83,15 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
   )
 }
 
+//theme extend....revert or copy paste this file to commit history 99e8.... commit
+
 let quizGroupTypeId = '1'
 
 const CreateApp = ({ open, setOpen }) => {
   const router = useRouter()
+  var depVar = 1
 
   //hideVerticalMenu()
-
-  const theme = extendTheme({
-    shape: {
-      borderRadiusRound: 999
-    },
-    components: {
-      MuiSwitch: {
-        styleOverrides: {
-          root: {
-            '&.MuiSwitch-sizeMedium:has(.MuiSwitch-colorPrimary)': {
-              width: '40px',
-              height: '21px',
-              padding: '0',
-              '& .MuiSwitch-switchBase': {
-                padding: '0',
-                '& .MuiSwitch-thumb': {
-                  width: '17px',
-                  height: '17px',
-                  background: '#FAFAFA'
-                },
-                '& + .MuiSwitch-track': {
-                  width: '38px',
-                  height: '21px',
-                  borderRadius: '100px',
-                  opacity: '1'
-                }
-              },
-              '&:not(:has(.Mui-checked)):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible))': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(3px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    background: '#BDBDBD'
-                  }
-                }
-              },
-              '&:not(:has(.Mui-checked)):has(.Mui-disabled):not(:has(.Mui-focusVisible))': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(3px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    background: 'rgba(229, 229, 229, 0.99)'
-                  }
-                }
-              },
-              '&:not(:has(.Mui-checked)):not(:has(.Mui-disabled)):has(.Mui-focusVisible)': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(3px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    border: '1px solid #000',
-                    background: '#BDBDBD'
-                  }
-                }
-              },
-              '&:has(.Mui-checked):has(.Mui-disabled):not(:has(.Mui-focusVisible))': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(19px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    background: 'rgba(187, 231, 188, 0.99)'
-                  }
-                }
-              },
-              '&:not(:has(.Mui-checked)):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible)):hover': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(3px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    background: '#616161'
-                  }
-                }
-              },
-              '&:has(.Mui-checked):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible))': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(19px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    background: 'var(--mui-palette-success-light)'
-                  }
-                }
-              },
-              '&:has(.Mui-checked):not(:has(.Mui-disabled)):not(:has(.Mui-focusVisible)):hover': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(19px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    background: 'var(--mui-palette-success-dark)'
-                  }
-                }
-              },
-              '&:has(.Mui-checked):not(:has(.Mui-disabled)):has(.Mui-focusVisible)': {
-                '& .MuiSwitch-switchBase': {
-                  transform: 'translateX(19px) translateY(2px)',
-                  '& + .MuiSwitch-track': {
-                    border: '1px solid #000',
-                    background: 'var(--mui-palette-success-light)'
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  })
 
   //states
   const [steps, setSteps] = useState(initialSteps)
@@ -196,7 +106,7 @@ const CreateApp = ({ open, setOpen }) => {
     //setActiveStep(0)
     setLoading(true)
     setQuestionType('')
-    setTitle('                       ')
+    setTitle('                      ')
   }
 
   async function fetch(step) {
@@ -215,6 +125,7 @@ const CreateApp = ({ open, setOpen }) => {
 
       setQuestionType(questionType)
       setTitle(questionTitle)
+      console.log('set loading false')
       setLoading(false)
     })
 
@@ -225,17 +136,17 @@ const CreateApp = ({ open, setOpen }) => {
     fetch(activeStep)
 
     return unmount
-  }, [])
+  }, [depVar])
 
-  if (activeStep < 0) return <p></p>
-  if (steps < 2) return <p></p>
-  if (isLoading) return <p></p>
-  if (questionType == '') return <p></p>
+  //if (activeStep < 0) return <p></p>
+  //if (steps < 2) return <p></p>
+  //if (isLoading) return <p></p>
+  //if (questionType == '') return <p></p>
 
   const delay = time => new Promise(res => setTimeout(res, time))
 
   const handleClose = async () => {
-    //setOpen(false)
+    setOpen(false)
     setActiveStep(-1)
     await unmount()
     await fetch(-1)

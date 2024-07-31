@@ -75,6 +75,8 @@ const MenuItem = (props, ref) => {
 
   // Handle the click event.
   const handleClick = () => {
+    console.log('handleclick ')
+
     if (isToggled) {
       toggleVerticalNav()
     }
@@ -82,9 +84,13 @@ const MenuItem = (props, ref) => {
 
   // Change active state when the url changes
   useEffect(() => {
+    console.log('href ' + href)
+
     const href = rest.href || (component && typeof component !== 'string' && component.props.href)
 
     if (href) {
+      console.log('useeffect ' + href)
+
       // Check if the current url matches any of the children urls
       if (exactMatch ? pathname === href : activeUrl && pathname.includes(activeUrl)) {
         setActive(true)

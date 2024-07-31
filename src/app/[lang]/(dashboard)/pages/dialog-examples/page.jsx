@@ -1,5 +1,9 @@
 'use client' // MUI Imports
+import { useState } from 'react'
+
 import Grid from '@mui/material/Grid'
+
+// React Imports
 
 // Component Imports
 //import { BrowserRouter } from 'react-router-dom'
@@ -36,12 +40,17 @@ import CreateApp from '@components/dialogs/create-app'
 
   return res.json()
 } */
+var initialState = true
 
 const DialogExamples = () => {
   // Vars
   //const data = getPricingData()
+  // States
+  const [open, setOpen] = useState(initialState)
 
-  return <CreateApp open={true} setOpen={true}></CreateApp>
+  console.log('dialog examples ' + open)
+
+  return <CreateApp open={open} setOpen={setOpen}></CreateApp>
 
   //<Grid container spacing={6}>
   //  <Grid item xs={12} sm={6} md={4}>
