@@ -357,7 +357,7 @@ export const DashboardBuilder = () => {
 
           <Grid container spacing={6} flex>
             <Grid item xs='12'>
-              <DashboardHeatmapChart />
+              <DashboardHeatmapChart teamsMetricStats={teamsMetricStats} dataDiffArr={teamsMetricDiffStats} />
             </Grid>
           </Grid>
 

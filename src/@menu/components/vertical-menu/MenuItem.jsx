@@ -75,7 +75,7 @@ const MenuItem = (props, ref) => {
 
   // Handle the click event.
   const handleClick = () => {
-    console.log('handleclick ')
+    console.log('handleclick isToggled ' + isToggled)
 
     if (isToggled) {
       toggleVerticalNav()
@@ -103,6 +103,7 @@ const MenuItem = (props, ref) => {
 
   // Call the onActiveChange callback when the active state changes.
   useUpdateEffect(() => {
+    console.log('useUpdateEffect onActiveChange? ' + onActiveChange)
     onActiveChange?.(active)
   }, [active])
 

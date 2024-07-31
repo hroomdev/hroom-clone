@@ -60,6 +60,7 @@ const Menu = (props, ref) => {
 
   const toggleOpenSubmenu = useCallback(
     (...submenus) => {
+      console.log('toggleOpenSubmenu' + toggleOpenSubmenu)
       if (!submenus.length) return
       const openSubmenuCopy = [...openSubmenu]
 

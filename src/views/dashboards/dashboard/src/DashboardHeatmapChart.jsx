@@ -18,13 +18,20 @@ const subtitleru = 'По командам'
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
-const generateDataHeat = (count, yrange) => {
-  let i = 0
+//count is Category count
+const updDataHeat = (seriesNameData, teamId, dataHeat, count) => {
+  let i = 0 //metric Id
   const series = []
 
+  //dataHeat i'th is metric id
+  //dataHeat j'th is teamId
+
   while (i < count) {
-    const x = `w${(i + 1).toString()}`
-    const y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
+    var metricKey = Object.keys(metricsru).at(i)
+    var metricName = metricsru[metricKey]
+
+    const x = metricName //`w${(i + 1).toString()}`
+    const y = dataHeat[i][teamId].toFixed(1)
 
     series.push({
       x,
@@ -33,42 +40,48 @@ const generateDataHeat = (count, yrange) => {
     i += 1
   }
 
-  return series
+  seriesNameData[teamId].data = series
+
+  return seriesNameData
 }
 
 // Vars
 const series = [
   {
     name: teamsru['benchmark'],
-    data: generateDataHeat(11, { min: 0, max: 60 })
+    data: []
   },
   {
     name: teamsru['whole'],
-    data: generateDataHeat(11, { min: 0, max: 60 })
+    data: []
   },
   {
     name: teamsru['management'],
-    data: generateDataHeat(11, { min: 0, max: 60 })
+    data: []
   },
   {
     name: teamsru['finance'],
-    data: generateDataHeat(11, { min: 0, max: 60 })
+    data: []
   },
   {
     name: teamsru['business'],
-    data: generateDataHeat(11, { min: 0, max: 60 })
+    data: []
   },
   {
     name: teamsru['development'],
-    data: generateDataHeat(11, { min: 0, max: 60 })
+    data: []
   },
   {
     name: teamsru['testing'],
-    data: generateDataHeat(11, { min: 0, max: 60 })
+    data: []
   }
 ]
 
-const DashboardHeatmapChart = () => {
+const DashboardHeatmapChart = ({ teamsMetricStats, teamsMetricDiffStats }) => {
+  for (var i = 0; i < series.length; i++) {
+    updDataHeat(series, i, teamsMetricStats, teamsMetricStats.length)
+  }
+
   // Hooks
   const theme = useTheme()
 
@@ -99,12 +112,16 @@ const DashboardHeatmapChart = () => {
         enableShades: false,
         colorScale: {
           ranges: [
-            { to: 10, from: 0, name: '0-10', color: '#b9b3f8' },
-            { to: 20, from: 11, name: '10-20', color: '#aba4f6' },
-            { to: 30, from: 21, name: '20-30', color: '#9d95f5' },
-            { to: 40, from: 31, name: '30-40', color: '#8f85f3' },
-            { to: 50, from: 41, name: '40-50', color: '#8176f2' },
-            { to: 60, from: 51, name: '50-60', color: '#7367f0' }
+            { to: 1, from: 0, name: '0-1', color: '#b9b3f8' },
+            { to: 2, from: 1.1, name: '1-2', color: '#aba4f6' },
+            { to: 3, from: 2.1, name: '2-3', color: '#9d95f5' },
+            { to: 4, from: 3.1, name: '3-4', color: '#8f85f3' },
+            { to: 5, from: 4.1, name: '4-5', color: '#8176f2' },
+            { to: 6, from: 5.1, name: '5-6', color: '#7367f0' },
+            { to: 7, from: 6.1, name: '6-7', color: '#7367f0' },
+            { to: 8, from: 7.1, name: '7-8', color: '#7367f0' },
+            { to: 9, from: 8.1, name: '8-9', color: '#7367f0' },
+            { to: 10, from: 9.1, name: '9-10', color: '#7367f0' }
           ]
         }
       }
