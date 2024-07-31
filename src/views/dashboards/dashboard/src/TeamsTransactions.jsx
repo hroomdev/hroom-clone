@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 
 import Typography from '@mui/material/Typography'
@@ -12,8 +11,6 @@ import MenuItem from '@mui/material/MenuItem'
 
 import { metricsru } from './screens/DashboardBuilder/Metrics'
 import { teamsru } from './screens/DashboardBuilder/Teams'
-import colorsOrd, { colorsRGBA } from './MetricsColors'
-import { binaryFormat, midRangeRating } from '@/app/server/const'
 import { getVectorFileName, getScaleVec, getColor } from './../src/components/VectorUtils'
 
 // Vars
@@ -76,11 +73,7 @@ const TeamsTransactions = ({ propSelectedMetric, setSelectedHandle, teamStats, t
   const refreshText = select => {
     var idSel = Object.keys(metricsru).findIndex(key => metricsru[key] == metricsru[select])
 
-    //console.log('select ' + select)
-    //console.log('idSel ' + idSel)
-    //console.log(JSON.stringify(teamStats))
-    //console.log(JSON.stringify(teamStatsDiff))
-
+    //all in all 7 teams i'th team stats and diff is displayed in this widget
     for (var i = 0; i < data.length; i++) {
       data[i].stats = teamStats[idSel][i].toFixed(1)
       data[i].diff = teamStatsDiff[idSel][i].toFixed(1)

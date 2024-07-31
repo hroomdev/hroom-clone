@@ -19,14 +19,14 @@ const subtitleru = 'По командам'
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
 //count is Category count
-const updDataHeat = (seriesNameData, teamId, dataHeat, count) => {
+const updDataHeatForTeam = (seriesNameData, teamId, dataHeat, categoryCount) => {
   let i = 0 //metric Id
   const series = []
 
   //dataHeat i'th is metric id
   //dataHeat j'th is teamId
 
-  while (i < count) {
+  while (i < categoryCount) {
     var metricKey = Object.keys(metricsru).at(i)
     var metricName = metricsru[metricKey]
 
@@ -40,46 +40,27 @@ const updDataHeat = (seriesNameData, teamId, dataHeat, count) => {
     i += 1
   }
 
-  seriesNameData[teamId].data = series
+  var teamKey = Object.keys(teamsru).at(teamId)
+  var teamName = teamsru[teamKey]
 
-  return seriesNameData
+  var nameData = {
+    name: teamName,
+    data: series
+  }
+
+  seriesNameData.push(nameData)
 }
 
 // Vars
-const series = [
-  {
-    name: teamsru['benchmark'],
-    data: []
-  },
-  {
-    name: teamsru['whole'],
-    data: []
-  },
-  {
-    name: teamsru['management'],
-    data: []
-  },
-  {
-    name: teamsru['finance'],
-    data: []
-  },
-  {
-    name: teamsru['business'],
-    data: []
-  },
-  {
-    name: teamsru['development'],
-    data: []
-  },
-  {
-    name: teamsru['testing'],
-    data: []
-  }
-]
+var series = []
 
 const DashboardHeatmapChart = ({ teamsMetricStats, teamsMetricDiffStats }) => {
-  for (var i = 0; i < series.length; i++) {
-    updDataHeat(series, i, teamsMetricStats, teamsMetricStats.length)
+  var statsTeamsCount = teamsMetricStats[0].length
+
+  series = []
+
+  for (var i = 0; i < statsTeamsCount; i++) {
+    updDataHeatForTeam(series, i, teamsMetricStats, teamsMetricStats.length)
   }
 
   // Hooks
