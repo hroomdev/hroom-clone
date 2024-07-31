@@ -26,7 +26,6 @@ import { RemixIconsLineSystemErrorWarningLine1 } from '../../icons/RemixIconsLin
 import { Item, preload, checkIsAvailable, getDashboardData, loading } from '@/app/server/dashboardstrategy'
 
 import './style.css'
-import './DashboardBuilder.css'
 
 import companyId from './../../../../../../../src/app/[lang]/(dashboard)/dashboards/dashboard/page'
 import { getMockDashboardData } from './../../../../../../../src/app/server/MockData'
@@ -109,8 +108,8 @@ export const DashboardBuilder = () => {
         <div className='body-2'>
           <div className='row'>
             <p className='div-6'>
-              <span className='atext-wrapper-9'>С возвращением, </span>
-              <span className='atext-wrapper-10'>Константин 👋🏻</span>
+              <span className='text-wrapper-9'>С возвращением, </span>
+              <span className='text-wrapper-10'>Константин 👋🏻</span>
             </p>
             <div className='frame-4'>
               <div className='text-3'>

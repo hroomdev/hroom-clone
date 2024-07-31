@@ -22,7 +22,7 @@
 
 .total-revenue .sub-text {
   color: #2e263de6;
-  font-family: "Inter", Helvetica;
+  /*font-family: "Inter", Helvetica;*/
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 0;
@@ -120,7 +120,7 @@
 
 .total-revenue .percentage {
   color: #56ca00;
-  font-family: "Inter", Helvetica;
+  font-family: 'Inter', Helvetica;
   font-size: 15px;
   font-weight: 400;
   left: 94px;
@@ -152,7 +152,7 @@
 .total-revenue .number {
   align-self: stretch;
   color: var(--gray-900);
-  font-family: "Inter", Helvetica;
+  font-family: 'Inter', Helvetica;
   font-size: 32px;
   font-weight: 600;
   height: 27.31px;
@@ -333,7 +333,7 @@
 
 .total-revenue .text {
   color: #111926;
-  font-family: "Inter", Helvetica;
+  font-family: 'Inter', Helvetica;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0;
