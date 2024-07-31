@@ -84,9 +84,9 @@ const MenuItem = (props, ref) => {
 
   // Change active state when the url changes
   useEffect(() => {
-    console.log('href ' + href)
-
     const href = rest.href || (component && typeof component !== 'string' && component.props.href)
+
+    console.log('href ' + href)
 
     if (href) {
       console.log('useeffect ' + href)
