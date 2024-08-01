@@ -610,7 +610,8 @@ export const getCurrentQuiz = async () => {
   return currentQuiz
 }
 
-export const getQuestionMetricBy = async questionId => {
+//todo: add limi LIMIT $1
+export const getQuestionMetricSubMetricQuestionBy = async questionId => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -620,23 +621,25 @@ export const getQuestionMetricBy = async questionId => {
   })
 
   const queryMetric = {
-    text: 'SELECT "public"."question-list"."Metric" FROM "public"."question-list" WHERE "public"."question-list"."id" = $1',
+    text: 'SELECT "public"."question-list"."Metric","public"."question-list"."Sub Metric","public"."question-list"."Question"  FROM "public"."question-list" WHERE "public"."question-list"."id" = $1',
     values: [questionId],
     rowMode: 'array'
   }
 
-  var questionMetric = 'metric not found by questionId ' + questionId + ':actions.js'
+  var questionMetricSubQuest = 'metric not found by questionId ' + questionId + ':actions.js'
 
   try {
     await client.connect()
     var res = await client.query(queryMetric)
 
-    questionMetric = res.rows[0] //id of a row less then id of any table by one
+    questionMetricSubQuest = res.rows[0] //id of a row less then id of any table by one
   } catch (e) {
     console.error(e.stack)
   } finally {
     client.end()
   }
 
-  return questionMetric
+  //console.log('questionMetricSubQuest ' + questionMetricSubQuest)
+
+  return questionMetricSubQuest
 }

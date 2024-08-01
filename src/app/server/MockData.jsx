@@ -1,4 +1,5 @@
 const local = 'ru-RU'
+const en = 'en-GB'
 
 export const getMockDashboardData = id => {
   //set cache renewal conditionscheck is available on each new user data must be set false
@@ -23,6 +24,12 @@ export const getMockDashboardData = id => {
   var transactionsMetricDiffStats = [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.8, 1.2, 0.8]
 
   //row = particular metric for a teams from 0 to 13
+  var teamsMetricStory = {
+    dateStamp: [],
+    stats: [],
+    diff: []
+  }
+
   var teamsMetricStats = [
     [1.1, 0.5, 0.2, 1.1, 1.8, 0.9, 0.3, 0.1, 0.2, 1.1, 5.5, 0.1, 1.5],
     [1.1, 0.5, 1.2, 1.1, 1.8, 0.9, 0.3, 0.1, 0.2, 1.1, 5.5, 0.1, 1.5],
@@ -115,12 +122,29 @@ export const getMockDashboardData = id => {
 
   var categoriesApexLineMetrics = [] //'7/12', '8/12', '9/12'
 
-  for (var i = 0; i < 10; i++) {
-    var date = new Date(date)
+  var toGenerateQuizCount = 10
 
-    date.setHours(date.getHours() + i)
+  for (var i = 0; i < toGenerateQuizCount; i++) {
+    var artificialDate = new Date()
 
-    categoriesApexLineMetrics.push(date.toLocaleString(local, optionsChart)) //
+    if (i < 1) {
+      artificialDate.setMinutes(artificialDate.getMinutes() - i)
+    } else if (i < 2) {
+      artificialDate.setHours(artificialDate.getHours() - i)
+    } else if (i < 4) {
+      artificialDate.setDate(artificialDate.getDate() - i)
+    } else if (i < 5) {
+      artificialDate.setMonth(artificialDate.getMonth() - i)
+    } else artificialDate.setFullYear(artificialDate.getFullYear() - i)
+
+    //artificialDate.setHours(artificialDate.getHours() + i)
+
+    //var artificialDateLocal =  //optionsChart
+
+    categoriesApexLineMetrics.push(artificialDate.toLocaleString(optionsChart))
+    teamsMetricStory.dateStamp.push(artificialDate)
+    teamsMetricStory.stats.push(teamsMetricStats)
+    teamsMetricStory.diff.push(teamsMetricDiffStats)
   }
 
   //mock data
@@ -129,7 +153,7 @@ export const getMockDashboardData = id => {
       transactionsMetricStats[i] = Math.floor(Math.random() * 10)
     }
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < toGenerateQuizCount; i++) {
       item.data.push(transactionsMetricStats[i])
     }
 
@@ -139,6 +163,40 @@ export const getMockDashboardData = id => {
   //
 
   var timeStart = Date.now()
+
+  var acutelys = [
+    {
+      data: [45, 5, 15, 15, 5],
+      question: 'Моя организация поддержит меня, если мне понадобится использовать гибкий график работы',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [5, 55, 5, 5, 15],
+      question: 'Я получаю значимое признание.',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [15, 5, 45, 15, 5],
+      question:
+        'Что из следующего лучше всего описывает количество отзывов, которые вы обычно получаете о своей работе?',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [15, 5, 15, 45, 5],
+      question: 'Вкладывает ли ваша организация столько ресурсов, людей и усилий, сколько соответствует ее амбициям?',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [15, 5, 15, 15, 45],
+      question: 'Моя организация ценит уникальность членов своей команды.',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    }
+  ]
 
   var db = {
     id: id,
@@ -156,7 +214,9 @@ export const getMockDashboardData = id => {
     seriesApexLineMetrics: seriesApexLineMetrics, //[]
     categoriesApexLineMetrics: categoriesApexLineMetrics, //[]
     teamsMetricStats: teamsMetricStats,
-    teamsMetricDiffStats: teamsMetricDiffStats
+    teamsMetricDiffStats: teamsMetricDiffStats,
+    acutelys: acutelys,
+    teamsMetricStory: teamsMetricStory
   }
 
   return db

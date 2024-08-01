@@ -73,13 +73,13 @@ var series = []
 const DashboardHeatmapChart = ({ teamsMetricStats, teamsMetricDiffStats }) => {
   //metricss teams
 
-  console.log('teamsMetricStats len' + teamsMetricStats.length + ' length 2nd ' + teamsMetricStats[0].length)
+  //console.log('teamsMetricStats len' + teamsMetricStats.length + ' length 2nd ' + teamsMetricStats[0].length)
 
-  console.log(JSON.stringify(teamsMetricStats))
+  //console.log(JSON.stringify(teamsMetricStats))
 
-  console.log(
-    'teamsMetricDiffStats len' + teamsMetricDiffStats.length + ' length 2nd ' + teamsMetricDiffStats[0].length
-  )
+  //console.log(
+  //   'teamsMetricDiffStats len' + teamsMetricDiffStats.length + ' length 2nd ' + teamsMetricDiffStats[0].length
+  //)
 
   series = []
 

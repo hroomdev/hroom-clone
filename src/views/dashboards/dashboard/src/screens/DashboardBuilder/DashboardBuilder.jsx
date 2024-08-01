@@ -38,7 +38,8 @@ const options = {
   day: 'numeric'
 }
 
-var selectedMetricByTeam = 'Ambassadorship'
+var initialMetricByTeam = 'Ambassadorship'
+var initialTimeInterval = 'quarter'
 
 export const DashboardBuilder = () => {
   var depVar = 1
@@ -50,7 +51,8 @@ export const DashboardBuilder = () => {
 
   //console.log(JSON.stringify(mockData))
 
-  const [selectedEngagementMetricKey, setSelected] = useState(selectedMetricByTeam) // Declare a state variable...
+  const [selectedEngagementMetricKey, setSelected] = useState(initialMetricByTeam) // Declare a state variable...
+  const [selectedTeamTimeIntervalKey, setSelectedTimeInterval] = useState(initialTimeInterval)
 
   const [d, setData] = useState(mockData) // Declare a state variable...
 
@@ -68,9 +70,15 @@ export const DashboardBuilder = () => {
   const [transactionsMetricDiffStats, setTransactionsMetricDiffStats] = useState(mockData.transactionsMetricDiffStats) // Declare a state variable...
   const [teamsMetricStats, setTeamsMetricStats] = useState(mockData.teamsMetricStats) // Declare a state variable...
   const [teamsMetricDiffStats, setTeamsMetricDiffStats] = useState(mockData.teamsMetricDiffStats) // Declare a state variable...
+  const [acutelys, setAcutelys] = useState(mockData.acutelys) // Declare a state variable...
+  const [teamMetricStory, setTeamMetricStory] = useState(mockData.teamsMetricStory)
 
   const setSelectedHandle = value => {
     setSelected(value)
+  }
+
+  const setSelectedTimeIntervalHandle = value => {
+    setSelectedTimeInterval(value)
   }
 
   useEffect(() => {
@@ -95,7 +103,8 @@ export const DashboardBuilder = () => {
       setTransactionsMetricDiffStats(data.transactionsMetricDiffStats)
       setTeamsMetricStats(data.teamsMetricStats)
       setTeamsMetricDiffStats(data.teamsMetricDiffStats)
-
+      setAcutelys(data.acutelys)
+      setTeamMetricStory(data.teamsMetricStory)
       console.log(JSON.stringify(data))
     }
 
@@ -103,40 +112,6 @@ export const DashboardBuilder = () => {
 
     return () => {}
   }, [depVar])
-
-  var acutelys = [
-    {
-      data: [45, 5, 15, 15, 5],
-      question: 'Моя организация поддержит меня, если мне понадобится использовать гибкий график работы',
-      submetric: 'Баланс работа-жизнь',
-      metric: 'Счастье'
-    },
-    {
-      data: [5, 55, 5, 5, 15],
-      question: 'Я получаю значимое признание.',
-      submetric: 'Баланс работа-жизнь',
-      metric: 'Счастье'
-    },
-    {
-      data: [15, 5, 45, 15, 5],
-      question:
-        'Что из следующего лучше всего описывает количество отзывов, которые вы обычно получаете о своей работе?',
-      submetric: 'Баланс работа-жизнь',
-      metric: 'Счастье'
-    },
-    {
-      data: [15, 5, 15, 45, 5],
-      question: 'Вкладывает ли ваша организация столько ресурсов, людей и усилий, сколько соответствует ее амбициям?',
-      submetric: 'Баланс работа-жизнь',
-      metric: 'Счастье'
-    },
-    {
-      data: [15, 5, 15, 15, 45],
-      question: 'Моя организация ценит уникальность членов своей команды.',
-      submetric: 'Баланс работа-жизнь',
-      metric: 'Счастье'
-    }
-  ]
 
   //console.log('diffstats : DashboardBuilder ' + JSON.stringify(d.teamsMetricDiffStats))
   return (
@@ -332,7 +307,13 @@ export const DashboardBuilder = () => {
                 />
               </Grid>
               <Grid item xs={5}>
-                <DashboardBarChart propSelectedMetric={selectedEngagementMetricKey} teamStats={teamsMetricStats} />
+                <DashboardBarChart
+                  setSelectedTimeInterval={setSelectedTimeIntervalHandle}
+                  propSelectedMetricId={selectedEngagementMetricKey}
+                  propSelectedTimeInterval={selectedTeamTimeIntervalKey}
+                  teamStats={teamsMetricStats}
+                  teamMetricStory={teamMetricStory}
+                />
               </Grid>
               <Grid item xs>
                 <div className='col'>

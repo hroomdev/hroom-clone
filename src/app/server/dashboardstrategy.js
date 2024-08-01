@@ -15,7 +15,7 @@ import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbS
 
 import { teamsru } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
 
-import { ratingMax, midRangeRating } from './const'
+import { ratingMax, midRangeRating, cohortsLevelsPercents, cohortsAcutesAbs } from './const'
 import {
   getSelectedAnswersByTeamId,
   getSelectedAnswersByQuizId,
@@ -24,7 +24,7 @@ import {
   getQuestGroupTypeBy,
   getSelectedOptions,
   getQuestGroupGroupBy,
-  getQuestionMetricBy,
+  getQuestionMetricSubMetricQuestionBy,
   getQuizById
 } from './actions'
 
@@ -35,6 +35,7 @@ import { getMockDashboardData } from './MockData'
 const intervalDataUpd = 1000
 
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
+import { submetricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Submetrics'
 
 const local = 'ru-RU'
 
@@ -62,7 +63,7 @@ export const getDashboardData = async id => {
   console.log('loading false -> set loading true : getDashboardData... ')
 
   if (loading) {
-    console.log('twice call loading quit : dashboardstrategy')
+    console.log('twice call loading quit : dashboardstrategy') //react debug version calls refresh view useEffect hook twice to test data unmount method
 
     return undefined
   }
@@ -81,6 +82,7 @@ export const getDashboardData = async id => {
   })
 
   mockData.categoriesApexLineMetrics = []
+  mockData.acutelys = []
 
   //set cache renewal conditionscheck is available on each new user data must be set false
   var participantsQuizPassed = mockData.participantsQuizPassed
@@ -99,6 +101,7 @@ export const getDashboardData = async id => {
   var teamMetricsDateEnd = mockData.teamMetricsDateEnd
   var options = mockData.options
   var optionsChart = mockData.optionsChart
+  var acutelys = mockData.acutelys
 
   // Vars
   var seriesApexLineMetrics = mockData.seriesApexLineMetrics
@@ -123,8 +126,6 @@ export const getDashboardData = async id => {
     nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
   })
 
-  var cohortsLevelsPercents = [33, 66]
-
   for (var i = 0; i < totalRevenueStats.length; i++) {
     if (i != 4) totalRevenueStats[i] = 0
   }
@@ -139,17 +140,21 @@ export const getDashboardData = async id => {
   var diffStats = transactionsMetricDiffStats
   var teamDiffStats = teamsMetricDiffStats
 
-  quizes = quizes.filter(q => q != undefined)
+  quizes = quizes.filter(q => {
+    return q !== undefined
+  })
 
-  for (var i = quizes.length - 1; i > -1; i--) {
-    var quiz = quizes[i]
+  //console.log('before start acutelys  ' + JSON.stringify(acutelys))
+
+  for (var quizI = quizes.length - 1; quizI > -1; quizI--) {
+    var quiz = quizes[quizI]
 
     var engageResult = await getEngageMetrics(
       quiz,
-      cohortsLevelsPercents,
       totalRevenueStats,
       transactionsMetricStats,
-      teamsMetricStats
+      teamsMetricStats,
+      acutelys
     )
 
     //console.log('quiz ' + JSON.stringify(quiz) + 'len - 1 ' + (quizes.length - 1) + ' i ' + i)
@@ -158,7 +163,11 @@ export const getDashboardData = async id => {
     var metStats = engageResult[1]
     var teamStats = engageResult[2]
 
-    if (i != 0) {
+    acutelys = engageResult[3]
+
+    //console.log(quizI + 'acutelys result acutes ' + JSON.stringify(acutelys))
+
+    if (quizI != 0) {
       diffStats = diffStats.map(function (item, index) {
         if (metStats != 0) return metStats[index]
 
@@ -181,7 +190,8 @@ export const getDashboardData = async id => {
       //console.log('engage current ' + totalRevenueStats[5])
     }
 
-    if (i == 0) {
+    //stats related to difference in moment info
+    if (quizI == 0) {
       diffStats = diffStats.map(function (item, index) {
         var res = metStats[index] - item
 
@@ -200,7 +210,8 @@ export const getDashboardData = async id => {
       totalRevenueStats[0] = (engageLast / 10) * 100
     }
 
-    if (i == 0) {
+    //overall stats
+    if (quizI == 0) {
       //console.log('i == 0 ')
       totalRevenueStats = revStats
       transactionsMetricStats = metStats
@@ -229,8 +240,31 @@ export const getDashboardData = async id => {
     categoriesApexLineMetrics.push(dateToLocal)
 
     //console.log('push ' + dateToLocal)
-    console.log('for  ' + i + ' end')
+    console.log('for  ' + quizI + ' end')
   }
+
+  acutelys = pickTopMostByCohortAbsDataSubAssArr(acutelys)
+
+  //format - remove 'id' fields and translate metric and submetric to local language
+  acutelys = acutelys.map(item => {
+    return Object.keys(item).reduce((acc, key) => {
+      if (key !== 'id') {
+        if (key == 'metric') {
+          var metric = item[key]
+          var value = metricsru[metric]
+
+          acc[key] = value
+        } else if (key == 'submetric') {
+          var submetric = item['submetric']
+          var value = submetricsru[submetric]
+
+          acc[key] = value
+        } else acc[key] = item[key]
+      }
+
+      return acc
+    }, {})
+  })
 
   //console.log('teamStats length ' + teamStats.length + '  teamsstats ' + teamsMetricDiffStats.length)
 
@@ -260,7 +294,9 @@ export const getDashboardData = async id => {
     seriesApexLineMetrics: seriesApexLineMetrics, //[]
     categoriesApexLineMetrics: categoriesApexLineMetrics, //[]
     teamsMetricStats: teamsMetricStats,
-    teamsMetricDiffStats: teamsMetricDiffStats
+    teamsMetricDiffStats: teamsMetricDiffStats,
+    acutelys: acutelys,
+    teamsMetricStory: mockData.teamsMetricStory
   }
 
   resultAllIds[id] = db
@@ -314,17 +350,12 @@ export const getCurrentQuizIdAudi = async () => {
   return [currentQuizId, currentQuizAuditory]
 }
 
-export const getEngageMetrics = async (
-  quiz,
-  cohortsLevelsPercents,
-  totalRevenueStats,
-  metricsStats,
-  teamsMetricStats
-) => {
+export const getEngageMetrics = async (quiz, totalRevenueStats, metricsStats, teamsMetricStats, acutelys) => {
   var revStats = totalRevenueStats
   var metStats = metricsStats
   var teamStats = teamsMetricStats
 
+  //console.log('quiz' + quiz)
   var quizSplittedStr = quiz.toString().split(',')
 
   var quizTypeIdx = await dbQuizTypeIdx()
@@ -359,15 +390,53 @@ export const getEngageMetrics = async (
   var questionsIdsStrsArr = quizGroupGroup.toString().split(',') //['1','2','3'..]
 
   var questionsIdsArr = questionsIdsStrsArr.map(qIdStr => Number.parseInt(qIdStr)) //[1,2,3..]
-  var questionsMetricsArr = await Promise.all(
+
+  var questionsMetricsArr = []
+  var questionsSubMetricArr = []
+  var questionsQuestionArr = []
+
+  await Promise.all(
     // eslint-disable-next-line lines-around-comment
     //['Relationship with Peers','Wellness',..]
     questionsIdsArr.map(async qId => {
-      var qMetric = await getQuestionMetricBy(qId)
+      var qMetricSubMetricQuestion = await getQuestionMetricSubMetricQuestionBy(qId)
+      var strArr = qMetricSubMetricQuestion.toString().split(',')
 
-      return qMetric
+      questionsMetricsArr.push(strArr[0])
+      questionsSubMetricArr.push(strArr[1])
+      questionsQuestionArr.push(strArr[2])
+
+      //console.log('added metric ' + strArr[0] + ' sub ' + strArr[1] + 'q ' + strArr[2])
     })
   )
+
+  for (var i = 0; i < questionsIdsArr.length; i++) {
+    var qId = questionsIdsArr[i]
+    var data = [0, 0, 0, 0, 0]
+    var question = questionsQuestionArr[i]
+    var subMetric = questionsSubMetricArr[i]
+    var metric = questionsMetricsArr[i]
+
+    var acuteIDWithQId = -1
+
+    acutelys.map(item => {
+      Object.keys(item).map(key => {
+        var index = item['id']
+
+        if (index == qId) acuteIDWithQId = index
+      })
+    })
+
+    if (acuteIDWithQId == -1) {
+      acutelys.push({
+        id: qId,
+        data: data,
+        question: question,
+        submetric: subMetric,
+        metric: metric
+      })
+    }
+  }
 
   var counterMetricQuiz = [metStats.length]
 
@@ -411,7 +480,9 @@ export const getEngageMetrics = async (
     revStats[2] = 0
     revStats[1] = 0
 
-    return [revStats, metStats, teamStats]
+    //console.log('no one is involved in participation zero acutelys')
+
+    return [revStats, metStats, teamStats, acutelys]
   }
 
   const CountCohort = async selectedAnswer => {
@@ -422,17 +493,17 @@ export const getEngageMetrics = async (
 
     var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 1]) //hack count columns selectedAnswers table Depenent
 
-    if (selectedAnswerTeamId == 7) console.log('selectedAnswerTeamId SEVEN')
+    //if (selectedAnswerTeamId == 7) console.log('selectedAnswerTeamId SEVEN')
 
     var selectedOptions = await getSelectedOptions(selectedAnswerId)
 
     var selectedOptionsSplittedStr = selectedOptions.toString().split(',')
 
     //checks for empty values too
-    var selectedOptionsNumArr = selectedOptionsSplittedStr.map(str => Number.parseInt(str) || midRangeRating)
+    var selectedOptionsNumArr = selectedOptionsSplittedStr.map(str => Number.parseInt(str) || 0)
 
     //check for db consistency
-    selectedOptionsNumArr = selectedOptionsNumArr.map(num => (num < 0 ? midRangeRating : num))
+    selectedOptionsNumArr = selectedOptionsNumArr.map(num => (num < 0 ? 0 : num))
 
     var selectedAnswersSummOptions = selectedOptionsNumArr.reduce((accumulator, currentValue) => {
       return accumulator + currentValue
@@ -483,6 +554,34 @@ export const getEngageMetrics = async (
         }
       }
     }
+
+    //acutely data collect
+    if (questionsIdsArr.length > selectedOptionsNumArr.length) {
+      console.error('answers less than questions')
+    }
+
+    for (var i = 0; i < questionsIdsArr.length; i++) {
+      var qId = questionsIdsArr[i]
+
+      var selectedOption = selectedOptionsNumArr[i]
+
+      var bucket = -1
+
+      for (var j = 0; j < cohortsAcutesAbs.length; j++) {
+        if (selectedOption < cohortsAcutesAbs[j]) {
+          bucket = j
+          break
+        }
+      }
+
+      acutelys.map(item => {
+        if (item.id == qId) {
+          item.data[bucket] = item.data[bucket] + 1
+
+          return item
+        }
+      })
+    }
   }
 
   var selAnsLen = selectedAnswers.length
@@ -523,5 +622,58 @@ export const getEngageMetrics = async (
   revStats[3] = (quizSelectedAnswersInCohortNot / quizCountParticipators) * 100 //not
   //console.log('return for quiz ' + quiz)
 
-  return [revStats, metStats, teamStats]
+  return [revStats, metStats, teamStats, acutelys]
+}
+
+const pickTopMostByCohortAbsDataSubAssArr = obj => {
+  var maxedArr = []
+
+  var maxId = [-1, -1, -1, -1, -1]
+  var maximums = [-1, -1, -1, -1, -1]
+
+  obj.map(item => {
+    Object.keys(item).map(key => {
+      var index = item['id']
+
+      if (key == 'data') {
+        if (item[key][0] > maximums[0]) {
+          maxId[0] = index
+          maximums[0] = item[key][0]
+        }
+
+        if (item[key][1] > maximums[1]) {
+          maxId[1] = index
+          maximums[1] = item[key][1]
+        }
+
+        if (item[key][2] > maximums[2]) {
+          maxId[2] = index
+          maximums[2] = item[key][2]
+        }
+
+        if (item[key][3] > maximums[3]) {
+          maxId[3] = index
+          maximums[3] = item[key][2]
+        }
+
+        if (item[key][4] > maximums[4]) {
+          maxId[4] = index
+          maximums[4] = item[key][4]
+        }
+      }
+    })
+  })
+
+  for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < obj.length; j++) {
+      var index = obj[j]['id']
+
+      if (index == maxId[i]) {
+        maxedArr.push(obj[j])
+        break
+      }
+    }
+  }
+
+  return maxedArr
 }
