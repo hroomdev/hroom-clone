@@ -30,6 +30,8 @@ import './style.css'
 import companyId from './../../../../../../../src/app/[lang]/(dashboard)/dashboards/dashboard/page'
 import { getMockDashboardData } from './../../../../../../../src/app/server/MockData'
 
+import { StackedBar } from './../../StackedBar'
+
 const options = {
   year: 'numeric',
   month: 'long',
@@ -102,6 +104,41 @@ export const DashboardBuilder = () => {
     return () => {}
   }, [depVar])
 
+  var acutelys = [
+    {
+      data: [45, 5, 15, 15, 5],
+      question: 'Моя организация поддержит меня, если мне понадобится использовать гибкий график работы',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [5, 55, 5, 5, 15],
+      question: 'Я получаю значимое признание.',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [15, 5, 45, 15, 5],
+      question:
+        'Что из следующего лучше всего описывает количество отзывов, которые вы обычно получаете о своей работе?',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [15, 5, 15, 45, 5],
+      question: 'Вкладывает ли ваша организация столько ресурсов, людей и усилий, сколько соответствует ее амбициям?',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    },
+    {
+      data: [15, 5, 15, 15, 45],
+      question: 'Моя организация ценит уникальность членов своей команды.',
+      submetric: 'Баланс работа-жизнь',
+      metric: 'Счастье'
+    }
+  ]
+
+  //console.log('diffstats : DashboardBuilder ' + JSON.stringify(d.teamsMetricDiffStats))
   return (
     <div className='dashboard-builder'>
       <div className='container-2'>
@@ -351,123 +388,74 @@ export const DashboardBuilder = () => {
                 </div>
               </Grid>
             </Grid>
-
-            {/*<img className='chart-4' alt='Chart' src='/static/img/chart-7.png' />*/}
           </div>
 
           <Grid container spacing={6} flex>
             <Grid item xs='12'>
-              <DashboardHeatmapChart teamsMetricStats={teamsMetricStats} dataDiffArr={teamsMetricDiffStats} />
+              <DashboardHeatmapChart teamsMetricStats={teamsMetricStats} teamsMetricDiffStats={teamsMetricDiffStats} />
             </Grid>
           </Grid>
 
           <div className='row-2'>
             <div className='card-5'>
               <div className='body-4'>
-                <div className='chart-6'>
-                  <div className='overlap-group-5'>
-                    <div className='bar-7' />
-                    <div className='bar-8' />
-                    <div className='bar-9' />
-                    <div className='bar-10' />
-                    <div className='bar-11' />
-                  </div>
-                </div>
+                <StackedBar arrFiveValuesPercent={acutelys[0].data}></StackedBar>
                 <div className='deta'>
                   <div className='div-8'>
-                    <p className='text-12'>
-                      Моя организация поддержит меня, если мне понадобится использовать гибкий график работы
-                    </p>
+                    <p className='text-12'>{acutelys[0].question}</p>
                   </div>
                   <div className='row-8'>
-                    <div className='text-13'>Баланс работа-жизнь</div>
-                    <div className='text-14'>Счастье</div>
+                    <div className='text-13'>{acutelys[0].submetric}</div>
+                    <div className='text-14'>{acutelys[0].metric}</div>
                   </div>
                 </div>
               </div>
               <div className='body-4'>
-                <div className='chart-6'>
-                  <div className='overlap-group-5'>
-                    <div className='bar-7' />
-                    <div className='bar-8' />
-                    <div className='bar-9' />
-                    <div className='bar-10' />
-                    <div className='bar-11' />
-                  </div>
-                </div>
+                <StackedBar arrFiveValuesPercent={acutelys[1].data}></StackedBar>
+
                 <div className='deta'>
                   <div className='div-8'>
-                    <div className='text-12'>Я получаю значимое признание.</div>
+                    <div className='text-12'>{acutelys[1].question}</div>
                   </div>
                   <div className='row-8'>
-                    <div className='text-13'>Баланс работа-жизнь</div>
-                    <div className='text-14'>Счастье</div>
+                    <div className='text-13'>{acutelys[1].submetric}</div>
+                    <div className='text-14'>{acutelys[1].metric}</div>
                   </div>
                 </div>
               </div>
               <div className='body-4'>
-                <div className='chart-6'>
-                  <div className='overlap-group-5'>
-                    <div className='bar-7' />
-                    <div className='bar-8' />
-                    <div className='bar-9' />
-                    <div className='bar-10' />
-                    <div className='bar-11' />
-                  </div>
-                </div>
+                <StackedBar arrFiveValuesPercent={acutelys[2].data}></StackedBar>
                 <div className='deta'>
                   <div className='div-8'>
-                    <p className='text-12'>
-                      Что из следующего лучше всего описывает количество отзывов, которые вы обычно получаете о своей
-                      работе?
-                    </p>
+                    <p className='text-12'>{acutelys[2].question}</p>
                   </div>
                   <div className='row-8'>
-                    <div className='text-13'>Баланс работа-жизнь</div>
-                    <div className='text-14'>Счастье</div>
+                    <div className='text-13'>{acutelys[2].submetric}</div>
+                    <div className='text-14'>{acutelys[2].metric}</div>
                   </div>
                 </div>
               </div>
               <div className='body-4'>
-                <div className='chart-6'>
-                  <div className='overlap-group-5'>
-                    <div className='bar-7' />
-                    <div className='bar-8' />
-                    <div className='bar-9' />
-                    <div className='bar-10' />
-                    <div className='bar-11' />
-                  </div>
-                </div>
+                <StackedBar arrFiveValuesPercent={acutelys[3].data}></StackedBar>
                 <div className='deta'>
                   <div className='div-8'>
-                    <p className='text-12'>
-                      Вкладывает ли ваша организация столько ресурсов, людей и усилий, сколько соответствует ее
-                      амбициям?
-                    </p>
+                    <p className='text-12'>{acutelys[3].question}</p>
                   </div>
                   <div className='row-8'>
-                    <div className='text-13'>Баланс работа-жизнь</div>
-                    <div className='text-14'>Счастье</div>
+                    <div className='text-13'>{acutelys[3].submetric}</div>
+                    <div className='text-14'>{acutelys[3].metric}</div>
                   </div>
                 </div>
               </div>
               <div className='body-4'>
-                <div className='chart-6'>
-                  <div className='overlap-group-5'>
-                    <div className='bar-7' />
-                    <div className='bar-8' />
-                    <div className='bar-9' />
-                    <div className='bar-10' />
-                    <div className='bar-11' />
-                  </div>
-                </div>
+                <StackedBar arrFiveValuesPercent={acutelys[4].data}></StackedBar>
                 <div className='deta'>
                   <div className='div-8'>
-                    <p className='text-12'>Моя организация ценит уникальность членов своей команды.</p>
+                    <p className='text-12'>{acutelys[4].question}</p>
                   </div>
                   <div className='row-8'>
-                    <div className='text-13'>Баланс работа-жизнь</div>
-                    <div className='text-14'>Счастье</div>
+                    <div className='text-13'>{acutelys[4].submetric}</div>
+                    <div className='text-14'>{acutelys[4].metric}</div>
                   </div>
                 </div>
               </div>

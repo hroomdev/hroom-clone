@@ -137,13 +137,11 @@ export const getDashboardData = async id => {
   let quizes = await getQuizOrderByIdDesc(12, 0)
 
   var diffStats = transactionsMetricDiffStats
-
-  console.log('quizes length ' + quizes.length)
+  var teamDiffStats = teamsMetricDiffStats
 
   quizes = quizes.filter(q => q != undefined)
 
   for (var i = quizes.length - 1; i > -1; i--) {
-    console.log('for  ' + i + ' start')
     var quiz = quizes[i]
 
     var engageResult = await getEngageMetrics(
@@ -160,19 +158,24 @@ export const getDashboardData = async id => {
     var metStats = engageResult[1]
     var teamStats = engageResult[2]
 
-    if (i == 1) {
+    if (i != 0) {
       diffStats = diffStats.map(function (item, index) {
-        var res = metStats[index]
+        if (metStats != 0) return metStats[index]
 
-        return res
+        //var res = metStats[index]
+        //return res
       })
 
-      for (var j = 0; j < teamStats.length; j++) {
-        teamsMetricDiffStats[j] = teamsMetricDiffStats[j].map(function (item, index) {
-          var res = teamStats[j][index]
+      //teamDiffStats = teamStats
 
-          return res
-        })
+      for (var j = 0; j < teamStats.length; j++) {
+        for (var k = 0; k < teamStats[j].length; k++) {
+          if (teamStats[j][k] != 0) {
+            teamDiffStats[j][k] = teamStats[j][k]
+
+            //console.log(i + ' i jk NOT EQUALS ZERO')
+          }
+        }
       }
 
       //console.log('engage current ' + totalRevenueStats[5])
@@ -186,11 +189,10 @@ export const getDashboardData = async id => {
       })
 
       for (var j = 0; j < teamStats.length; j++) {
-        teamsMetricDiffStats[j] = teamsMetricDiffStats[j].map(function (item, index) {
-          var res = teamStats[j][index] - item
-
-          return res
-        })
+        for (var k = 0; k < teamStats[j].length; k++) {
+          //console.log('teamdiff is ' + teamStats[j][k] + ' minus ' + teamDiffStats[j][k])
+          teamDiffStats[j][k] = teamStats[j][k] - teamDiffStats[j][k]
+        }
       }
 
       var engageLast = diffStats.reduce((partialSum, a) => partialSum + a, 0) / 10
@@ -199,11 +201,16 @@ export const getDashboardData = async id => {
     }
 
     if (i == 0) {
-      console.log('i == 0 ')
+      //console.log('i == 0 ')
       totalRevenueStats = revStats
       transactionsMetricStats = metStats
+
       transactionsMetricDiffStats = diffStats
+
       teamsMetricStats = teamStats
+
+      teamsMetricDiffStats = teamDiffStats
+
       totalRevenueStats[5] = metStats.reduce((partialSum, a) => partialSum + a, 0) / 10
     }
 
@@ -224,6 +231,8 @@ export const getDashboardData = async id => {
     //console.log('push ' + dateToLocal)
     console.log('for  ' + i + ' end')
   }
+
+  //console.log('teamStats length ' + teamStats.length + '  teamsstats ' + teamsMetricDiffStats.length)
 
   var timeEnd = Date.now()
 

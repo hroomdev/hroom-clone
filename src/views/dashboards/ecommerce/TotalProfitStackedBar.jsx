@@ -56,7 +56,7 @@ const series = [
   }
 ]
 
-const ProfitStackedBar = () => {
+const StackedBar = () => {
   // Hooks
   const theme = useTheme()
   const disabledText = 'var(--mui-palette-text-disabled)'
@@ -235,4 +235,4 @@ const ProfitStackedBar = () => {
   )
 }
 
-export default ProfitStackedBar
+export default StackedBars

@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 
+//
 const LinearProgressWithLabel = props => {
   return (
     <div className='flex items-center gap-3'>
@@ -26,7 +27,7 @@ const ProgressLinearWithLabel = props => {
     setProgress(props.value)
   }, [props.value])
 
-  return <LinearProgressWithLabel value={progress} />
+  return <LinearProgressWithLabel value={progress} color={'secondary'} />
 }
 
 export default ProgressLinearWithLabel
