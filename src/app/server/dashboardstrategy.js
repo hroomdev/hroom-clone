@@ -102,6 +102,10 @@ export const getDashboardData = async id => {
   var options = mockData.options
   var optionsChart = mockData.optionsChart
   var acutelys = mockData.acutelys
+  var teamsMetricStory = mockData.teamsMetricStory
+
+  teamsMetricStory.dateStamp = []
+  teamsMetricStory.stats = []
 
   // Vars
   var seriesApexLineMetrics = mockData.seriesApexLineMetrics
@@ -236,6 +240,10 @@ export const getDashboardData = async id => {
     var quizStartsAtDate = quizSplittedStr[quizStartsAtDateIdx]
     var dateParsed = Date.parse(quizStartsAtDate)
     var dateToLocal = new Date(dateParsed).toLocaleString(local, optionsChart)
+
+    teamsMetricStory.dateStamp.push(quizStartsAtDate)
+    console.log('team stats json i' + i + ' teamsstats ' + JSON.stringify(teamStats))
+    teamsMetricStory.stats.push(teamStats)
 
     categoriesApexLineMetrics.push(dateToLocal)
 

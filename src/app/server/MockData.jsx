@@ -26,8 +26,7 @@ export const getMockDashboardData = id => {
   //row = particular metric for a teams from 0 to 13
   var teamsMetricStory = {
     dateStamp: [],
-    stats: [],
-    diff: []
+    stats: []
   }
 
   var teamsMetricStats = [
@@ -88,10 +87,6 @@ export const getMockDashboardData = id => {
   }
 
   console.log('teamsMetricDiffStats ' + teamsMetricStats.length)
-  console.log('teamsMetricDiffStats ' + teamsMetricDiffStats.length)
-
-  arrLength(teamsMetricStats)
-  arrLength(teamsMetricDiffStats)
 
   teamsMetricStats = arr2DRandomizeFloorTo(teamsMetricStats)
 
@@ -179,7 +174,6 @@ export const getMockDashboardData = id => {
 
     teamsMetricStory.stats.push(rndMetricStats)
     console.log('stats json ' + JSON.stringify(teamsMetricStory.stats))
-    teamsMetricStory.diff.push(teamsMetricDiffStats)
   }
 
   //mock data

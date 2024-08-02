@@ -62,7 +62,7 @@ const DashboardBarChart = ({
     //reset data
     //var xAxisCategories = []
     //var ySeriesData = []
-
+    // дата конкретная по запрошенному отрезку времени - высчитываем до этой даты нас данные из истории не интересуют
     var dateCutoff = new Date()
 
     if (selectedInterval == 'hour') {
@@ -78,6 +78,8 @@ const DashboardBarChart = ({
     } else console.error('unknown time interval' + selectedInterval)
 
     //console.log('teamMetricStory.dateStamp.length ' + teamMetricStory.dateStamp.length)
+
+    //отфильтровываем даты которые после выбранной даты в селекторе выбора даты виджета barchart и заполняем из массива с историей всех последних опросов
     var teamMetricStoryFiltered = []
 
     for (var i = 0; i < teamMetricStory.dateStamp.length; i++) {
@@ -111,58 +113,75 @@ const DashboardBarChart = ({
       }
     }
 
-    console.log('teamMetricStoryFiltered.length ' + teamMetricStoryFiltered.length)
+    //console.log('teamMetricStoryFiltered.length ' + teamMetricStoryFiltered.length)
 
     //var teamMetricAvgInterval = [][]
 
-    var teamMetricAvgInterval = new Array(teamMetricStoryFiltered[0].length).fill(0)
+    var teamMetricAvgInterval = []
 
-    console.log('teamMetricStoryFiltered[0].length ' + teamMetricStoryFiltered[0].length)
+    //сколько - то есть отфильтрованных данных по периоду времени - добавляем в массив с усередненными данными и далее - вычисляем средние значения на вывод
+    if (teamMetricStoryFiltered.length > 0 && teamMetricStoryFiltered[0].length > 0) {
+      teamMetricAvgInterval = new Array(teamMetricStoryFiltered[0].length).fill(0)
+      console.log('teamMetricStoryFiltered[0].length ' + teamMetricStoryFiltered[0].length)
 
-    for (var i = 0; i < teamMetricAvgInterval.length; i++) {
-      teamMetricAvgInterval[i] = new Array(teamMetricStoryFiltered[0][0].length).fill(0)
-      console.log('teamMetricStoryFiltered[0][0].length ' + teamMetricStoryFiltered[0][0].length)
-    }
+      for (var i = 0; i < teamMetricAvgInterval.length; i++) {
+        teamMetricAvgInterval[i] = new Array(teamMetricStoryFiltered[0][0].length).fill(0)
+        console.log('teamMetricStoryFiltered[0][0].length ' + teamMetricStoryFiltered[0][0].length)
+      }
 
-    for (var i = 0; i < teamMetricStoryFiltered.length; i++) {
-      //9
-      for (var j = 0; j < teamMetricStoryFiltered[i].length; j++) {
-        console.log('teamMetricStoryFiltered i  ' + teamMetricStoryFiltered[i][j] + ' i ' + i + ' j ' + j)
+      for (var i = 0; i < teamMetricStoryFiltered.length; i++) {
+        //9
+        for (var j = 0; j < teamMetricStoryFiltered[i].length; j++) {
+          console.log('teamMetricStoryFiltered i  ' + teamMetricStoryFiltered[i][j] + ' i ' + i + ' j ' + j)
 
-        //11
-        for (var k = 0; k < teamMetricStoryFiltered[i][j].length; k++) {
-          //13
-          teamMetricAvgInterval[j][k] =
-            teamMetricAvgInterval[j][k] + teamMetricStoryFiltered[i][j][k] / teamMetricStoryFiltered.length
+          //11
+          for (var k = 0; k < teamMetricStoryFiltered[i][j].length; k++) {
+            //13
+            teamMetricAvgInterval[j][k] =
+              teamMetricAvgInterval[j][k] + teamMetricStoryFiltered[i][j][k] / teamMetricStoryFiltered.length
+          }
         }
       }
+    } else {
+      console.log(
+        'мы отфильтровали все данные по дате ' + selectedInterval + ' выводить в teamMetricAvgInterval нечего'
+      )
     }
 
-    console.log('teamMetricAvgInterval ' + JSON.stringify(teamMetricAvgInterval))
+    //console.log('teamMetricAvgInterval ' + JSON.stringify(teamMetricAvgInterval))
 
-    console.log('team metric avg len 1' + teamMetricAvgInterval.length)
-    console.log('team metric avg len 2 ' + teamMetricAvgInterval[0].length)
+    //console.log('team metric avg len 1' + teamMetricAvgInterval.length)
+    //console.log('team metric avg len 2 ' + teamMetricAvgInterval[0].length)
 
-    var teamStatsFiltered = teamMetricAvgInterval //=teamStats
+    var teamStatsFiltered = teamMetricAvgInterval
 
     seriesData = []
     xAxisNames = []
+    var teamCountTiDisplay = 7
 
-    for (var i = 0; i < 7; i++) {
-      var categoryStatTeam = teamStatsFiltered[metricsKeyCategorySel][i].toFixed(1)
+    //данных должно быть по всем командам мы выводим только семь по - дизайну надо проверить что они есть - тогда выводим
 
-      console.log(' ' + categoryStatTeam)
-      seriesData.push(categoryStatTeam)
-      var keyTeamName = Reflect.ownKeys(teamsru)[i]
-      var teamName = teamsru[keyTeamName]
+    if (
+      teamStatsFiltered != undefined &&
+      teamStatsFiltered.length >= metricsKeyCategorySel &&
+      teamStatsFiltered[metricsKeyCategorySel].length >= teamCountTiDisplay
+    ) {
+      for (var i = 0; i < teamCountTiDisplay; i++) {
+        var categoryStatTeam = teamStatsFiltered[metricsKeyCategorySel][i].toFixed(1)
 
-      xAxisNames.push(teamName)
-      console.log(' xaxis ' + teamName)
+        console.log(' ' + categoryStatTeam)
+        seriesData.push(categoryStatTeam)
+        var keyTeamName = Reflect.ownKeys(teamsru)[i]
+        var teamName = teamsru[keyTeamName]
+
+        xAxisNames.push(teamName)
+        console.log(' xaxis ' + teamName)
+      }
+    } else {
+      console.error(
+        'нет данных чтобы выводить по ' + teamCountTiDisplay + ' командам временной интервал ' + selectedInterval
+      )
     }
-
-    //setSeriesData(ySeriesData)
-
-    //setXAxisNames(xAxisCategories)
   }
 
   const handleChange = event => {
