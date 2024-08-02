@@ -94,9 +94,57 @@ const DashboardHeatmapChart = ({ teamsMetricStats, teamsMetricDiffStats }) => {
     chart: {
       parentHeightOffset: 0,
       toolbar: { show: false },
-      offsetX: theme.direction === 'rtl' ? 10 : -10
+      offsetX: theme.direction === 'rtl' ? 10 : -10,
+      width: '100%',
+      height: '800'
     },
-    dataLabels: { enabled: false },
+    dataLabels: {
+      enabled: true,
+      enabledOnSeries: undefined,
+      formatter: function (val, { seriesIndex, dataPointIndex, w }) {
+        //
+        const desc = w.config.series[seriesIndex].data[dataPointIndex].description
+
+        return [val, desc]
+
+        //return val
+      },
+      textAnchor: 'middle',
+      distributed: true,
+      offsetX: 0,
+      offsetY: -5,
+      style: {
+        fontSize: '14px',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontWeight: 'bold',
+        colors: ['#000']
+      },
+      background: {
+        enabled: false,
+        foreColor: '#fff',
+        padding: 4,
+        borderRadius: 2,
+        borderWidth: 1,
+        borderColor: '#fff',
+        opacity: 0.9,
+        dropShadow: {
+          enabled: false,
+          top: 1,
+          left: 1,
+          blur: 1,
+          color: '#000',
+          opacity: 0.45
+        }
+      },
+      dropShadow: {
+        enabled: false,
+        top: 1,
+        left: 1,
+        blur: 1,
+        color: '#000',
+        opacity: 0.45
+      }
+    },
     legend: {
       position: 'bottom',
       labels: {
@@ -117,15 +165,10 @@ const DashboardHeatmapChart = ({ teamsMetricStats, teamsMetricDiffStats }) => {
         enableShades: false,
         colorScale: {
           ranges: [
-            { to: 1, from: 0, name: '0-1', color: '#DD343C' },
-            { to: 2, from: 1.1, name: '1-2', color: '#DD343C' },
-            { to: 3, from: 2.1, name: '2-3', color: '#DD343C' },
-            { to: 4, from: 3.1, name: '3-4', color: '#8f85f3' },
-            { to: 5, from: 4.1, name: '4-5', color: '#FD8F90' },
-            { to: 6, from: 5.1, name: '5-6', color: '#F6E599' },
+            { to: 3, from: 0, name: '0-1', color: '#DD343C' },
+            { to: 6, from: 4.1, name: '4-5', color: '#FD8F90' },
             { to: 7, from: 6.1, name: '6-7', color: '#F6E599' },
-            { to: 8, from: 7.1, name: '7-8', color: '#F6E599' },
-            { to: 9, from: 8.1, name: '8-9', color: '#7FC192' },
+            { to: 8, from: 8.1, name: '7-8', color: '#7FC192' },
             { to: 10, from: 9.1, name: '9-10', color: '#218971' }
           ]
         }
@@ -143,15 +186,6 @@ const DashboardHeatmapChart = ({ teamsMetricStats, teamsMetricDiffStats }) => {
       labels: { show: false },
       axisTicks: { show: false },
       axisBorder: { show: false }
-    },
-    tooltip: {
-      custom: function (opts) {
-        const desc = opts.ctx.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].description
-
-        const value = opts.series[opts.seriesIndex][opts.dataPointIndex]
-
-        return desc + ': ' + value
-      }
     }
   }
 
@@ -160,7 +194,7 @@ const DashboardHeatmapChart = ({ teamsMetricStats, teamsMetricDiffStats }) => {
       <CardHeader title={titleru} />
       <p style={{ paddingLeft: '24px' }}> {subtitleru}</p>
       <CardContent>
-        <AppReactApexCharts type='heatmap' width='100%' height={400} options={options} series={series} />
+        <AppReactApexCharts type='heatmap' width='100%' height={800} options={options} series={series} />
       </CardContent>
     </Card>
   )
