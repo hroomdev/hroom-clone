@@ -59,17 +59,43 @@ export const getMockDashboardData = id => {
     [2.1, 0.5, 1.0, 2.1, 1.2, 2.9, 0.3, 0, 0, 0, 0, 0, 0]
   ]
 
-  for (var i = 0; i < teamsMetricStats.length; i++) {
-    for (var j = 0; j < teamsMetricStats[i].length; j++) {
-      teamsMetricStats[i][j] = Math.floor(Math.random() * 10)
+  function arr2DRandomizeFloorTo(arr) {
+    var shallow = Array(arr.length)
+
+    for (var i = 0; i < shallow.length; i++) {
+      shallow[i] = Array(arr[i].length)
+    }
+
+    for (var i = 0; i < arr.length; i++) {
+      for (var j = 0; j < arr[i].length; j++) {
+        shallow[i][j] = Math.floor(Math.random() * 10)
+      }
+    }
+
+    return shallow
+  }
+
+  function arr2DrandomizeMinusToPlus(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      for (var j = 0; j < arr[i].length; j++) {
+        arr[i][j] = -Math.random() + Math.random()
+      }
     }
   }
 
-  for (var i = 0; i < teamsMetricDiffStats.length; i++) {
-    for (var j = 0; j < teamsMetricDiffStats[i].length; j++) {
-      teamsMetricDiffStats[i][j] = -Math.random() + Math.random()
-    }
+  function arrLength(arr) {
+    console.log('typeof ' + typeof arr + 'arr Length ' + arr.length)
   }
+
+  console.log('teamsMetricDiffStats ' + teamsMetricStats.length)
+  console.log('teamsMetricDiffStats ' + teamsMetricDiffStats.length)
+
+  arrLength(teamsMetricStats)
+  arrLength(teamsMetricDiffStats)
+
+  teamsMetricStats = arr2DRandomizeFloorTo(teamsMetricStats)
+
+  //teamsMetricDiffStats = arr2DrandomizeMinusToPlus(teamsMetricDiffStats)
 
   var teamMetricsDateStart = new Date(Date.UTC(2024, 6, 17, 3, 10, 0))
   var teamMetricsDateEnd = new Date(Date.UTC(2024, 6, 17, 3, 10, 0))
@@ -143,7 +169,16 @@ export const getMockDashboardData = id => {
 
     categoriesApexLineMetrics.push(artificialDate.toLocaleString(optionsChart))
     teamsMetricStory.dateStamp.push(artificialDate)
-    teamsMetricStory.stats.push(teamsMetricStats)
+
+    console.log('team metric stats ' + JSON.stringify(teamsMetricStats))
+    var rndMetricStats = arr2DRandomizeFloorTo(teamsMetricStats)
+
+    console.log('team metric stats after randommize' + JSON.stringify(rndMetricStats))
+
+    //teamsMetricDiffStats = arr2DrandomizeMinusToPlus(teamsMetricDiffStats)
+
+    teamsMetricStory.stats.push(rndMetricStats)
+    console.log('stats json ' + JSON.stringify(teamsMetricStory.stats))
     teamsMetricStory.diff.push(teamsMetricDiffStats)
   }
 

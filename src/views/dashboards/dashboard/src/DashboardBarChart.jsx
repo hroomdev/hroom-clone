@@ -35,8 +35,8 @@ import { intervalsru } from './screens/DashboardBuilder/TimeIntervals'
 const byTeamru = 'по командам'
 const perioudru = 'Период'
 
-var seriesData = [] //700, 350, 480, 600, 210, 550, 150
-var xAxisCategories = [] //'Mon, 11', 'Thu, 14', 'Fri, 15', 'Mon, 18', 'Wed, 20', 'Fri, 21', 'Mon, 23'
+var seriesDataInitial = [] //700, 350, 480, 600, 210, 550, 150
+var xAxisCategoriesInitial = [] //'Mon, 11', 'Thu, 14', 'Fri, 15', 'Mon, 18', 'Wed, 20', 'Fri, 21', 'Mon, 23'
 
 const DashboardBarChart = ({
   propSelectedMetricId,
@@ -47,7 +47,12 @@ const DashboardBarChart = ({
 }) => {
   console.log(JSON.stringify(teamMetricStory))
 
+  var seriesData = []
+  var xAxisNames = []
+
   const [selectedTimeInterval, setSelected] = useState(propSelectedTimeInterval) // Declare a state variable...
+  //const [seriesData, setSeriesData] = useState(seriesDataInitial) // Declare a state variable...
+  //const [xAxisNames, setXAxisNames] = useState(xAxisCategoriesInitial) // Declare a state variable...
 
   const refreshText = selectedInterval => {
     var metricsKeyCategorySel = Object.keys(metricsru).findIndex(
@@ -55,8 +60,8 @@ const DashboardBarChart = ({
     )
 
     //reset data
-    xAxisCategories = []
-    seriesData = []
+    //var xAxisCategories = []
+    //var ySeriesData = []
 
     var dateCutoff = new Date()
 
@@ -87,6 +92,7 @@ const DashboardBarChart = ({
       //=> -1
 
       if (result < 0) {
+        //console.log()
         teamMetricStoryFiltered.push(teamMetricStory.stats[i])
         console.log(
           'dateParsed ' +
@@ -94,7 +100,11 @@ const DashboardBarChart = ({
             ' after date cutoff ' +
             dateCutoff +
             'push  teamMetricStoryFiltered.length' +
-            teamMetricStoryFiltered.length
+            teamMetricStoryFiltered.length +
+            ' statsi ' +
+            teamMetricStory.stats[i] +
+            ' i ' +
+            i
         )
       } else {
         console.log('dateParsed ' + dateParsed + ' before date cutoff ' + dateCutoff)
@@ -117,6 +127,8 @@ const DashboardBarChart = ({
     for (var i = 0; i < teamMetricStoryFiltered.length; i++) {
       //9
       for (var j = 0; j < teamMetricStoryFiltered[i].length; j++) {
+        console.log('teamMetricStoryFiltered i  ' + teamMetricStoryFiltered[i][j] + ' i ' + i + ' j ' + j)
+
         //11
         for (var k = 0; k < teamMetricStoryFiltered[i][j].length; k++) {
           //13
@@ -127,29 +139,41 @@ const DashboardBarChart = ({
     }
 
     console.log('teamMetricAvgInterval ' + JSON.stringify(teamMetricAvgInterval))
-    console.log('teamMetricAvgIntervallength ' + teamMetricAvgInterval.length)
-    console.log('teamMetricAvgInterval[0].lngth ' + teamMetricAvgInterval[0].length)
+
+    console.log('team metric avg len 1' + teamMetricAvgInterval.length)
+    console.log('team metric avg len 2 ' + teamMetricAvgInterval[0].length)
 
     var teamStatsFiltered = teamMetricAvgInterval //=teamStats
+
+    seriesData = []
+    xAxisNames = []
 
     for (var i = 0; i < 7; i++) {
       var categoryStatTeam = teamStatsFiltered[metricsKeyCategorySel][i].toFixed(1)
 
+      console.log(' ' + categoryStatTeam)
       seriesData.push(categoryStatTeam)
       var keyTeamName = Reflect.ownKeys(teamsru)[i]
       var teamName = teamsru[keyTeamName]
 
-      xAxisCategories.push(teamName)
+      xAxisNames.push(teamName)
+      console.log(' xaxis ' + teamName)
     }
+
+    //setSeriesData(ySeriesData)
+
+    //setXAxisNames(xAxisCategories)
   }
 
   const handleChange = event => {
     var key = Object.keys(intervalsru).find(key => intervalsru[key] === event.target.value)
 
+    console.log('metric is ' + key)
+
+    refreshText(key)
+
     setSelected(key)
     setSelectedTimeInterval(key)
-    console.log('metric is ' + key)
-    refreshText(key)
   }
 
   //initialise refresh
@@ -195,7 +219,7 @@ const DashboardBarChart = ({
     },
     xaxis: {
       axisTicks: { show: false },
-      categories: xAxisCategories,
+      categories: xAxisNames,
       labels: {
         style: { colors: disabledText, fontSize: '13px' }
       }
