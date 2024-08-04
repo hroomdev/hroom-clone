@@ -1,4 +1,5 @@
 import { getAdvicesTexts } from './actions'
+import makeOPENCHATAIGetRequest from './aichatgpt'
 
 const promptPrepare0 =
   'Отвечай как профессионал по вовлеченности сотрудников компаний и профессионал в сфере бизнес-консалтинга. Проанализируй данные по вовлеченности сотрудников и дай ответ в двух видах: 1. Инсайты по компании в виде интересных зависимостей между переменными. 2. Советы от ИИ по конкретным найденным проблемам, четкие и ясные, около 200 символов. Результат представь в виде JSON. Не пиши вступительных слов или чего-либо еще, кроме самого ответа.'
@@ -29,6 +30,8 @@ export const saveAIAdvice = async (category, num) => {
 
   //query ai then save advices
   let b = await makeOPENCHATAIGetRequest(prompt)
+
+  console.log(b)
 }
 
 export const getAIAdvices = async category => {

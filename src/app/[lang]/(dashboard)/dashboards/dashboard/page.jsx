@@ -1,3 +1,5 @@
+export const dynamic = 'force-static'
+
 import { GET } from '@/app/api/apps/dashboard/route'
 
 const local = 'ru-RU'
@@ -34,6 +36,7 @@ const Dashboard = async () => {
   //if (!filteredData) {
   //  redirect('/not-found')
   //}
+  // return <p>page.jsx return p</p>
 
   return <DashboardBuilder />
 }

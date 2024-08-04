@@ -83,10 +83,10 @@ export const getMockDashboardData = id => {
   }
 
   function arrLength(arr) {
-    console.log('typeof ' + typeof arr + 'arr Length ' + arr.length)
+    //console.log('typeof ' + typeof arr + 'arr Length ' + arr.length)
   }
 
-  console.log('teamsMetricDiffStats ' + teamsMetricStats.length)
+  //console.log('teamsMetricDiffStats ' + teamsMetricStats.length)
 
   teamsMetricStats = arr2DRandomizeFloorTo(teamsMetricStats)
 
@@ -165,15 +165,16 @@ export const getMockDashboardData = id => {
     categoriesApexLineMetrics.push(artificialDate.toLocaleString(optionsChart))
     teamsMetricStory.dateStamp.push(artificialDate)
 
-    console.log('team metric stats ' + JSON.stringify(teamsMetricStats))
+    //console.log('team metric stats ' + JSON.stringify(teamsMetricStats))
     var rndMetricStats = arr2DRandomizeFloorTo(teamsMetricStats)
 
-    console.log('team metric stats after randommize' + JSON.stringify(rndMetricStats))
+    //console.log('team metric stats after randommize' + JSON.stringify(rndMetricStats))
 
     //teamsMetricDiffStats = arr2DrandomizeMinusToPlus(teamsMetricDiffStats)
 
     teamsMetricStory.stats.push(rndMetricStats)
-    console.log('stats json ' + JSON.stringify(teamsMetricStory.stats))
+
+    //console.log('stats json ' + JSON.stringify(teamsMetricStory.stats))
   }
 
   //mock data

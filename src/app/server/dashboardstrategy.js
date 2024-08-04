@@ -48,33 +48,36 @@ export async function preload(id) {
   await getDashboardData(id)
 }
 
-export async function Item(id, mockData) {}
-
-var resultAllIds = []
-
-export async function checkIsAvailable(id) {
-  return resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
+export async function Item(id, mockData) {
+  console.error('get data error cant find this id ' + id)
 }
 
-export var loading = false
+export var resultAllIds = []
 
-export const getDashboardData = async id => {
+export function checkIsAvailable(id) {
+  var isAvailable = resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
+
+  console.log(
+    id + 'isavail  ' + isAvailable + ' resid ' + resultAllIds[id] + ' resultAllIds.len ' + resultAllIds.length
+  )
+
+  return isAvailable
+}
+
+//export var loading = false
+
+export const getDashboardData = cache(async id => {
+  console.log('getDashboardData start ' + JSON.stringify(resultAllIds))
+
   console.log('loading false -> set loading true : getDashboardData... ')
 
-  if (loading) {
-    console.log('twice call loading quit : dashboardstrategy') //react debug version calls refresh view useEffect hook twice to test data unmount method
+  if (checkIsAvailable(id) == true) {
+    console.log('available cached version return : dashboardstrategy')
 
-    return undefined
+    return resultAllIds[id]
   }
 
-  loading = true
-
-  //if (isAvailable(id)) {
-  //}
-
   var mockData = getMockDashboardData(id)
-
-  console.log('mock data' + JSON.stringify(mockData))
 
   mockData.seriesApexLineMetrics = mockData.seriesApexLineMetrics.map((item, index) => {
     item.data = []
@@ -243,13 +246,14 @@ export const getDashboardData = async id => {
     var dateToLocal = new Date(dateParsed).toLocaleString(local, optionsChart)
 
     teamsMetricStory.dateStamp.push(quizStartsAtDate)
-    console.log('team stats json i' + i + ' teamsstats ' + JSON.stringify(teamStats))
+
+    //console.log('team stats json i' + i + ' teamsstats ' + JSON.stringify(teamStats))
     teamsMetricStory.stats.push(teamStats)
 
     categoriesApexLineMetrics.push(dateToLocal)
 
     //console.log('push ' + dateToLocal)
-    console.log('for  ' + quizI + ' end')
+    //console.log('for  ' + quizI + ' end')
   }
 
   acutelys = pickTopMostByCohortAbsDataSubAssArr(acutelys)
@@ -287,6 +291,12 @@ export const getDashboardData = async id => {
   //    })
   //)
 
+  if (checkIsAvailable(id) == true) {
+    console.log('sample from cache ' + id) //+ JSON.stringify(db)
+
+    return resultAllIds[id]
+  }
+
   var db = {
     id: id,
     participationPercent: participationPercent,
@@ -310,12 +320,16 @@ export const getDashboardData = async id => {
 
   resultAllIds[id] = db
 
-  loading = false
+  //loading = false
 
-  console.log('database sample' + JSON.stringify(db))
+  console.log('database sample' + id) //+ JSON.stringify(db)
 
-  return db
-}
+  console.log('is available id ' + id + '  ' + checkIsAvailable(id)) //+ JSON.stringify(db)
+
+  console.log('resultalluds ' + JSON.stringify(resultAllIds))
+
+  return resultAllIds[id]
+})
 
 export const getCurrentQuizAuditory = async () => {
   let currentQuizIdAudi = await getCurrentQuizIdAudi()
