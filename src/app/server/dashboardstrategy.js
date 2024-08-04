@@ -58,7 +58,6 @@ export async function checkIsAvailable(id) {
 
 export var loading = false
 
-//cache for server calls only this is called from client
 export const getDashboardData = async id => {
   console.log('loading false -> set loading true : getDashboardData... ')
 

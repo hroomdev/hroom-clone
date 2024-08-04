@@ -22,7 +22,22 @@ const nextConfig = {
         locale: false
       }
     ]
-  }
+  },
+  webpack: config => {
+    config.resolve.fallback = {
+      fs: false,
+      path: false,
+      stream: false,
+      string_decoder: false,
+      dns: false,
+      net: false,
+      crypto: false,
+      tls: false
+    }
+
+    return config
+  },
+  experimental: { instrumentationHook: true }
 }
 
 export default nextConfig

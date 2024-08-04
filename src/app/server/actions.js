@@ -643,3 +643,40 @@ export const getQuestionMetricSubMetricQuestionBy = async questionId => {
 
   return questionMetricSubQuest
 }
+
+export const getAdvicesTexts = async category => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const adviceQuery = {
+    text: 'SELECT "public"."advices"."text" FROM "public"."advices" WHERE "public"."advices"."categoryId" = $1',
+    values: [category],
+    rowMode: 'array'
+  }
+
+  var advicesFromCategory = []
+
+  try {
+    await client.connect()
+    var res = await client.query(adviceQuery)
+
+    if (res.rows.length <= 0) {
+      console.log('no advices yet from ai advice category' + category)
+
+      return advicesFromCategory
+    }
+
+    advicesFromCategory = res.rows
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return advicesFromCategory
+}

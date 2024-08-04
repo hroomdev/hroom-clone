@@ -28,6 +28,8 @@ const RootLayout = ({ children, params }) => {
   const headersList = headers()
   const direction = i18n.langDirection[params.lang]
 
+  console.log('root layout')
+
   //console.log('root layout params.lang' + params.lang)
 
   return (

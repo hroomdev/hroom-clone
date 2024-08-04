@@ -24,7 +24,8 @@ import { Icon13 } from '../../icons/Icon13'
 import { RemixIconsLineMapCarLine3 } from '../../icons/RemixIconsLineMapCarLine3'
 import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineSystemArrowRightLine1'
 import { RemixIconsLineSystemErrorWarningLine1 } from '../../icons/RemixIconsLineSystemErrorWarningLine1'
-import { Item, preload, checkIsAvailable, getDashboardData, loading } from '@/app/server/dashboardstrategy'
+import { Item, preload, checkIsAvailable, loading } from '@/app/server/dashboardstrategy'
+import { getDashboardData } from '@/app/server/dashboarddbcache'
 
 import './style.css'
 
@@ -42,6 +43,12 @@ const options = {
 var initialMetricByTeam = 'Ambassadorship'
 var initialTimeInterval = 'quarter'
 
+//AI advices
+var initiaLCategory3Advice1 = 'Найдите слабые метрики команд и ознакомьтесь с советами помощника.hc'
+var initiaLCategory3Advice2 = 'Проанализируйте срезы в разделе Аналитика, чтобы исследовать слабые метрики глубже.hc'
+var initiaLCategory3Advice3 =
+  'Не знаете с чего начать? Спросите у помощника как улучшить слабые метрики или что делать дальше.hc'
+
 export const DashboardBuilder = () => {
   var depVar = 1
   var mockData = getMockDashboardData(companyId)
@@ -52,6 +59,12 @@ export const DashboardBuilder = () => {
 
   //console.log(JSON.stringify(mockData))
 
+  //ai advices
+  const [category3Advice1, setCategory3Advice1] = useState(initiaLCategory3Advice1) // Declare a state variable...
+  const [category3Advice2, setCategory3Advice2] = useState(initiaLCategory3Advice2) // Declare a state variable...
+  const [category3Advice3, setCategory3Advice3] = useState(initiaLCategory3Advice3) // Declare a state variable...
+
+  //user data
   const [selectedEngagementMetricKey, setSelected] = useState(initialMetricByTeam) // Declare a state variable...
   const [selectedTeamTimeIntervalKey, setSelectedTimeInterval] = useState(initialTimeInterval)
 
@@ -533,7 +546,7 @@ export const DashboardBuilder = () => {
           <div className='row-2'>
             <DashboardCard
               color={'light'}
-              title={'Найдите слабые метрики команд и ознакомьтесь с советами помощника.'}
+              title={category3Advice1}
               stats={''}
               trendNumber={''}
               avatarIcon={'ri-car-line'}
@@ -542,7 +555,7 @@ export const DashboardBuilder = () => {
             ></DashboardCard>
             <DashboardCard
               color={'light'}
-              title={'Проанализируйте срезы в разделе Аналитика, чтобы исследовать слабые метрики глубже.'}
+              title={category3Advice2}
               stats={''}
               trendNumber={''}
               avatarIcon={'ri-car-line'}
@@ -556,7 +569,7 @@ export const DashboardBuilder = () => {
             <DashboardCard
               className={'card-6'}
               color={'light'}
-              title={'Не знаете с чего начать? Спросите у помощника как улучшить слабые метрики или что делать дальше.'}
+              title={category3Advice3}
               stats={''}
               trendNumber={''}
               avatarIcon={'ri-car-line'}

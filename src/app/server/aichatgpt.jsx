@@ -13,8 +13,9 @@ async function makeOPENCHATAIGetRequest(message) {
     Authorization: `Bearer ${apiKey}`
   }
 
+  //gpt-4
   const data = {
-    model: 'gpt-4', // Or use 'gpt-3.5-turbo' if you are using GPT-3.5
+    model: 'gpt-3.5-turbo', // Or use 'gpt-3.5-turbo' if you are using GPT-3.5
     messages: [{ role: 'user', content: message }],
     max_tokens: 150
   }
