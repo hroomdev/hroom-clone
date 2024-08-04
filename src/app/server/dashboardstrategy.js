@@ -75,6 +75,8 @@ export const getDashboardData = async id => {
 
   var mockData = getMockDashboardData(id)
 
+  console.log('mock data' + JSON.stringify(mockData))
+
   mockData.seriesApexLineMetrics = mockData.seriesApexLineMetrics.map((item, index) => {
     item.data = []
 
@@ -310,6 +312,8 @@ export const getDashboardData = async id => {
   resultAllIds[id] = db
 
   loading = false
+
+  console.log('database sample' + JSON.stringify(db))
 
   return db
 }

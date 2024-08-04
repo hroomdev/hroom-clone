@@ -39,7 +39,6 @@ import StarRate from './StarRate'
 import Database from './Database'
 import Billing from './Billing'
 import Submit from './Submit'
-import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
 
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
@@ -203,8 +202,6 @@ const CreateApp = ({ open, setOpen }) => {
 
           console.log('selected options   ' + c)
         }
-
-        //let b = await makeOPENCHATAIGetRequest(prompt)
       })
     }
   }

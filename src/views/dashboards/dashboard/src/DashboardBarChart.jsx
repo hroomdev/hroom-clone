@@ -96,20 +96,8 @@ const DashboardBarChart = ({
       if (result < 0) {
         //console.log()
         teamMetricStoryFiltered.push(teamMetricStory.stats[i])
-        console.log(
-          'dateParsed ' +
-            dateParsed +
-            ' after date cutoff ' +
-            dateCutoff +
-            'push  teamMetricStoryFiltered.length' +
-            teamMetricStoryFiltered.length +
-            ' statsi ' +
-            teamMetricStory.stats[i] +
-            ' i ' +
-            i
-        )
       } else {
-        console.log('dateParsed ' + dateParsed + ' before date cutoff ' + dateCutoff)
+        //console.log('dateParsed ' + dateParsed + ' before date cutoff ' + dateCutoff)
       }
     }
 
@@ -122,17 +110,19 @@ const DashboardBarChart = ({
     //сколько - то есть отфильтрованных данных по периоду времени - добавляем в массив с усередненными данными и далее - вычисляем средние значения на вывод
     if (teamMetricStoryFiltered.length > 0 && teamMetricStoryFiltered[0].length > 0) {
       teamMetricAvgInterval = new Array(teamMetricStoryFiltered[0].length).fill(0)
-      console.log('teamMetricStoryFiltered[0].length ' + teamMetricStoryFiltered[0].length)
+
+      //console.log('teamMetricStoryFiltered[0].length ' + teamMetricStoryFiltered[0].length)
 
       for (var i = 0; i < teamMetricAvgInterval.length; i++) {
         teamMetricAvgInterval[i] = new Array(teamMetricStoryFiltered[0][0].length).fill(0)
-        console.log('teamMetricStoryFiltered[0][0].length ' + teamMetricStoryFiltered[0][0].length)
+
+        //console.log('teamMetricStoryFiltered[0][0].length ' + teamMetricStoryFiltered[0][0].length)
       }
 
       for (var i = 0; i < teamMetricStoryFiltered.length; i++) {
         //9
         for (var j = 0; j < teamMetricStoryFiltered[i].length; j++) {
-          console.log('teamMetricStoryFiltered i  ' + teamMetricStoryFiltered[i][j] + ' i ' + i + ' j ' + j)
+          //console.log('teamMetricStoryFiltered i  ' + teamMetricStoryFiltered[i][j] + ' i ' + i + ' j ' + j)
 
           //11
           for (var k = 0; k < teamMetricStoryFiltered[i][j].length; k++) {
@@ -143,9 +133,9 @@ const DashboardBarChart = ({
         }
       }
     } else {
-      console.log(
-        'мы отфильтровали все данные по дате ' + selectedInterval + ' выводить в teamMetricAvgInterval нечего'
-      )
+      //console.log(
+      //'мы отфильтровали все данные по дате ' + selectedInterval + ' выводить в teamMetricAvgInterval нечего'
+      //)
     }
 
     //console.log('teamMetricAvgInterval ' + JSON.stringify(teamMetricAvgInterval))
@@ -187,7 +177,7 @@ const DashboardBarChart = ({
   const handleChange = event => {
     var key = Object.keys(intervalsru).find(key => intervalsru[key] === event.target.value)
 
-    console.log('metric is ' + key)
+    //console.log('metric is ' + key)
 
     refreshText(key)
 

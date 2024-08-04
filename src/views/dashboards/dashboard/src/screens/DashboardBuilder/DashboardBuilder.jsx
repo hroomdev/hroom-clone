@@ -10,6 +10,7 @@ const local = 'ru-RU'
 
 import { formatDistanceToNow, subDays, intervalToDuration } from 'date-fns'
 
+import DashboardCard from './../../DashboardCard'
 import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
 import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
 import TeamsTransactions from '@views/dashboards/dashboard/src/TeamsTransactions'
@@ -530,64 +531,38 @@ export const DashboardBuilder = () => {
             </div>
           </div>
           <div className='row-2'>
-            <div className='card-6'>
-              <div className='row-10'>
-                <div className='frame-19'>
-                  <p className='text-28'>Найдите слабые метрики команд и ознакомьтесь с советами помощника.</p>
-                </div>
-                <div className='remix-icons-line-map-car-line-3-wrapper'>
-                  <RemixIconsLineMapCarLine3 className='icon-instance-node-2' color='#B29DF8' />
-                </div>
-              </div>
-              <div className='div-7'>
-                <div className='row-7'>
-                  <div className='chip-label-2'>
-                    <div className='text-wrapper-12'>рекомендация</div>
-                  </div>
-                  <div className='text-10'>Что делать дальше?</div>
-                </div>
-              </div>
-            </div>
-            <div className='card-6'>
-              <div className='row-10'>
-                <div className='frame-19'>
-                  <p className='text-28'>
-                    Проанализируйте срезы в разделе Аналитика, чтобы исследовать слабые метрики глубже.
-                  </p>
-                </div>
-                <div className='remix-icons-line-map-car-line-3-wrapper'>
-                  <RemixIconsLineMapCarLine3 className='icon-instance-node-2' color='#B29DF8' />
-                </div>
-              </div>
-              <div className='row-wrapper'>
-                <div className='row-7'>
-                  <div className='chip-label-2'>
-                    <div className='text-wrapper-12'>рекомендация</div>
-                  </div>
-                  <div className='text-10'>Что делать дальше?</div>
-                </div>
-              </div>
-            </div>
-            <div className='card-6'>
-              <div className='row-10'>
-                <div className='frame-19'>
-                  <p className='text-28'>
-                    Не знаете с чего начать? Спросите у помощника как улучшить слабые метрики или что делать дальше.
-                  </p>
-                </div>
-                <div className='remix-icons-line-map-car-line-3-wrapper'>
-                  <RemixIconsLineMapCarLine3 className='icon-instance-node-2' color='#B29DF8' />
-                </div>
-              </div>
-              <div className='row-wrapper'>
-                <div className='row-7'>
-                  <div className='chip-label-2'>
-                    <div className='text-wrapper-12'>рекомендация</div>
-                  </div>
-                  <div className='text-10'>Что делать дальше?</div>
-                </div>
-              </div>
-            </div>
+            <DashboardCard
+              color={'light'}
+              title={'Найдите слабые метрики команд и ознакомьтесь с советами помощника.'}
+              stats={''}
+              trendNumber={''}
+              avatarIcon={'ri-car-line'}
+              ritoric={'Что делать дальше'}
+              chipLabel={'рекомендация'}
+            ></DashboardCard>
+            <DashboardCard
+              color={'light'}
+              title={'Проанализируйте срезы в разделе Аналитика, чтобы исследовать слабые метрики глубже.'}
+              stats={''}
+              trendNumber={''}
+              avatarIcon={'ri-car-line'}
+              ritoric={'Что делать дальше'}
+              chipLabel={'рекомендация'}
+              style={{
+                height: '255'
+              }}
+            ></DashboardCard>
+
+            <DashboardCard
+              className={'card-6'}
+              color={'light'}
+              title={'Не знаете с чего начать? Спросите у помощника как улучшить слабые метрики или что делать дальше.'}
+              stats={''}
+              trendNumber={''}
+              avatarIcon={'ri-car-line'}
+              ritoric={'Что делать дальше'}
+              chipLabel={'рекомендация'}
+            ></DashboardCard>
           </div>
           <div className='row-11' />
           <div className='row-11' />
