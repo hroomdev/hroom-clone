@@ -14,6 +14,7 @@ import DashboardWelcomeCard from '@views/dashboards/dashboard/src/DashboardWelco
 import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
 
 import { teamsru } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
+import { checkIsAvailable, Item } from '@/app/server/dashboarddbcache'
 
 import { ratingMax, midRangeRating, cohortsLevelsPercents, cohortsAcutesAbs } from './const'
 import {
@@ -39,42 +40,13 @@ import { submetricsru } from './../../../src/views/dashboards/dashboard/src/scre
 
 const local = 'ru-RU'
 
-export async function preload(id) {
-  console.log(id + 'preload id : getDashboardData... ')
-
-  // void evaluates the given expression and returns undefined
-  // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/void
-  //https://nextjs.org/docs/app/building-your-application/data-fetching/patterns#parallel-and-sequential-data-fetching
-  await getDashboardData(id)
-}
-
-export async function Item(id, mockData) {
-  console.error('get data error cant find this id ' + id)
-}
-
-export var resultAllIds = []
-
-export function checkIsAvailable(id) {
-  var isAvailable = resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
-
-  console.log(
-    id + 'isavail  ' + isAvailable + ' resid ' + resultAllIds[id] + ' resultAllIds.len ' + resultAllIds.length
-  )
-
-  return isAvailable
-}
-
-//export var loading = false
-
-export const getDashboardData = cache(async id => {
-  console.log('getDashboardData start ' + JSON.stringify(resultAllIds))
-
+export const getDashboardData = async id => {
   console.log('loading false -> set loading true : getDashboardData... ')
 
   if (checkIsAvailable(id) == true) {
     console.log('available cached version return : dashboardstrategy')
 
-    return resultAllIds[id]
+    return Item(id)
   }
 
   var mockData = getMockDashboardData(id)
@@ -291,12 +263,6 @@ export const getDashboardData = cache(async id => {
   //    })
   //)
 
-  if (checkIsAvailable(id) == true) {
-    console.log('sample from cache ' + id) //+ JSON.stringify(db)
-
-    return resultAllIds[id]
-  }
-
   var db = {
     id: id,
     participationPercent: participationPercent,
@@ -318,18 +284,12 @@ export const getDashboardData = cache(async id => {
     teamsMetricStory: mockData.teamsMetricStory
   }
 
-  resultAllIds[id] = db
-
   //loading = false
 
-  console.log('database sample' + id) //+ JSON.stringify(db)
+  console.log('end db sample ' + id + ' checkisavail ' + checkIsAvailable(id)) //+ JSON.stringify(db)
 
-  console.log('is available id ' + id + '  ' + checkIsAvailable(id)) //+ JSON.stringify(db)
-
-  console.log('resultalluds ' + JSON.stringify(resultAllIds))
-
-  return resultAllIds[id]
-})
+  return db
+}
 
 export const getCurrentQuizAuditory = async () => {
   let currentQuizIdAudi = await getCurrentQuizIdAudi()

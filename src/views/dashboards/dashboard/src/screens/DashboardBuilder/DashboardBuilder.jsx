@@ -24,8 +24,6 @@ import { Icon13 } from '../../icons/Icon13'
 import { RemixIconsLineMapCarLine3 } from '../../icons/RemixIconsLineMapCarLine3'
 import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineSystemArrowRightLine1'
 import { RemixIconsLineSystemErrorWarningLine1 } from '../../icons/RemixIconsLineSystemErrorWarningLine1'
-import { Item, preload, checkIsAvailable, loading } from '@/app/server/dashboardstrategy'
-import { getDashboardData } from '@/app/server/dashboarddbcache'
 
 import './style.css'
 
@@ -46,24 +44,8 @@ var initiaLCategory3Advice2 = 'Проанализируйте срезы в ра
 var initiaLCategory3Advice3 =
   'Не знаете с чего начать? Спросите у помощника как улучшить слабые метрики или что делать дальше.hc'
 
-import { getMockDashboardData } from '@/app/server/MockData'
-
-//import { companyId } from '@/app/[lang]/(dashboard)/dashboards/dashboard/page'
-
-export const DashboardBuilder = () => {
+export const DashboardBuilder = ({ companyId, data }) => {
   var depVar = 1
-
-  var data = getMockDashboardData(1)
-
-  data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)
-  data.nextQuizStarts = data.nextQuizStarts.toLocaleDateString(local, options)
-
-  //var data = getDashboardData(companyId)
-
-  //data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)
-  //data.nextQuizStarts = data.nextQuizStarts.toLocaleDateString(local, options)
-
-  console.log('mockdata') //+ JSON.stringify(data)
 
   //ai advices
   const [category3Advice1, setCategory3Advice1] = useState(initiaLCategory3Advice1) // Declare a state variable...
@@ -105,9 +87,18 @@ export const DashboardBuilder = () => {
 
   useEffect(() => {
     const f = async () => {
-      //if (loading) return
+      //if (loading) return :todo change id to company ID
 
-      var data = await getDashboardData(1)
+      if (checkIsAvailable(id) == false) {
+        console.log('checkIsAvailable(id) == false : DaSHBOARDbUILDER ')
+
+        return
+      } else {
+        console.log('available ')
+      }
+
+      console.log('getDashboardData from db available id  ' + id)
+      var data = Item(id)
 
       console.log('call fetch data from f data ' + JSON.stringify(data))
 
