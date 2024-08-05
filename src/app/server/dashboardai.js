@@ -25,13 +25,16 @@ const promptPrepare1 = `###ИНСТРУКЦИИ###
 ##Пример ответа на русском##
 <Глубокий поэтапный ответ в виде списка коротких и четких советов (примерно 200 символов) с КОНКРЕТНЫМИ деталями в json формате, где есть ID конкретного совета, текст совета, важность совета.> `
 
-export const saveAIAdvice = async (category, num) => {
-  let prompt = 'ping'
+export const saveAIAdvice = async prompt => {
+  //let prompt = 'ping'
 
   //query ai then save advices
+
   let b = await makeOPENCHATAIGetRequest(prompt)
 
   console.log(b)
+
+  return b
 }
 
 export const getAIAdvices = async category => {

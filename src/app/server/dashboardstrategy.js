@@ -18,15 +18,13 @@ import { checkIsAvailable, Item } from '@/app/server/dashboarddbcache'
 
 import { ratingMax, midRangeRating, cohortsLevelsPercents, cohortsAcutesAbs } from './const'
 import {
-  getSelectedAnswersByTeamId,
   getSelectedAnswersByQuizId,
   getCurrentQuiz,
   getQuizOrderByIdDesc,
   getQuestGroupTypeBy,
   getSelectedOptions,
   getQuestGroupGroupBy,
-  getQuestionMetricSubMetricQuestionBy,
-  getQuizById
+  getQuestionMetricSubMetricQuestionBy
 } from './actions'
 
 import { getMockDashboardData } from './MockData'
@@ -453,7 +451,7 @@ export const getEngageMetrics = async (quiz, totalRevenueStats, metricsStats, te
 
   for (var i = 0; i < selectedAnswers.length; i++) {
     var selectedAnswerSplittedStr = selectedAnswers[i].toString().split(',')
-    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 1]) //hack count
+    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 2]) //hack count minus two db column dependent
 
     counterTeamMetricQuiz[selectedAnswerTeamId - 1] = counterTeamMetricQuiz[selectedAnswerTeamId - 1] + 1
   }
@@ -476,7 +474,7 @@ export const getEngageMetrics = async (quiz, totalRevenueStats, metricsStats, te
     var selectedAnswersIdx = await dbSelectedAnswersIdIdx()
     var selectedAnswerId = selectedAnswerSplittedStr[selectedAnswersIdx]
 
-    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 1]) //hack count columns selectedAnswers table Depenent
+    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 2]) //hack count columns selectedAnswers table Depenent
 
     //if (selectedAnswerTeamId == 7) console.log('selectedAnswerTeamId SEVEN')
 

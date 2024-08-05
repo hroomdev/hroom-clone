@@ -25,6 +25,8 @@ import {
 import classnames from 'classnames'
 
 import teamsru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
+import employeesru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Employees'
+
 import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
 
 import { hideVerticalMenu, showVerticalMenu } from './../../../components/layout/vertical/Navigation'
@@ -193,12 +195,13 @@ const CreateApp = ({ open, setOpen }) => {
 
         let optionsStr = selectedOptions.join(',')
 
-        var teamId = getRandomInt(Reflect.ownKeys(teamsru).length)
+        var departmentId = 7 //to separate generated and real data
+        var employeeId = 1 //to separate generated and real data
 
         if (checkValidJoinedStr(optionsStr, selectedOptions.length, 1, 10, 0) == false) {
           console.logerror('generate quiz report error check validity of the slected options answers before send')
         } else {
-          let c = await createSelectedAnswersCurrentQuiz(optionsStr, teamId)
+          let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId,departmentId)
 
           console.log('selected options   ' + c)
         }

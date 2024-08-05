@@ -88,6 +88,7 @@ export const DashboardBuilder = ({ companyId, data }) => {
   useEffect(() => {
     const f = async () => {
       //if (loading) return :todo change id to company ID
+      return
 
       if (checkIsAvailable(id) == false) {
         console.log('checkIsAvailable(id) == false : DaSHBOARDbUILDER ')

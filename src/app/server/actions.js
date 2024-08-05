@@ -68,7 +68,7 @@ export const getStatisticsData = async () => {
   return statisticsData
 }
 
-export const createQuiz = async (timeStart, type, auditory) => {
+export const createQuiz = async (timeStart, type, auditory, endDate, survey_name) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -79,8 +79,10 @@ export const createQuiz = async (timeStart, type, auditory) => {
 
   await client.connect()
 
-  const text = 'INSERT INTO "public"."quiz" ("timestart","type","auditory") VALUES($1, $2, $3) RETURNING *'
-  const values = [timeStart, type, auditory]
+  const text =
+    'INSERT INTO "public"."quiz" ("timestart","type","auditory","end_date","survey_name") VALUES($1, $2, $3,$4, $5) RETURNING *'
+
+  const values = [timeStart, type, auditory, endDate, survey_name]
 
   const query = {
     // give the query a unique name
@@ -102,7 +104,59 @@ export const createQuiz = async (timeStart, type, auditory) => {
   return res
 }
 
-export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, team) => {
+export const createStatistics = async (
+  survey_id,
+  employee_id,
+  engagement_score,
+  satisfaction_score,
+  loyalty_score,
+  total_answers,
+  negative_responses
+) => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  await client.connect()
+
+  const text =
+    'INSERT INTO "public"."Survey_Statistics" ("survey_id","employee_id","engagement_score","satisfaction_score","loyalty_score","total_answers","negative_responses") VALUES($1, $2, $3,$4, $5,$6,$7) RETURNING *'
+
+  const values = [
+    survey_id,
+    employee_id,
+    engagement_score,
+    satisfaction_score,
+    loyalty_score,
+    total_answers,
+    negative_responses
+  ]
+
+  const query = {
+    // give the query a unique name
+    text: text,
+    rowMode: 'array',
+    values: values
+  }
+
+  var res = ''
+
+  await client
+    .query(query) // your query string here
+    .then(result => {
+      res = result.rows[0]
+    }) // your callback here
+    .catch(e => console.error(e.stack)) // your callback here
+    .then(() => client.end())
+
+  return res
+}
+
+export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, employeeId, department_id) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -119,9 +173,9 @@ export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, team)
   await client.connect()
 
   const text =
-    'INSERT INTO "public"."selectedAnswers" ("selectedOptions","quizId","team") VALUES($1, $2,$3) RETURNING *'
+    'INSERT INTO "public"."selectedAnswers" ("selectedOptions","quizId","department_id","employee_id") VALUES($1, $2,$3,$4) RETURNING *'
 
-  const values = [selectedOptionsStr, currentQuizId, team]
+  const values = [selectedOptionsStr, currentQuizId, department_id, employeeId]
 
   const query = {
     // give the query a unique name
@@ -444,43 +498,6 @@ export const getSelectedAnswersByQuizId = async id => {
 
     if (res.rows.length <= 0) {
       console.log('noone yet participated in  quizId' + id)
-
-      return selectedAnswers
-    }
-
-    selectedAnswers = res.rows
-  } catch (e) {
-    console.error(e.stack)
-  } finally {
-    client.end()
-  }
-
-  return selectedAnswers
-}
-
-export const getSelectedAnswersByTeamId = async id => {
-  let client = new Client({
-    user: 'gen_user',
-    host: '147.45.227.55',
-    database: 'default_db',
-    password: 'j6ukvvX(SS0#&5',
-    port: 5432
-  })
-
-  const selectedAnswersIds = {
-    text: 'SELECT * FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."team" = $1',
-    values: [teamId],
-    rowMode: 'array'
-  }
-
-  var selectedAnswers = []
-
-  try {
-    await client.connect()
-    var res = await client.query(selectedAnswersIds)
-
-    if (res.rows.length <= 0) {
-      console.log('noone yet participated in  quizId' + quizId)
 
       return selectedAnswers
     }

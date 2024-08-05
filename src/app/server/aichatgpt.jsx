@@ -1,9 +1,22 @@
+import OpenAI from 'openai'
+
 const axios = require('axios')
 
 const apiKey = process.env.CHATGPT_API_KEY
 
+const client = new OpenAI({
+  apiKey: process.env.CHATGPT_API_KEY //['OPENAI_API_KEY'] // This is the default and can be omitted
+})
+
 //reverse proxy api
 async function makeOPENCHATAIGetRequest(message) {
+  const chatCompletion = await client.chat.completions.create({
+    messages: [{ role: 'user', content: 'Say this is a test' }],
+    model: 'gpt-3.5-turbo'
+  })
+
+  return chatCompletion
+
   const url = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/chat/completions'
 
   let returnResponse = ''
