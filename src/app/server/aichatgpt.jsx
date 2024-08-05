@@ -1,6 +1,4 @@
-import http from 'http'
-
-import { HttpsProxyAgent } from 'https-proxy-agent'
+//import { HttpsProxyAgent } from 'https-proxy-agent'
 
 import OpenAI from 'openai'
 
