@@ -170,7 +170,7 @@ export async function register() {
 
   //var advice4 = await saveAIAdvice(promt4)
 
-  var advice4 = await saveAIAdvice('')
+  var advice4 = await saveAIAdvice('ping this vpn infrastructure test *')
 
   console.log('register hook end' + advice4)
 
