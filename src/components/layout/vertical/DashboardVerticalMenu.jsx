@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Chip from '@mui/material/Chip'
+
 import { useTheme } from '@mui/material/styles'
 
 // Third-party Imports
@@ -47,7 +48,8 @@ import {
   getQuestionMetricSubMetricQuestionBy,
   createQuiz,
   createSelectedAnswersCurrentQuiz,
-  createStatistics
+  createStatistics,
+  getEmployees
 } from '@/app/server/actions'
 
 import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
@@ -117,8 +119,25 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             var generatedOptions = generateOptions(countGenerated, maximum)
             let optionsStr = generatedOptions.join(',')
 
-            var departmentId = 4 //getRandomInt(Reflect.ownKeys(employeesru).length)
-            var employeeId = 13 //getRandomInt(Reflect.ownKeys(employeesru).length)
+            var maxEmps = 10
+
+            var employeeId = getRandomInt(maxEmps)
+
+            var employees = await getEmployees(maxEmps)
+
+            console.log('employees l ' + employees.length + 'employeeId ' + employeeId)
+
+            var departmentId = 7
+
+            for (var i = 0; i < employees.length; i++) {
+              if (i == employeeId - 1) {
+                departmentId = employees[i].toString().split(',')[1]
+
+                console.log('departmentId ' + departmentId + ' ')
+              }
+            }
+
+            console.log('agen emplid ' + employeeId + 'dep id ' + departmentId)
 
             if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
               console.log('generated quiz is not valid! not sending to db')
@@ -142,11 +161,16 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             //const date = dates[0]
             const dateNow = new Date()
 
+            var dateStampNowParsed = Date.parse(dateNow)
+            var dateNowParsed = new Date(dateStampNowParsed)
+
             //const date = dateNow.getDate()
 
-            const endDate = dateNow.setDate(dateNow.getDate() + 7)
+            const endDate = new Date()
 
-            console.log(dateNow)
+            endDate.setDate(dateNowParsed.getDate() + 7)
+
+            console.log('end date' + endDate)
 
             var formattedDateNow = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, dateNow)
             var formattedEndDate = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, endDate)

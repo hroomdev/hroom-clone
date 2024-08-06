@@ -585,6 +585,40 @@ export const getQuizById = async id => {
   }
 }
 
+export const getEmployees = async limit => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryCurrentQuizId = {
+    text: 'SELECT * FROM "public"."Employees" ORDER BY "public"."Employees"."employee_id" ASC LIMIT $1',
+    values: [limit],
+    rowMode: 'array'
+  }
+
+  let emps = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryCurrentQuizId)
+
+    emps = res.rows
+
+    //console.log('res res.rows[0] ' + res.rows[0])
+  } catch (e) {
+    console.log('error connect to db ' + e.stack)
+    console.error(e.stack)
+  } finally {
+    client.end()
+
+    return emps
+  }
+}
+
 export const getQuizOrderByIdDesc = async (limit, offset) => {
   let client = new Client({
     user: 'gen_user',

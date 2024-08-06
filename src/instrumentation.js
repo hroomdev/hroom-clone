@@ -162,6 +162,11 @@ export async function register() {
   //load db to cache dashboard
   console.log('register hook start')
 
+  //1 manual calculate/update statistics table -> auto after quiz ends save to db with each quiz ends
+  //2 update vector store openchat gpt ai api
+  //3 get advice from ai query api openchatgpt manual auto trigger after quiz ends for all auditory or manuall triggered
+  //4 save advice in db auto
+
   //var advice1 = await saveAIAdvice(promt1)
 
   //var advice2 = await saveAIAdvice(promt2)

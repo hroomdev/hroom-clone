@@ -10,7 +10,7 @@ export const getMockDashboardData = id => {
   var currentQuizStarts = new Date(Date.UTC(2024, 6, 17, 3, 10, 0)) //23 мая 2024
   var curToNow = 'неделю'
   var nowToNext = '13 дней'
-  var nextQuizStarts = new Date(Date.UTC(2024, 7, 5, 7, 12, 6)) // 3 июня 2024
+  var nextQuizStarts = new Date(Date.UTC(2024, 11, 30, 7, 12, 6)) //
   var totalRevenueStats = [
     1.5, // процент изменения с последнего опроса
     21, // статистика тотал по всем метрикам  вовлеченные
