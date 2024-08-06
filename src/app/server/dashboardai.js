@@ -1,6 +1,6 @@
 import { getAdvicesTexts } from './actions'
 
-import makeOPENCHATAIGetRequest from './aichatgpt'
+import { makeOPENCHATAIGetRequest, makeOPENCHATAIAPIVectorStoreRequest } from './aichatgpt'
 
 const promptPrepare0 =
   'Отвечай как профессионал по вовлеченности сотрудников компаний и профессионал в сфере бизнес-консалтинга. Проанализируй данные по вовлеченности сотрудников и дай ответ в двух видах: 1. Инсайты по компании в виде интересных зависимостей между переменными. 2. Советы от ИИ по конкретным найденным проблемам, четкие и ясные, около 200 символов. Результат представь в виде JSON. Не пиши вступительных слов или чего-либо еще, кроме самого ответа.'
@@ -25,6 +25,25 @@ const promptPrepare1 = `###ИНСТРУКЦИИ###
 8. Не пиши вступительных слов или чего либо еще, кроме самого ответа.
 ##Пример ответа на русском##
 <Глубокий поэтапный ответ в виде списка коротких и четких советов (примерно 200 символов) с КОНКРЕТНЫМИ деталями в json формате, где есть ID конкретного совета, текст совета, важность совета.> `
+
+export const updVectorStore = async (surveysJson, questionsJson, surveys_Statisticsjson, employeesjson) => {
+  //delete
+  //Surveys.json
+  //Questions.json
+  //Survey_Statisics.json
+  //Employees.json
+
+  //add surveysJson questionsJson surveys_Statisticsjson employeesjson
+
+  //let prompt = 'ping'
+
+  //query ai then save advices
+
+  let b = await makeOPENCHATAIAPIVectorStoreRequest(surveysJson, questionsJson, surveys_Statisticsjson, employeesjson)
+  console.log(b)
+
+  return 'not implemented : dashboardai.js'
+}
 
 export const saveAIAdvice = async prompt => {
   //let prompt = 'ping'

@@ -1,9 +1,6 @@
 // Next Imports
 import { useParams } from 'next/navigation'
 
-// MUI Imports
-import Chip from '@mui/material/Chip'
-
 import { useTheme } from '@mui/material/styles'
 
 // Third-party Imports
@@ -24,43 +21,11 @@ import useVerticalNav from '@menu/hooks/useVerticalNav'
 // Styled Component Imports
 import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNavExpandIcon'
 
-import {
-  dbQuizAuditoryIdx,
-  dbQuizIdIdx,
-  dbQuizTimeStartSIdx,
-  dbQuizTypeIdx,
-  dbSelectedAnswersIdIdx
-} from '@/app/server/dbMapping'
-
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
-import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
-import generateDates from '../../dialogs/create-app/GenerateDates'
-import teamsru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
-import employeeId, {
-  employeesru
-} from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Employees'
-
-import { getStatsMetrics } from '@/app/server/statistics'
-
-import {
-  getSelectedAnswersByOrderDescQuizId,
-  getCurrentQuiz,
-  getQuizOrderByIdDesc,
-  getQuestGroupTypeBy,
-  getSelectedOptions,
-  getQuestGroupGroupBy,
-  getQuestionMetricSubMetricQuestionBy,
-  createQuiz,
-  createSelectedAnswersCurrentQuiz,
-  createStatistics,
-  getEmployees
-} from '@/app/server/actions'
 
 import { generateSelectedOptions, generateStatistics, generateQuiz } from '@/app/server/dashboardstrategy'
-
-import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>

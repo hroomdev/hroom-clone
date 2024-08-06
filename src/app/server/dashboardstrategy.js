@@ -165,7 +165,9 @@ export const generateSelectedOptions = async () => {
 
   var employeeId = getRandomInt(maxEmps)
 
-  var employees = await getEmployees(maxEmps)
+  var employeesres = await getEmployees(maxEmps)
+
+  var employees = employeesres.rows
 
   console.log('employees l ' + employees.length + 'employeeId ' + employeeId)
 
@@ -173,7 +175,7 @@ export const generateSelectedOptions = async () => {
 
   for (var i = 0; i < employees.length; i++) {
     if (i == employeeId - 1) {
-      departmentId = employees[i].toString().split(',')[1]
+      departmentId = employees[i]['department_id']
 
       console.log('departmentId ' + departmentId + ' ')
     }

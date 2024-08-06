@@ -594,19 +594,20 @@ export const getEmployees = async limit => {
     port: 5432
   })
 
-  const queryCurrentQuizId = {
+  //rowMode: 'array'
+
+  const queryEmp = {
     text: 'SELECT * FROM "public"."Employees" ORDER BY "public"."Employees"."employee_id" ASC LIMIT $1',
-    values: [limit],
-    rowMode: 'array'
+    values: [limit]
   }
 
   let emps = 'empty'
 
   try {
     await client.connect()
-    var res = await client.query(queryCurrentQuizId)
+    var res = await client.query(queryEmp)
 
-    emps = res.rows
+    emps = res
 
     //console.log('res res.rows[0] ' + res.rows[0])
   } catch (e) {
@@ -617,6 +618,42 @@ export const getEmployees = async limit => {
 
     return emps
   }
+}
+
+export const getStatistics = async limit => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const text =
+    'SELECT * FROM "public"."Survey_Statistics" ORDER BY "public"."Survey_Statistics"."statistic_id" DESC LIMIT $1'
+
+  const values = [limit]
+
+  const query = {
+    text: text,
+    values: values
+  }
+
+  var stats = ''
+  try {
+    await client.connect()
+    var res = await client.query(query)
+
+    stats = res
+  } catch (error) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+
+    return stats
+  }
+
+  return stats
 }
 
 export const getQuizOrderByIdDesc = async (limit, offset) => {
@@ -641,6 +678,39 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
     var res = await client.query(queryCurrentQuizId)
 
     quizes = res.rows
+
+    //console.log('res res.rows[0] ' + res.rows[0])
+  } catch (e) {
+    console.log('error connect to db ' + e.stack)
+    console.error(e.stack)
+  } finally {
+    client.end()
+
+    return quizes
+  }
+}
+
+export const getSurveysOrderByIdDesc = async limit => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryCurrentQuizId = {
+    text: 'SELECT * FROM "public"."quiz" ORDER BY "public"."quiz"."id" DESC LIMIT $1',
+    values: [limit]
+  }
+
+  let quizes = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryCurrentQuizId)
+
+    quizes = res
 
     //console.log('res res.rows[0] ' + res.rows[0])
   } catch (e) {
@@ -693,6 +763,36 @@ export const getQuestionMetricSubMetricQuestionBy = async questionId => {
   //console.log('questionMetricSubQuest ' + questionMetricSubQuest)
 
   return questionMetricSubQuest
+}
+
+export const getQuestionsOrderDesc = async limit => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryMetric = {
+    text: 'SELECT *  FROM "public"."question-list" ORDER BY "public"."question-list"."id" DESC LIMIT $1',
+    values: [limit]
+  }
+
+  var questions = 'metric not found by questionId :actions.js'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryMetric)
+
+    questions = res
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return questions
 }
 
 export const getAdvicesTexts = async category => {

@@ -17,17 +17,23 @@ import OpenAI from 'openai'
 //reverse proxy api
 async function makeOPENCHATAIGetRequest(message) {
   const openai = new OpenAI({
-    //http://168.63.76.32:3128
     apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
   })
 
-  // Configure the default for all requests:
-  //var agent = new HttpsProxyAgent('https://217.160.99.39:80')
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
+    model: 'gpt-3.5-turbo-0125'
+  })
 
-  //const completion = await openai.chat.completions.create({
-  //  messages: [{ role: 'system', content: 'You are a helpful assistant.' }],
-  //  model: 'gpt-3.5-turbo-0125'
-  //})
+  console.log(completion.choices[0])
+
+  return completion.choices[0].message
+}
+
+export async function makeOPENCHATAIAPIVectorStoreRequest() {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
+  })
 
   //console.log(completion.choices[0])
 
@@ -39,9 +45,21 @@ async function makeOPENCHATAIGetRequest(message) {
   //  name: 'Surveys.json'
   //})
 
-  const vectorStoreFiles = await openai.beta.vectorStores.files.list('vs_qIjt5szPOVqtyifTrOLFde1C')
+  //const vectorStoreFiles = await openai.beta.vectorStores.files.list('vs_qIjt5szPOVqtyifTrOLFde1C')
 
-  console.log(vectorStoreFiles)
+  const vectorStores = await openai.beta.vectorStores.list()
+
+  console.log(vectorStores)
+
+  console.log('json ' + JSON.stringify(vectorStores))
+
+  console.log('json data' + JSON.stringify(vectorStores.data))
+
+  for (var i = 0; i < vectorStores.data.length; i++) {
+    var jsonDatai = vectorStores.data[i]
+
+    console.log(i + 'json data i ' + JSON.stringify(jsonDatai))
+  }
 
   //const deletedVectorStoreFile = await openai.beta.vectorStores.files.del('vs_qIjt5szPOVqtyifTrOLFde1C', 'Surveys.json')
   //
