@@ -13,13 +13,14 @@ import OpenAI from 'openai'
 //})
 //  HttpsProxyAgent: new HttpsProxyAgent('http://168.63.76.32:3128'),
 //httpAgent: new HttpsProxyAgent('http://hroomdeveloper-ai-proxy.hf.space:7860'), /// /api/v1' chat/completions
-const openai = new OpenAI({
-  //http://168.63.76.32:3128
-  apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
-})
 
 //reverse proxy api
 async function makeOPENCHATAIGetRequest(message) {
+  const openai = new OpenAI({
+    //http://168.63.76.32:3128
+    apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
+  })
+
   // Configure the default for all requests:
   //var agent = new HttpsProxyAgent('https://217.160.99.39:80')
 
@@ -30,7 +31,7 @@ async function makeOPENCHATAIGetRequest(message) {
 
   //console.log(completion.choices[0])
 
-  const vectorStores = await openai.beta.vectorStores.list()
+  //const vectorStores = await openai.beta.vectorStores.list()
 
   //console.log(vectorStores)
 
@@ -38,7 +39,22 @@ async function makeOPENCHATAIGetRequest(message) {
   //  name: 'Surveys.json'
   //})
 
-  console.log('vector store list result ' + vectorStores + ' json stringify ' + JSON.stringify(vectorStores))
+  const vectorStoreFiles = await openai.beta.vectorStores.files.list('vs_qIjt5szPOVqtyifTrOLFde1C')
+
+  console.log(vectorStoreFiles)
+
+  //const deletedVectorStoreFile = await openai.beta.vectorStores.files.del('vs_qIjt5szPOVqtyifTrOLFde1C', 'Surveys.json')
+  //
+  //console.log(deletedVectorStoreFile)
+  //
+  //
+  //const myVectorStoreFileBatch = await openai.beta.vectorStores.fileBatches.create(
+  //  "vs_qIjt5szPOVqtyifTrOLFde1C",
+  //  {
+  //    file_ids: ["Surveys.json"]
+  //  }
+  //);
+  //console.log(myVectorStoreFileBatch);
 
   return vectorStores
 

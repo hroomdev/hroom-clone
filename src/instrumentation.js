@@ -170,15 +170,9 @@ export async function register() {
 
   //var advice4 = await saveAIAdvice(promt4)
 
-  var advice4 = await saveAIAdvice('ping this vpn infrastructure test *')
+  //var advice4 = await saveAIAdvice('ping this vpn infrastructure test *')
 
-  console.log('register hook end' + advice4)
+  //console.log('register hook end' + advice4)
 
   //await updateCacheData()
-
-  //var advices = await getAIAdvices('3')
-
-  //for (var i = 0; i < advices.length; i++) {
-  //  console.log('advice readed ' + advices[i])
-  //}
 }

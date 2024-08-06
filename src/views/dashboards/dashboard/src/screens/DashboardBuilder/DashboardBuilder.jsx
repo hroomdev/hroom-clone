@@ -10,6 +10,7 @@ const local = 'ru-RU'
 
 import { formatDistanceToNow, subDays, intervalToDuration } from 'date-fns'
 
+import { Item, preload, checkIsAvailable, updateCacheData } from './../../../../../../app/server/dashboarddbcache'
 import DashboardCard from './../../DashboardCard'
 import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
 import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
@@ -38,19 +39,13 @@ const options = {
 var initialMetricByTeam = 'Ambassadorship'
 var initialTimeInterval = 'quarter'
 
-//AI advices
-var initiaLCategory3Advice1 = 'Найдите слабые метрики команд и ознакомьтесь с советами помощника.hc'
-var initiaLCategory3Advice2 = 'Проанализируйте срезы в разделе Аналитика, чтобы исследовать слабые метрики глубже.hc'
-var initiaLCategory3Advice3 =
-  'Не знаете с чего начать? Спросите у помощника как улучшить слабые метрики или что делать дальше.hc'
-
-export const DashboardBuilder = ({ companyId, data }) => {
+export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3Adv2, initialCat3Adv3 }) => {
   var depVar = 1
 
   //ai advices
-  const [category3Advice1, setCategory3Advice1] = useState(initiaLCategory3Advice1) // Declare a state variable...
-  const [category3Advice2, setCategory3Advice2] = useState(initiaLCategory3Advice2) // Declare a state variable...
-  const [category3Advice3, setCategory3Advice3] = useState(initiaLCategory3Advice3) // Declare a state variable...
+  const [category3Advice1, setCategory3Advice1] = useState(initialCat3Adv1) // Declare a state variable...
+  const [category3Advice2, setCategory3Advice2] = useState(initialCat3Adv2) // Declare a state variable...
+  const [category3Advice3, setCategory3Advice3] = useState(initialCat3Adv3) // Declare a state variable...
 
   //user data
   const [selectedEngagementMetricKey, setSelected] = useState(initialMetricByTeam) // Declare a state variable...
@@ -87,19 +82,16 @@ export const DashboardBuilder = ({ companyId, data }) => {
 
   useEffect(() => {
     const f = async () => {
-      //if (loading) return :todo change id to company ID
-      return
-
-      if (checkIsAvailable(id) == false) {
+      if (checkIsAvailable(companyId) == false) {
         console.log('checkIsAvailable(id) == false : DaSHBOARDbUILDER ')
 
         return
       } else {
-        console.log('available ')
+        console.log('available ' + companyId)
       }
 
-      console.log('getDashboardData from db available id  ' + id)
-      var data = Item(id)
+      console.log('getDashboardData from db available id  ' + companyId)
+      var data = Item(companyId)
 
       console.log('call fetch data from f data ' + JSON.stringify(data))
 
