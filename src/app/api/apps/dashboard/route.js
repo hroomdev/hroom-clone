@@ -17,7 +17,7 @@ export async function GET() {
   //if (!filteredData) {
   //  redirect('/not-found')
   //}
-  var db = isAvailable ? Item(companyId) : null
+  var db = isAvailable ? await Item(companyId) : null
 
   //return isAvailable ? Item(companyId) : null
 

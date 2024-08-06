@@ -1,4 +1,6 @@
-import React, { useCallback, cache } from 'react'
+'use server'
+
+//import React, { useCallback, cache } from 'react'
 
 import { getDashboardData as getUserData } from '@/app/server/dashboardstrategy'
 
@@ -24,7 +26,7 @@ export const updateCacheData = async () => {
   console.log('company id ' + 1)
 
   resultAllIds[1] = await preload(1)
-  console.log('updateCacheData checkisavail ' + checkIsAvailable(1)) //+ JSON.stringify(db)
+  console.log('updateCacheData checkisavail ' + (await checkIsAvailable(1))) //+ JSON.stringify(db)
 
   sometext = sometext + 'afteripdatecachedata'
 }
@@ -42,15 +44,15 @@ export async function preload(id) {
   return userData
 }
 
-export const Item = id => {
+export const Item = async id => {
   return resultAllIds[id]
 }
 
-export const resultAllIds = []
+const resultAllIds = []
 
 var sometext = ''
 
-export const checkIsAvailable = id => {
+export const checkIsAvailable = async id => {
   var isAvailable = resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
 
   console.log('|' + sometext + '|')

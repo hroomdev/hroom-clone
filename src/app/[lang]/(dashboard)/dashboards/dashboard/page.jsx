@@ -30,9 +30,7 @@ const Dashboard = async () => {
 
   var data = getMockDashboardData(companyId)
 
-  updateCacheData().then(() => {
-    data = Item(companyId)
-  })
+  updateCacheData()
 
   var advices = await getAIAdvices('3')
 
@@ -40,14 +38,14 @@ const Dashboard = async () => {
     console.log('advice readed ' + advices[i])
   }
 
-  if (checkIsAvailable(companyId) == false) {
-    console.log('checkIsAvailable(id) == false : DaSHBOARDbUILDER ')
+  if ((await checkIsAvailable(companyId)) == false) {
+    console.log('checkIsAvailable(id) == false : page ')
 
     data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)
     data.nextQuizStarts = data.nextQuizStarts.toLocaleDateString(local, options)
   } else {
     console.log('available ')
-    data = Item(companyId)
+    data = await Item(companyId)
   }
 
   return (

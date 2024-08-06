@@ -10,6 +10,8 @@ const local = 'ru-RU'
 
 import { formatDistanceToNow, subDays, intervalToDuration } from 'date-fns'
 
+import { getMockDashboardData } from '@/app/server/MockData'
+
 import { Item, preload, checkIsAvailable, updateCacheData } from './../../../../../../app/server/dashboarddbcache'
 import DashboardCard from './../../DashboardCard'
 import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
@@ -82,7 +84,13 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
 
   useEffect(() => {
     const f = async () => {
-      if (checkIsAvailable(companyId) == false) {
+      var data = getMockDashboardData(companyId)
+
+      await updateCacheData()
+
+      //return
+
+      if ((await checkIsAvailable(companyId)) == false) {
         console.log('checkIsAvailable(id) == false : DaSHBOARDbUILDER ')
 
         return
@@ -91,9 +99,10 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
       }
 
       console.log('getDashboardData from db available id  ' + companyId)
-      var data = Item(companyId)
 
-      console.log('call fetch data from f data ' + JSON.stringify(data))
+      var data = await Item(companyId)
+
+      console.log('cnow to next ' + data.nowToNext.toString())
 
       if (data == undefined) return
 
@@ -106,6 +115,9 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
       setParticipantsQuizAll(data.participantsQuizAll)
       setTotalRevenueStats(data.totalRevenueStats)
       setSeriesApexLineMetrics(data.seriesApexLineMetrics)
+
+      console.log('set cur to now :Dashboardbuilder.jsx' + data.curToNow.toString())
+
       setCategoriesApexLineMetrics(data.categoriesApexLineMetrics)
       setTransactionsMetricStats(data.transactionsMetricStats)
       setTransactionsMetricDiffStats(data.transactionsMetricDiffStats)
@@ -113,6 +125,7 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
       setTeamsMetricDiffStats(data.teamsMetricDiffStats)
       setAcutelys(data.acutelys)
       setTeamMetricStory(data.teamsMetricStory)
+
       console.log(JSON.stringify(data))
     }
 
