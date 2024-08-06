@@ -41,11 +41,12 @@ const local = 'ru-RU'
 export const getDashboardData = async id => {
   console.log('loading false -> set loading true : getDashboardData... ')
 
-  if ((await checkIsAvailable(id)) == true) {
-    console.log('available cached version return : dashboardstrategy')
-
-    return await Item(id)
-  }
+  //cache forever
+  //if ((await checkIsAvailable(id)) == true) {
+  //  console.log('available cached version return : dashboardstrategy')
+  //
+  //  return await Item(id)
+  //}
 
   var mockData = getMockDashboardData(id)
 
