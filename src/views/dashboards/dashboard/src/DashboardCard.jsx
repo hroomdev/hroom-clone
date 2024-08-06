@@ -33,8 +33,6 @@ const DashboardCard = props => {
   // Props
   const { title, stats, trendNumber, avatarIcon, color, ritoric, chipLabel } = props
 
-  console.log('color ' + color)
-
   return (
     <Card color={color || 'primary'}>
       <CardContent className='flex flex-col gap-2'>

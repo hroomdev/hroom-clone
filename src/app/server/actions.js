@@ -475,7 +475,7 @@ export const getQuestData = async () => {
   return quizQuestions
 }
 
-export const getSelectedAnswersByQuizId = async id => {
+export const getSelectedAnswersByOrderDescQuizId = async (id, limit) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -485,8 +485,8 @@ export const getSelectedAnswersByQuizId = async id => {
   })
 
   const selectedAnswersIds = {
-    text: 'SELECT * FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."quizId" = $1',
-    values: [id],
+    text: 'SELECT * FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."quizId" = $1 ORDER BY "public"."selectedAnswers"."id" DESC LIMIT $2',
+    values: [id, limit],
     rowMode: 'array'
   }
 

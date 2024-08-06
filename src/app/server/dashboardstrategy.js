@@ -5,7 +5,12 @@ import Grid from '@mui/material/Grid'
 
 import ruLocale from 'date-fns/locale/ru'
 
+var formatDate = require('date-format')
+
 import { formatDistanceToNow, intervalToDuration, format } from 'date-fns'
+
+import generateOptions, { getRandomInt } from './../../../src/components/dialogs/create-app/GenerateQuizSelectedOptions'
+import { checkValidJoinedStr } from './../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
 import { DashboardBuilder } from '@views/dashboards/dashboard/src/screens/DashboardBuilder'
 
@@ -17,14 +22,21 @@ import { teamsru } from '@/views/dashboards/dashboard/src/screens/DashboardBuild
 import { checkIsAvailable, Item } from '@/app/server/dashboarddbcache'
 
 import { ratingMax, midRangeRating, cohortsLevelsPercents, cohortsAcutesAbs } from './const'
+
+import { getStatsMetrics } from '@/app/server/statistics'
+
 import {
-  getSelectedAnswersByQuizId,
+  getSelectedAnswersByOrderDescQuizId,
   getCurrentQuiz,
   getQuizOrderByIdDesc,
   getQuestGroupTypeBy,
   getSelectedOptions,
   getQuestGroupGroupBy,
-  getQuestionMetricSubMetricQuestionBy
+  getQuestionMetricSubMetricQuestionBy,
+  getEmployees,
+  createSelectedAnswersCurrentQuiz,
+  createStatistics,
+  createQuiz
 } from './actions'
 
 import { getMockDashboardData } from './MockData'
@@ -37,6 +49,146 @@ import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens
 import { submetricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Submetrics'
 
 const local = 'ru-RU'
+
+export const generateQuiz = async () => {
+  console.log('createQuiz enter')
+
+  //var randomDayNum = 6 + getRandomInt(15) //[7,21]
+
+  //console.log(' randomDayNum  ' + randomDayNum)
+
+  //const dates = generateDates(new Date(2024, 6, randomDayNum), new Date(2023, 6, randomDayNum + 7), 1)
+  //const date = dates[0]
+  const dateNow = new Date()
+
+  var dateStampNowParsed = Date.parse(dateNow)
+  var dateNowParsed = new Date(dateStampNowParsed)
+
+  //const date = dateNow.getDate()
+
+  const endDate = new Date()
+
+  endDate.setDate(dateNowParsed.getDate() + 7)
+
+  console.log('date now' + dateNow)
+
+  console.log('end date' + endDate)
+
+  var formattedDateNow = formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, dateNow)
+  var formattedEndDate = formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, endDate)
+
+  var quizTypeId = '1'
+  var auditory = '300'
+
+  function makeid(length) {
+    let result = ''
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    let counter = 0
+
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+      counter += 1
+    }
+
+    return result
+  }
+
+  var randomName = makeid(10)
+
+  let c = await createQuiz(formattedDateNow, quizTypeId, auditory, formattedEndDate, randomName)
+
+  console.log('create quiz result ' + c)
+}
+
+export const generateStatistics = async (limitQuiz, limitAnswers) => {
+  console.log('generateStatistics  ' + limitQuiz + ' limitAnswers ' + limitAnswers)
+
+  let quizes = await getQuizOrderByIdDesc(limitQuiz, 0)
+
+  quizes = quizes.filter(q => {
+    return q !== undefined
+  })
+
+  for (var quizI = quizes.length - 1; quizI > -1; quizI--) {
+    var quiz = quizes[quizI]
+    var quizSplittedStr = quiz.toString().split(',')
+
+    var quizIdIdx = await dbQuizIdIdx()
+    let quizId = quizSplittedStr[quizIdIdx]
+
+    var selectedAnswers = await getSelectedAnswersByOrderDescQuizId(quizId, limitAnswers)
+    var selAnsLen = selectedAnswers.length
+
+    for (var i = 0; i < selAnsLen; i++) {
+      var selectedAnswer = selectedAnswers[i]
+
+      var statsResult = await getStatsMetrics(quiz, selectedAnswer)
+
+      //var stat_id = 1 //increase  auto
+      var survey_id = statsResult[0] // first from quiz table 1,15-24
+      var employee_id = statsResult[1] //   1,2,3,4 query from selectedAnswers
+      var engagement = statsResult[2] //engagement_score calculate
+      var satisfaction = statsResult[3] //engagement_score calculate
+      var loyalty = statsResult[4]
+      var total_answers = statsResult[5] //query from selectedAnswers
+      var negative_reponses = statsResult[6] //always zero
+
+      let c = createStatistics(
+        survey_id,
+        employee_id,
+        engagement,
+        satisfaction,
+        loyalty,
+        total_answers,
+        negative_reponses
+      )
+
+      console.log('create stats  ' + c)
+
+      //break
+    }
+
+    //break
+  }
+}
+
+export const generateSelectedOptions = async () => {
+  console.log('onclick menuitem')
+
+  var countGenerated = 20
+  var maximum = 10
+  var generatedOptions = generateOptions(countGenerated, maximum)
+  let optionsStr = generatedOptions.join(',')
+
+  var maxEmps = 10
+
+  var employeeId = getRandomInt(maxEmps)
+
+  var employees = await getEmployees(maxEmps)
+
+  console.log('employees l ' + employees.length + 'employeeId ' + employeeId)
+
+  var departmentId = 7
+
+  for (var i = 0; i < employees.length; i++) {
+    if (i == employeeId - 1) {
+      departmentId = employees[i].toString().split(',')[1]
+
+      console.log('departmentId ' + departmentId + ' ')
+    }
+  }
+
+  console.log('agen emplid ' + employeeId + 'dep id ' + departmentId)
+
+  if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
+    console.log('generated quiz is not valid! not sending to db')
+  } else {
+    let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId, departmentId)
+
+    console.log('options   ' + c)
+  }
+}
 
 export const getDashboardData = async id => {
   console.log('loading false -> set loading true : getDashboardData... ')
@@ -296,7 +448,7 @@ export const getCurrentQuizAuditory = async () => {
   let currentQuizId = currentQuizIdAudi[0]
   let currentQuizAudi = currentQuizIdAudi[1]
 
-  var selectedAnswers = await getSelectedAnswersByQuizId(currentQuizId)
+  var selectedAnswers = await getSelectedAnswersByOrderDescQuizId(currentQuizId, currentQuizAudi)
 
   return [selectedAnswers.length, currentQuizAudi]
 }
@@ -321,7 +473,11 @@ export const getCurrentQuizIdAudi = async () => {
 
     var quizIdIdx = await dbQuizIdIdx()
 
+    console.log('quizIdIdx' + quizIdIdx)
+
     var currentQuizId = Number.parseInt(splittedStr[quizIdIdx])
+
+    console.log('currentQuizId' + currentQuizId)
 
     var auditoryIdx = await dbQuizAuditoryIdx()
 
@@ -343,7 +499,12 @@ export const getEngageMetrics = async (quiz, totalRevenueStats, metricsStats, te
   var quizSplittedStr = quiz.toString().split(',')
 
   var quizTypeIdx = await dbQuizTypeIdx()
+
   var quizGroupId = quizSplittedStr[quizTypeIdx]
+
+  var auditoryIdx = await dbQuizAuditoryIdx()
+
+  var quizAuditory = quizSplittedStr[auditoryIdx]
 
   let quizGroupType = await getQuestGroupTypeBy(quizGroupId)
 
@@ -360,7 +521,7 @@ export const getEngageMetrics = async (quiz, totalRevenueStats, metricsStats, te
   var quizIdIdx = await dbQuizIdIdx()
   let quizId = quizSplittedStr[quizIdIdx]
 
-  var selectedAnswers = await getSelectedAnswersByQuizId(quizId)
+  var selectedAnswers = await getSelectedAnswersByOrderDescQuizId(quizId, quizAuditory)
 
   var quizCountParticipators = selectedAnswers.length //c
 

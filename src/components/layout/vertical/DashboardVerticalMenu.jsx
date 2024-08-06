@@ -45,7 +45,7 @@ import employeeId, {
 import { getStatsMetrics } from '@/app/server/statistics'
 
 import {
-  getSelectedAnswersByQuizId,
+  getSelectedAnswersByOrderDescQuizId,
   getCurrentQuiz,
   getQuizOrderByIdDesc,
   getQuestGroupTypeBy,
@@ -57,6 +57,8 @@ import {
   createStatistics,
   getEmployees
 } from '@/app/server/actions'
+
+import { generateSelectedOptions, generateStatistics, generateQuiz } from '@/app/server/dashboardstrategy'
 
 import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
@@ -118,40 +120,8 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           target='_blank'
           icon={<i className='ri-star-smile-line' />}
           onClick={async () => {
-            console.log('onclick menuitem')
-
-            var countGenerated = 20
-            var maximum = 10
-            var generatedOptions = generateOptions(countGenerated, maximum)
-            let optionsStr = generatedOptions.join(',')
-
-            var maxEmps = 10
-
-            var employeeId = getRandomInt(maxEmps)
-
-            var employees = await getEmployees(maxEmps)
-
-            console.log('employees l ' + employees.length + 'employeeId ' + employeeId)
-
-            var departmentId = 7
-
-            for (var i = 0; i < employees.length; i++) {
-              if (i == employeeId - 1) {
-                departmentId = employees[i].toString().split(',')[1]
-
-                console.log('departmentId ' + departmentId + ' ')
-              }
-            }
-
-            console.log('agen emplid ' + employeeId + 'dep id ' + departmentId)
-
-            if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
-              console.log('generated quiz is not valid! not sending to db')
-            } else {
-              let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId, departmentId)
-
-              console.log('options   ' + c)
-            }
+            await generateSelectedOptions() //generate 1 quiz 1 employee last statistic
+            await generateStatistics(1, 1) //статистику только по последнему опросу только по последнему ответу
           }}
         >
           {'заполнить опрос'}
@@ -159,50 +129,9 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem
           icon={<i className='ri-wechat-line' />}
           onClick={async () => {
-            //var randomDayNum = 6 + getRandomInt(15) //[7,21]
-
-            //console.log(' randomDayNum  ' + randomDayNum)
-
-            //const dates = generateDates(new Date(2024, 6, randomDayNum), new Date(2023, 6, randomDayNum + 7), 1)
-            //const date = dates[0]
-            const dateNow = new Date()
-
-            var dateStampNowParsed = Date.parse(dateNow)
-            var dateNowParsed = new Date(dateStampNowParsed)
-
-            //const date = dateNow.getDate()
-
-            const endDate = new Date()
-
-            endDate.setDate(dateNowParsed.getDate() + 7)
-
-            console.log('end date' + endDate)
-
-            var formattedDateNow = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, dateNow)
-            var formattedEndDate = format(format.ISO8601_WITH_TZ_OFFSET_FORMAT, endDate)
-
-            var quizTypeId = '1'
-            var auditory = '300'
-
-            function makeid(length) {
-              let result = ''
-              const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-              const charactersLength = characters.length
-              let counter = 0
-
-              while (counter < length) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength))
-                counter += 1
-              }
-
-              return result
-            }
-
-            var randomName = makeid(10)
-
-            let c = await createQuiz(formattedDateNow, quizTypeId, auditory, formattedEndDate, randomName)
-
-            console.log('create quiz result ' + c)
+            console.log('create quiz before ener')
+            await generateQuiz()
+            console.log('create quiz after exit')
           }}
         >
           {'создать опрос'}
@@ -215,53 +144,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           target='_blank'
           icon={<i className='ri-team-line' />}
           onClick={async () => {
-            let quizes = await getQuizOrderByIdDesc(12, 0)
-
-            quizes = quizes.filter(q => {
-              return q !== undefined
-            })
-
-            for (var quizI = quizes.length - 1; quizI > -1; quizI--) {
-              var quiz = quizes[quizI]
-              var quizSplittedStr = quiz.toString().split(',')
-
-              var quizIdIdx = await dbQuizIdIdx()
-              let quizId = quizSplittedStr[quizIdIdx]
-
-              var selectedAnswers = await getSelectedAnswersByQuizId(quizId)
-              var selAnsLen = selectedAnswers.length
-
-              for (var i = 0; i < selAnsLen; i++) {
-                var selectedAnswer = selectedAnswers[i]
-
-                var statsResult = await getStatsMetrics(quiz, selectedAnswer)
-
-                //var stat_id = 1 //increase  auto
-                var survey_id = statsResult[0] // first from quiz table 1,15-24
-                var employee_id = statsResult[1] //   1,2,3,4 query from selectedAnswers
-                var engagement = statsResult[2] //engagement_score calculate
-                var satisfaction = statsResult[3] //engagement_score calculate
-                var loyalty = statsResult[4]
-                var total_answers = statsResult[5] //query from selectedAnswers
-                var negative_reponses = statsResult[6] //always zero
-
-                let c = createStatistics(
-                  survey_id,
-                  employee_id,
-                  engagement,
-                  satisfaction,
-                  loyalty,
-                  total_answers,
-                  negative_reponses
-                )
-
-                console.log('create stats  ' + c)
-
-                //break
-              }
-
-              //break
-            }
+            await generateStatistics(12, 100) //статистику
           }}
         >
           {'генерировать статистику'}

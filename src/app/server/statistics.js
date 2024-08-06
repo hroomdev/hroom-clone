@@ -1,7 +1,7 @@
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 
 import {
-  getSelectedAnswersByQuizId,
+  getSelectedAnswersByOrderDescQuizId,
   getCurrentQuiz,
   getQuizOrderByIdDesc,
   getQuestGroupTypeBy,
@@ -55,9 +55,12 @@ export const getStatsMetrics = async (quiz, selectedAnswer) => {
   var quizIdIdx = await dbQuizIdIdx()
   let quizId = quizSplittedStr[quizIdIdx]
 
+  var auditoryId = await dbQuizAuditoryIdx()
+  var quizAuditory = quizSplittedStr[auditoryId]
+
   survey_id = quizId //out parameter
 
-  var selectedAnswers = await getSelectedAnswersByQuizId(quizId)
+  var selectedAnswers = await getSelectedAnswersByOrderDescQuizId(quizId, quizAuditory)
 
   //transactions stats START/////////////////////////////////////
   let quizGroupGroup = await getQuestGroupGroupBy(quizGroupId) //'1,2,3,4,5,6,32'..

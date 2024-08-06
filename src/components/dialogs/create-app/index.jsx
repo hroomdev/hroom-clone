@@ -46,6 +46,9 @@ import Submit from './Submit'
 import StepperWrapper from '@core/styles/stepper'
 
 import { getQuestData as dbData, createSelectedAnswersCurrentQuiz } from '@/app/server/actions'
+
+import { generateStatistics } from '@/app/server/dashboardstrategy'
+
 import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
 const initialSteps = 0
@@ -201,8 +204,8 @@ const CreateApp = ({ open, setOpen }) => {
         if (checkValidJoinedStr(optionsStr, selectedOptions.length, 1, 10, 0) == false) {
           console.logerror('generate quiz report error check validity of the slected options answers before send')
         } else {
-          let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId,departmentId)
-
+          let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId, departmentId)
+          await generateStatistics(1, 1)
           console.log('selected options   ' + c)
         }
       })
