@@ -160,11 +160,13 @@ const DashboardBarChart = ({
         var categoryStatTeam = teamStatsFiltered[metricsKeyCategorySel][i].toFixed(1)
 
         //console.log(' ' + categoryStatTeam)
+
         seriesData.push(categoryStatTeam)
         var keyTeamName = Reflect.ownKeys(teamsru)[i]
         var teamName = teamsru[keyTeamName]
 
         xAxisNames.push(teamName)
+
         //console.log(' xaxis ' + teamName)
       }
     } else {
