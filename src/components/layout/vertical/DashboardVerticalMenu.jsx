@@ -7,6 +7,12 @@ import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
 
 // Third-party Imports
+//dictionary['navigation'].analytics
+///*dictionary['navigation'].ideas*/
+//* dictionary['navigation'].commentaries*/
+//dictionary['navigation'].quizes
+//dictionary['navigation'].teams
+
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Component Imports
@@ -106,7 +112,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           target='_blank'
           icon={<i className='ri-bar-chart-box-line' />}
         >
-          {dictionary['navigation'].analytics}
+          {'                    '}
         </MenuItem>
         <MenuItem
           target='_blank'
@@ -148,7 +154,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             }
           }}
         >
-          {dictionary['navigation'].ideas}
+          {'заполнить опрос'}
         </MenuItem>
         <MenuItem
           icon={<i className='ri-wechat-line' />}
@@ -199,10 +205,10 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             console.log('create quiz result ' + c)
           }}
         >
-          {dictionary['navigation'].commentaries}
+          {'создать опрос'}
         </MenuItem>
         <MenuItem href={`/${locale}/pages/dialog-examples`} icon={<i className='ri-calendar-line' />}>
-          {dictionary['navigation'].quizes}
+          {'пройти самому опрос'}
         </MenuItem>
         <MenuItem
           href={`${process.env.NEXT_PUBLIC_DOCS_URL}`}
@@ -258,7 +264,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
             }
           }}
         >
-          {dictionary['navigation'].teams}
+          {'генерировать статистику'}
         </MenuItem>
       </Menu>
     </ScrollWrapper>
