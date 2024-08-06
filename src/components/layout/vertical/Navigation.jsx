@@ -101,13 +101,15 @@ const Navigation = props => {
   }
 
   useEffect(() => {
-    //console.log('settings layout is' + settings.layout + '  isCollapsed' + isCollapsed)
+    console.log('settings layout is' + settings.layout + '  isCollapsed' + isCollapsed)
+
     //collapseVerticalNav(isCollapsed)
-    //if (settings.layout === 'collapsed') {
-    //  collapseVerticalNav(true)
-    //} else {
-    //  collapseVerticalNav(false)
-    //}
+
+    if (settings.layout === 'collapsed') {
+      collapseVerticalNav(true)
+    } else {
+      collapseVerticalNav(false)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.layout])
 
@@ -115,6 +117,8 @@ const Navigation = props => {
     // eslint-disable-next-line lines-around-comment
     // Sidebar Vertical Menu
     <VerticalNav
+      updateSettingsMethod={updateSettings}
+      collapseVerticalNav={collapseVerticalNav}
       customStyles={navigationCustomStyles(verticalNavOptions, theme)}
       collapsedWidth={navCollapsedWidth}
       backgroundColor='var(--mui-palette-background-default)'
@@ -131,17 +135,6 @@ const Navigation = props => {
         <Link href={getLocalizedUrl('/', locale)}>
           <Logo />
         </Link>
-
-        {/* // todo find way to call onCLick updateSettings in onHover VerticalMenu Menu */}
-        {/* {!(isCollapsed && !isHovered) && (*/}
-        {/*   <NavCollapseIcons*/}
-        {/*     lockedIcon={<i className='ri-radio-button-line text-xl' />}*/}
-        {/*     unlockedIcon={<i className='ri-checkbox-blank-circle-line text-xl' />}*/}
-        {/*     closeIcon={<i className='ri-close-line text-xl' />}*/}
-        {/*     className='text-textSecondary'*/}
-        {/*     onClick={() => updateSettings({ layout: !isCollapsed ? 'collapsed' : 'vertical' })}*/}
-        {/*   />*/}
-        {/* )}                                                                                             */}
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
 

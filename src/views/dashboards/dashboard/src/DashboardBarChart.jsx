@@ -45,7 +45,7 @@ const DashboardBarChart = ({
   teamStats,
   teamMetricStory
 }) => {
-  console.log(JSON.stringify(teamMetricStory))
+  //console.log(JSON.stringify(teamMetricStory))
 
   var seriesData = []
   var xAxisNames = []
@@ -159,13 +159,13 @@ const DashboardBarChart = ({
       for (var i = 0; i < teamCountTiDisplay; i++) {
         var categoryStatTeam = teamStatsFiltered[metricsKeyCategorySel][i].toFixed(1)
 
-        console.log(' ' + categoryStatTeam)
+        //console.log(' ' + categoryStatTeam)
         seriesData.push(categoryStatTeam)
         var keyTeamName = Reflect.ownKeys(teamsru)[i]
         var teamName = teamsru[keyTeamName]
 
         xAxisNames.push(teamName)
-        console.log(' xaxis ' + teamName)
+        //console.log(' xaxis ' + teamName)
       }
     } else {
       console.error(

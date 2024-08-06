@@ -30,7 +30,7 @@ const VerticalNav = props => {
   const {
     width = 236,
     collapsedWidth = 80,
-    defaultCollapsed = false,
+    defaultCollapsed = true, //false
     backgroundColor = 'white',
     backgroundImage,
     breakpoint = 'lg',
@@ -53,6 +53,9 @@ const VerticalNav = props => {
 
   // Hooks
   const {
+    toggleVerticalNav,
+    hoverVerticalNav,
+    collapseVerticalNav,
     updateVerticalNavState,
     isCollapsed: isCollapsedContext,
     width: widthContext,
@@ -80,13 +83,15 @@ const VerticalNav = props => {
     })
 
     if (!breakpointReached) {
+      console.log('!breakpointReached')
       updateVerticalNavState({ isToggled: false })
       verticalNavCollapsedRef.current && updateVerticalNavState({ isCollapsed: true })
     } else {
+      console.log('breakpointReached')
       if (isCollapsedContext && !verticalNavCollapsedRef.current) {
         verticalNavCollapsedRef.current = true
       }
-
+      console.log('is hovered context' + isHoveredContext)
       isCollapsedContext && updateVerticalNavState({ isCollapsed: false })
       isHoveredContext && updateVerticalNavState({ isHovered: false })
     }
@@ -94,6 +99,7 @@ const VerticalNav = props => {
   }, [width, collapsedWidth, scrollWithContent, breakpointReached, updateVerticalNavState])
   useEffect(() => {
     if (defaultCollapsed) {
+      console.log('defaultCollapsed')
       updateVerticalNavState({
         isCollapsed: defaultCollapsed,
         isToggled: false
@@ -107,6 +113,7 @@ const VerticalNav = props => {
         expanding: false,
         collapsing: false
       })
+      console.log('updateVerticalNavState isCollapsedContext after time transition duration')
     }, transitionDuration)
 
     if (!isCollapsedContext && !breakpointReached && verticalNavCollapsedRef.current) {
@@ -118,11 +125,16 @@ const VerticalNav = props => {
   // Handle Backdrop(Content Overlay) Click
   const handleBackdropClick = () => {
     // Close the verticalNav
+    console.log('handleBackdropClick')
     updateVerticalNavState({ isToggled: false })
   }
 
   // Handle VerticalNav Hover Event
   const handleVerticalNavHover = () => {
+    console.log('handleVerticalNavHover')
+    collapseVerticalNav(false)
+    hoverVerticalNav(true)
+    //toggleVerticalNav(false)
     /* If verticalNav is collapsed then only hover class should be added to verticalNav
           and hover functionality should work (expand verticalNav width) */
     if (isCollapsedContext && !isHoveredContext) {
@@ -132,9 +144,14 @@ const VerticalNav = props => {
 
   // Handle VerticalNav Hover Out Event
   const handleVerticalNavHoverOut = () => {
+    console.log('handleVerticalNavHoverOut')
+    collapseVerticalNav(true)
+    hoverVerticalNav(false)
     // If verticalNav is collapsed then only remove hover class should contract verticalNav width
     if (isCollapsedContext && isHoveredContext) {
       updateVerticalNavState({ isHovered: false })
+      //
+      //toggleVerticalNav(true)
     }
   }
 
@@ -170,8 +187,7 @@ const VerticalNav = props => {
         width={widthContext}
         className={verticalNavClasses.container}
         transitionDuration={transitionDurationContext}
-        {...(!isPopoutWhenCollapsedContext &&
-          isCollapsedContext &&
+        {...(!isPopoutWhenCollapsedContext && //          isCollapsedContext &&
           !breakpointReached && {
             onMouseEnter: handleVerticalNavHover,
             onMouseLeave: handleVerticalNavHoverOut
