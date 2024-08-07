@@ -30,11 +30,53 @@ async function makeOPENCHATAIGetRequest(message) {
   return completion.choices[0].message
 }
 
-export async function makeOPENCHATAIAPIVectorStoreRequest() {
+export async function makeOPENCHATAIAPIVectorStoreDELRequest() {
   const openai = new OpenAI({
-    apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
   })
 
+  const deletedVectorStoreFile = await openai.beta.vectorStores.del('vs_qIjt5szPOVqtyifTrOLFde1C')
+
+  console.log(deletedVectorStoreFile)
+
+  //const myVectorStoreFileBatch = await openai.beta.vectorStores.fileBatches.create('vs_qIjt5szPOVqtyifTrOLFde1C', {
+  //  file_ids: ['Surveys.json']
+  //})
+
+  //console.log(myVectorStoreFileBatch);
+
+  return deletedVectorStoreFile
+}
+
+export async function makeOPENCHATAIAPIVectorStoreCreateRequest() {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
+
+  const createVectorStoreResult = await openai.beta.vectorStores.create({
+    name: 'Vector store for hroom',
+    file_ids: ['file_1', 'file_2', 'file_3', 'file_4']
+  })
+
+  console.log(createVectorStoreResult)
+
+  //const myVectorStoreFileBatch = await openai.beta.vectorStores.fileBatches.create('vs_qIjt5szPOVqtyifTrOLFde1C', {
+  //  file_ids: ['Surveys.json']
+  //})
+
+  //console.log(myVectorStoreFileBatch);
+
+  return createVectorStoreResult
+}
+
+export async function makeOPENCHATAIAPIVectorStoreRequest() {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
+  //    project: 'hroom'
   //console.log(completion.choices[0])
 
   //const vectorStores = await openai.beta.vectorStores.list()
@@ -60,19 +102,6 @@ export async function makeOPENCHATAIAPIVectorStoreRequest() {
 
     console.log(i + 'json data i ' + JSON.stringify(jsonDatai))
   }
-
-  //const deletedVectorStoreFile = await openai.beta.vectorStores.files.del('vs_qIjt5szPOVqtyifTrOLFde1C', 'Surveys.json')
-  //
-  //console.log(deletedVectorStoreFile)
-  //
-  //
-  //const myVectorStoreFileBatch = await openai.beta.vectorStores.fileBatches.create(
-  //  "vs_qIjt5szPOVqtyifTrOLFde1C",
-  //  {
-  //    file_ids: ["Surveys.json"]
-  //  }
-  //);
-  //console.log(myVectorStoreFileBatch);
 
   return vectorStores
 
