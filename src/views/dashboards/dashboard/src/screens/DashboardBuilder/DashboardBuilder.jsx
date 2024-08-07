@@ -554,20 +554,18 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
             <DashboardCard
               color={'light'}
               title={category3Advice1}
-              stats={''}
-              trendNumber={''}
               avatarIcon={'ri-car-line'}
               ritoric={'Что делать дальше'}
               chipLabel={'рекомендация'}
+              borderColor='primary'
             ></DashboardCard>
             <DashboardCard
               color={'light'}
               title={category3Advice2}
-              stats={''}
-              trendNumber={''}
               avatarIcon={'ri-car-line'}
               ritoric={'Что делать дальше'}
               chipLabel={'рекомендация'}
+              borderColor='primary'
               style={{
                 height: '255'
               }}
@@ -577,11 +575,10 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
               className={'card-6'}
               color={'light'}
               title={category3Advice3}
-              stats={''}
-              trendNumber={''}
               avatarIcon={'ri-car-line'}
               ritoric={'Что делать дальше'}
               chipLabel={'рекомендация'}
+              borderColor='primary'
             ></DashboardCard>
           </div>
           <div className='row-11' />

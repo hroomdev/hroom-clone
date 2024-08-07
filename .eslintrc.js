@@ -2,7 +2,8 @@ module.exports = {
   "extends": [
     "next/core-web-vitals",
     "plugin:import/recommended",
-    "prettier"
+    "prettier",
+    "plugin:storybook/recommended"
   ],
   "rules": {
     "jsx-a11y/alt-text": "off",

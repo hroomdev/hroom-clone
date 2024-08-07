@@ -87,8 +87,6 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
   )
 }
 
-//theme extend....revert or copy paste this file to commit history 99e8.... commit
-
 let quizGroupTypeId = '1'
 
 const CreateApp = ({ open, setOpen }) => {
