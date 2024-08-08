@@ -41,13 +41,18 @@ const options = {
 var initialMetricByTeam = 'Ambassadorship'
 var initialTimeInterval = 'quarter'
 
-export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3Adv2, initialCat3Adv3 }) => {
+export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsights }) => {
   var depVar = 1
 
-  //ai advices
-  const [category3Advice1, setCategory3Advice1] = useState(initialCat3Adv1) // Declare a state variable...
-  const [category3Advice2, setCategory3Advice2] = useState(initialCat3Adv2) // Declare a state variable...
-  const [category3Advice3, setCategory3Advice3] = useState(initialCat3Adv3) // Declare a state variable...
+  //ai advices insights
+
+  const [insight1, setInsight1] = useState(initialInsights[0]) // Declare a state variable...
+  const [insight2, setInsight2] = useState(initialInsights[1]) // Declare a state variable...
+  const [insight3, setInsight3] = useState(initialInsights[2]) // Declare a state variable...
+
+  const [advice1, setAdvice1] = useState(initialAdivces[0]) // Declare a state variable...
+  const [advice2, setAdvice2] = useState(initialAdivces[1]) // Declare a state variable...
+  const [advice3, setAdvice3] = useState(initialAdivces[2]) // Declare a state variable...
 
   //user data
   const [selectedEngagementMetricKey, setSelected] = useState(initialMetricByTeam) // Declare a state variable...
@@ -253,69 +258,33 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
             </div>
           </div>
           <div className='row-5'>
-            <div className='card-2'>
-              <div className='row-6'>
-                <div className='frame-9'>
-                  <p className='text-9'>
-                    Вопросы, касающиеся личной инициативы и самоорганизации, вызывают смешанные реакции среди
-                    сотрудников, что указывает на необходимость более ясного определения ролей и ожиданий.
-                  </p>
-                </div>
-                <div className='remix-icons-line-wrapper'>
-                  <RemixIconsLineSystemErrorWarningLine1 className='icon-instance-node-2' color='#A189F2' />
-                </div>
-              </div>
-              <div className='div-7'>
-                <div className='row-7'>
-                  <div className='chip-label'>
-                    <div className='text-wrapper-12'>критично</div>
-                  </div>
-                  <div className='text-10'>все команды</div>
-                </div>
-              </div>
-            </div>
-            <div className='card-2'>
-              <div className='row-6'>
-                <div className='frame-9'>
-                  <p className='text-9'>
-                    Сотрудники компании высоко оценивают возможности для профессионального роста, но выражают
-                    неудовлетворенность в области обратной связи и четкости целей.
-                  </p>
-                </div>
-                <div className='remix-icons-line-wrapper'>
-                  <RemixIconsLineSystemErrorWarningLine1 className='icon-instance-node-2' color='#A189F2' />
-                </div>
-              </div>
-              <div className='div-7'>
-                <div className='row-7'>
-                  <div className='chip-label'>
-                    <div className='text-wrapper-12'>критично</div>
-                  </div>
-                  <div className='text-10'>все команды</div>
-                </div>
-              </div>
-            </div>
-            <div className='card-2'>
-              <div className='row-6'>
-                <div className='frame-9'>
-                  <p className='text-9'>
-                    Некоторые группы сотрудников выражают озабоченность отсутствием равных возможностей для развития
-                    карьеры, что требует разработки более инклюзивных стратегий развития персонала.
-                  </p>
-                </div>
-                <div className='remix-icons-line-wrapper'>
-                  <RemixIconsLineSystemErrorWarningLine1 className='icon-instance-node-2' color='#A189F2' />
-                </div>
-              </div>
-              <div className='div-7'>
-                <div className='row-7'>
-                  <div className='chip-label'>
-                    <div className='text-wrapper-12'>критично</div>
-                  </div>
-                  <div className='text-10'>все команды</div>
-                </div>
-              </div>
-            </div>
+            <DashboardCard
+              color={'light'}
+              title={insight1}
+              avatarIcon={'ri-error-warning-line'}
+              ritoric={'все команды'}
+              chipLabel={'критично'}
+              borderColor='primary'
+              chipBackgroundColor='rose-main'
+            ></DashboardCard>
+            <DashboardCard
+              color={'light'}
+              title={insight2}
+              avatarIcon={'ri-error-warning-line'}
+              ritoric={'все команды'}
+              chipLabel={'критично'}
+              borderColor='primary'
+              chipBackgroundColor='rose-main'
+            ></DashboardCard>
+            <DashboardCard
+              color={'light'}
+              title={insight3}
+              avatarIcon={'ri-error-warning-line'}
+              ritoric={'все команды'}
+              chipLabel={'критично'}
+              borderColor='primary'
+              chipBackgroundColor='rose-main'
+            ></DashboardCard>
           </div>
           <div className='row-2'>
             <Grid container spacing={6} flex>
@@ -339,49 +308,32 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
               <Grid item xs>
                 <div className='col'>
                   <div className='frame-10'>
-                    <div className='card-3'>
-                      <div className='frame-11'>
-                        <p className='text-11'>Улучшите обратную связь от руководства для повышения вовлеченности</p>
-                      </div>
-                      <div className='div-7'>
-                        <div className='row-7'>
-                          <div className='chip-label'>
-                            <div className='text-wrapper-12'>критично</div>
-                          </div>
-                          <div className='text-10'>Продажи</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='card-3'>
-                      <div className='frame-11'>
-                        <p className='text-11'>Усильте внутреннюю коммуникацию и прозрачность решений.</p>
-                      </div>
-                      <div className='div-7'>
-                        <div className='row-7'>
-                          <div className='chip-label'>
-                            <div className='text-wrapper-12'>критично</div>
-                          </div>
-                          <div className='text-10'>Финансы</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='card-4'>
-                      <div className='frame-11'>
-                        <p className='text-11'>
-                          Сотрудники отдела разработки <br />
-                          высоко ценят возможности профессионального роста, но испытывают недостаток обратной связи от
-                          руководства.
-                        </p>
-                      </div>
-                      <div className='div-7'>
-                        <div className='row-7'>
-                          <div className='chip-label'>
-                            <div className='text-wrapper-12'>критично</div>
-                          </div>
-                          <div className='text-10'>Разработка</div>
-                        </div>
-                      </div>
-                    </div>
+                    <DashboardCard
+                      color={'light'}
+                      title={'Улучшите обратную связь от руководства для повышения вовлеченности'}
+                      ritoric={'Продажи'}
+                      chipLabel={'критично'}
+                      borderColor='primary'
+                      chipBackgroundColor='rose-main'
+                    ></DashboardCard>
+                    <DashboardCard
+                      color={'light'}
+                      title={'Усильте внутреннюю коммуникацию и прозрачность решений.'}
+                      ritoric={'Финансы'}
+                      chipLabel={'критично'}
+                      borderColor='primary'
+                      chipBackgroundColor='rose-main'
+                    ></DashboardCard>
+                    <DashboardCard
+                      color={'light'}
+                      title={
+                        'Сотрудники отдела разработки высоко ценят возможности профессионального роста, но испытывают недостаток обратной связи от руководства.'
+                      }
+                      ritoric={'Разработка'}
+                      chipLabel={'критично'}
+                      borderColor='primary'
+                      chipBackgroundColor='rose-main'
+                    ></DashboardCard>
                     <div className='icon-4'>
                       <RemixIconsLineMapCarLine3 className='icon-instance-node-2' color='#B29DF8' />
                       <div className='text-5'>Все советы</div>
@@ -553,19 +505,21 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
           <div className='row-2'>
             <DashboardCard
               color={'light'}
-              title={category3Advice1}
+              title={advice1}
               avatarIcon={'ri-car-line'}
               ritoric={'Что делать дальше'}
               chipLabel={'рекомендация'}
               borderColor='primary'
+              chipBackgroundColor='action-selected'
             ></DashboardCard>
             <DashboardCard
               color={'light'}
-              title={category3Advice2}
+              title={advice2}
               avatarIcon={'ri-car-line'}
               ritoric={'Что делать дальше'}
               chipLabel={'рекомендация'}
               borderColor='primary'
+              chipBackgroundColor='action-selected'
               style={{
                 height: '255'
               }}
@@ -574,10 +528,11 @@ export const DashboardBuilder = ({ companyId, data, initialCat3Adv1, initialCat3
             <DashboardCard
               className={'card-6'}
               color={'light'}
-              title={category3Advice3}
+              title={advice3}
               avatarIcon={'ri-car-line'}
               ritoric={'Что делать дальше'}
               chipLabel={'рекомендация'}
+              chipBackgroundColor='action-selected'
               borderColor='primary'
             ></DashboardCard>
           </div>

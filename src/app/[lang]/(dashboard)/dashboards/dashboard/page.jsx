@@ -32,10 +32,16 @@ const Dashboard = async () => {
 
   updateCacheData()
 
-  var advices = await getAIAdvices('3')
+  var advices = await getAIAdvices('1')
 
   for (var i = 0; i < advices.length; i++) {
     console.log('advice readed ' + advices[i])
+  }
+
+  var insights = await getAIAdvices('3')
+
+  for (var i = 0; i < insights.length; i++) {
+    console.log('insights readed ' + insights[i])
   }
 
   if ((await checkIsAvailable(companyId)) == false) {
@@ -48,15 +54,7 @@ const Dashboard = async () => {
     data = await Item(companyId)
   }
 
-  return (
-    <DashboardBuilder
-      companyId={companyId}
-      data={data}
-      initialCat3Adv1={advices[0]}
-      initialCat3Adv2={advices[1]}
-      initialCat3Adv3={advices[2]}
-    />
-  )
+  return <DashboardBuilder companyId={companyId} data={data} initialAdivces={advices} initialInsights={insights} />
 }
 
 export default Dashboard

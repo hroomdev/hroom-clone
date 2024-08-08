@@ -1,8 +1,11 @@
 import { fn } from '@storybook/test'
-import DashboardCard from './DashboardCard'
-import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 
-import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
+import {
+  Experimental_CssVarsProvider as CssVarsProvider,
+  experimental_extendTheme as extendTheme
+} from '@mui/material/styles'
+
+import DashboardCard from './DashboardCard'
 
 const themeext = extendTheme({
   colorSchemes: { light: true, dark: true },
@@ -29,12 +32,29 @@ export default {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered'
   },
+
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
+
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    borderColor: { control: 'select', options: ['primary', 'secondary', 'error', 'info', 'success', 'warning'] }
+    borderColor: { control: 'select', options: ['primary', 'secondary', 'error', 'info', 'success', 'warning'] },
+    chipBackgroundColor: {
+      control: 'select',
+      options: [
+        'action-selected',
+        'divider',
+        'primary-main',
+        'background-default',
+        'action-disabled',
+        'action-hover',
+        'info-main',
+        'info-mainChannel',
+        'rose-main'
+      ]
+    }
   }
+
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   //args: { onClick: fn() }
 }
@@ -42,9 +62,31 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const AdviceStats = {
   args: {
-    title: 'Текст совета ',
+    title: 'Проанализируйте срезы в разделе Аналитика, чтобы исследовать слабые метрики глубже. ',
     avatarIcon: 'ri-car-line',
     ritoric: 'Что делать дальше',
-    chipLabel: 'рекомендация'
+    chipLabel: 'рекомендация',
+    chipBackgroundColor: 'action-selected'
+  }
+}
+
+export const InsightStats = {
+  args: {
+    title:
+      'Сотрудники компании высоко оценивают возможности для профессионального роста, но выражают неудовлетворенность в области обратной связи и четкости целей. ',
+    avatarIcon: 'ri-error-warning-line',
+    ritoric: 'все команды',
+    chipLabel: 'критично',
+    chipBackgroundColor: 'rose-main'
+  }
+}
+
+export const TeamActionStats = {
+  args: {
+    title: 'Улучшите обратную связь от руководства для повышения вовлеченности ',
+    avatarIcon: 'ri-error-warning-line',
+    ritoric: 'Продажи',
+    chipLabel: 'критично',
+    chipBackgroundColor: 'rose-main'
   }
 }

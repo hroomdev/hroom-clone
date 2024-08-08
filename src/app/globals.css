@@ -229,6 +229,27 @@
   --variables-theme-text-primary-duplicate: rgba(46, 38, 61, 0.9);
   --variables-theme-text-secondary: rgba(46, 38, 61, 0.7);
   --variables-theme-text-secondary-duplicate: rgba(46, 38, 61, 0.7);
+  --biloba-flower: #b29df8;
+  --black: #000000;
+  --blackcurrant: #2e263db2;
+  --blackcurrant-2: #2e263de6;
+  --blackcurrant-3: #2e263d66;
+  --blackcurrant-4: #2e263d14;
+  --blue-chalk: #e7e3fce6;
+  --ebony-clay: #28243d;
+  --eucalyptus: #55d8af;
+  --gray900: #0f1728;
+  --lightprimarycontrast: #ffffff;
+  --lightsecondarycontrast: #ffffff;
+  --magic-mint: #aaeedc;
+  --medium-purple: #8c57ff29;
+  --mui-palette-rose-main: #ff4c5161;
+  --seance: #7b1fa2;
+  --sheen-green: #56ca00;
+  --sundown: #fab5b7;
+  --sunglo: #dc6d71;
+  --tuft-bush: #f8e0cb;
+  --whisper: #f3f6fb;
 }
 
 /*
@@ -244,6 +265,7 @@ You can apply the theme on any DOM node, not just the `body`
 */
 
 [data-variables-mode='light'] {
+  --rose: var(--mui-palette-rose-main);
   --variables-color-palette-warning-main: rgba(249, 165, 227, 1);
   --variables-color-palette-warning-opacity-light: rgba(243, 177, 226, 0.16);
   --variables-misc-avatar-bg: rgba(240, 239, 240, 1);
