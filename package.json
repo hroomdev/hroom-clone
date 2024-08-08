@@ -14,7 +14,8 @@
     "postinstall": "npm run build:icons",
     "removeI18n": "tsx src/remove-translation-scripts/index.js",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_155549db22f12bd"
   },
   "//": "new  old    ",
   "dependencies": {
@@ -114,6 +115,7 @@
     "postcss-styled-syntax": "0.6.4",
     "prettier": "3.3.2",
     "storybook": "^8.2.7",
+    "storybook-anima": "^1.43.0",
     "storybook-theme-css-vars": "^0.0.12",
     "style-loader": "^4.0.0",
     "stylelint": "16.6.1",
