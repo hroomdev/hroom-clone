@@ -17,7 +17,7 @@ import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 
 //AI import
-import makeOPENCHATAIGetRequest from '../../../app/server/aichatgpt'
+import CHAT from '../../../app/server/aichatgpt'
 import makeGOOGLEGEMINIGetRequest from '../../../app/server/aigemini'
 
 // Slice Imports
@@ -103,7 +103,7 @@ const SendMsgForm = ({ dispatch, activeUser, isBelowSmScreen, messageInputRef })
         setMsg('')
       }
 
-      let b = await makeOPENCHATAIGetRequest(msg)
+      let b = await CHAT(msg)
 
       let g = await makeGOOGLEGEMINIGetRequest(msg)
 

@@ -2,6 +2,8 @@
 
 import OpenAI from 'openai'
 
+const Readable = require('stream').Readable
+
 // Override per-request:
 
 //const axios = require('axios')
@@ -15,7 +17,7 @@ import OpenAI from 'openai'
 //httpAgent: new HttpsProxyAgent('http://hroomdeveloper-ai-proxy.hf.space:7860'), /// /api/v1' chat/completions
 
 //reverse proxy api
-async function makeOPENCHATAIGetRequest(message) {
+async function CHAT(message) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
   })
@@ -30,7 +32,7 @@ async function makeOPENCHATAIGetRequest(message) {
   return completion.choices[0].message
 }
 
-export async function makeOPENCHATAIAPIVectorStoreDELRequest() {
+export async function VectorStoreDEL() {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
     organization: 'hroom'
@@ -49,7 +51,148 @@ export async function makeOPENCHATAIAPIVectorStoreDELRequest() {
   return deletedVectorStoreFile
 }
 
-export async function makeOPENCHATAIAPIVectorStoreCreateRequest() {
+//Use "assistants" for Assistants and Message files, "vision" for Assistants image file inputs, "batch" for Batch API, and "fine-tune" for Fine-tuning.
+export async function FilesUpload(filesAsStrsArr, filesNamesArr, purpose) {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
+
+  console.log(' files upload ' + JSON.stringify(filesAsStrsArr))
+  console.log(' files names ' + JSON.stringify(filesNamesArr))
+
+  const resultsUpload = []
+
+  try {
+    for (var i = 0; i < filesAsStrsArr.length; i++) {
+      var blob = new Blob([filesAsStrsArr[i]], { type: 'text/plain' })
+      var file = new File([blob], filesNamesArr[i], { type: 'text/plain' })
+
+      console.log('trying to upload ' + filesNamesArr[i])
+
+      var curUploadResult = await openai.files.create({
+        file: file,
+        purpose: purpose
+      })
+
+      resultsUpload.push(curUploadResult)
+
+      console.log('result file' + filesNamesArr[i] + ' upload  ' + resultsUpload)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+  return resultsUpload
+}
+
+export async function CreateVectorStoreFiles(vectorStoreId, uploadResultsArr) {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
+
+  const vectorStoreFilesUploadResullt = []
+
+  try {
+    for (var i = 0; i < uploadResultsArr.length; i++) {
+      var id = uploadResultsArr[i].id
+
+      console.log('trying to connect file id' + id + ' to a vector store id ' + vectorStoreId)
+
+      //id vector store id files
+      const myVectorStoreFile = await openai.beta.vectorStores.files.create(vectorStoreId, {
+        file_id: id
+      })
+
+      console.log(
+        'file id ' +
+          id +
+          ' connect to vector store id ' +
+          vectorStoreId +
+          ' result ' +
+          JSON.stringify(myVectorStoreFile)
+      )
+
+      vectorStoreFilesUploadResullt.push(myVectorStoreFile)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+  return vectorStoreFilesUploadResullt
+}
+
+export async function ListVectorStoreFiles(vectorStoreId) {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
+
+  var vectorStoreFilesListResult = ''
+
+  try {
+    console.log('trying to list vector store id' + vectorStoreId + 'files ')
+
+    //id vector store id files
+    vectorStoreFilesListResult = await openai.beta.vectorStores.files.list(vectorStoreId)
+  } catch (error) {
+    console.log(error)
+  }
+
+  return vectorStoreFilesListResult
+}
+
+export async function DeleteVectorStoreFiles(vectorStoreId, files_ids) {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
+
+  var deleteVectorStoreFilesResults = []
+
+  try {
+    for (var i = 0; i < files_ids.length; i++) {
+      console.log(
+        'trying to delete vector store file file id' + files_ids[i] + ' from a vector store id ' + vectorStoreId
+      )
+
+      const deletedVectorStoreFileResult = await openai.beta.vectorStores.files.del(vectorStoreId, files_ids[i])
+
+      deleteVectorStoreFilesResults.push(deletedVectorStoreFileResult)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+  return deleteVectorStoreFilesResults
+}
+
+export async function DeleteFiles(files_ids) {
+  console.log('DeleteFiles enter file_ids.length ' + files_ids.length)
+
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
+
+  var deleteFilesResults = []
+
+  try {
+    for (var i = 0; i < files_ids.length; i++) {
+      console.log('trying to delete  file id' + files_ids[i])
+      const fileDeleteResult = await openai.files.del(files_ids[i])
+
+      deleteFilesResults.push(fileDeleteResult)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+  return deleteFilesResults
+}
+
+export async function VectorStoreCREATE() {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
     organization: 'hroom'
@@ -71,11 +214,12 @@ export async function makeOPENCHATAIAPIVectorStoreCreateRequest() {
   return createVectorStoreResult
 }
 
-export async function makeOPENCHATAIAPIVectorStoreRequest() {
+export async function VectorStoreLIST() {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
     organization: 'hroom'
   })
+
   //    project: 'hroom'
   //console.log(completion.choices[0])
 
@@ -158,4 +302,4 @@ export async function makeOPENCHATAIAPIVectorStoreRequest() {
   return 'some response' //returnResponse
 }
 
-export default makeOPENCHATAIGetRequest
+export default CHAT

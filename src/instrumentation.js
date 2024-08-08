@@ -1,4 +1,4 @@
-import { getAIAdvices, saveAIAdvice, updVectorStore } from './app/server/dashboardai'
+import { getAIAdvices, saveAIAdvice, updateVectorStore } from './app/server/dashboardai'
 import { getEmployeesJSON, getQuestionsJSON, getStatisticsJSON, getSurveysJSON } from './jsonParser'
 import { updateCacheData } from './app/server/dashboarddbcache'
 
@@ -25,7 +25,7 @@ export async function register() {
 
   console.log('questionsJSONStr ' + questionsJSONStr)
 
-  var employees = await updVectorStore(surveysJSONStr, questionsJSONStr, statisticJSONStr, employesJSONStr)
+  var employees = await updateVectorStore(surveysJSONStr, questionsJSONStr, statisticJSONStr, employesJSONStr)
 
   //3 get advice from ai query api openchatgpt manual auto trigger after quiz ends for all auditory or manuall triggered
   //4 save advice in db auto
