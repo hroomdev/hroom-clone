@@ -84,7 +84,6 @@ export const InsightStats = {
 export const TeamActionStats = {
   args: {
     title: 'Улучшите обратную связь от руководства для повышения вовлеченности ',
-    avatarIcon: 'ri-error-warning-line',
     ritoric: 'Продажи',
     chipLabel: 'критично',
     chipBackgroundColor: 'rose-main'
