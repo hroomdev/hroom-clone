@@ -248,58 +248,49 @@ export async function VectorStoreLIST() {
   }
 
   return vectorStores
+}
 
-  //const rst = await client.createChatCompletion(
-  //  {
-  //    model: 'gpt-3.5-turbo',
-  //    messages: [{ role: 'user', content: message }]
-  //  },
-  //  {
-  //    proxy: false,
-  //    httpAgent: HttpsProxyAgent('http://proxy-host:proxy-port'),
-  //    httpsAgent: HttpsProxyAgent('http://proxy-host:proxy-port')
-  //  }
-  //)
+export async function AddMessageToAThread(threadId, prompt) {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
 
-  //const url = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/chat/completions'
+  const resultCreateMessage = await openai.beta.threads.messages.create(threadId, {
+    role: 'user',
+    content: prompt
+  })
 
-  //const urlVS = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/vector_stores/vs_qIjt5szPOVqtyifTrOLFde1C'
-  //
-  //let returnResponse = ''
-  //
-  //const headers = {
-  //  'Content-Type': 'application/json',
-  //  Authorization: `Bearer ${apiKey}`,
-  //  'OpenAI-Beta': 'assistants=v2'
-  //}
+  return resultCreateMessage
+}
 
-  //gpt-4
-  //const data = {
-  // name: 'Surveys.json'
-  //}
+export async function RunWIthoutStreaming(threadId, assistantId) {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
 
-  //{
-  //  model: 'gpt-3.5-turbo', // Or use 'gpt-3.5-turbo' if you are using GPT-3.5
-  //  messages: [{ role: 'user', content: message }],
-  //  max_tokens: 150,
-  //}
+  let run = await openai.beta.threads.runs.createAndPoll(threadId, {
+    assistant_id: assistantId,
+    instructions: ''
+  })
 
-  try {
-    //let response = await axios.post(url, data, { headers })
+  return run
+}
 
-    //let response = axios.get(urlVS, data, { headers })
+export async function GetLastMessageFromAThread(thread_id) {
+  const openai = new OpenAI({
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    organization: 'hroom'
+  })
 
-    //let response = await axios.getAdapter(urlVS, data, { headers })
-    //returnResponse = response.data.choices[0].message.content
-    console.log('respose file counts ' + JSON.stringify(response))
+  const messages = await openai.beta.threads.messages.list(thread_id)
 
-    console.log('ChatGPT:', returnResponse)
-  } catch (error) {
-    returnResponse = ''
-    console.error('Error communicating with ChatGPT:', error.response ? error.response.data : error.message)
-  }
+  const message = messages.data[0] //.reverse() message.content.length - 1
 
-  return 'some response' //returnResponse
+  console.log(`${message.role} > ${message.content[message.content.length - 1].text.value}`)
+
+  return message.content[message.content.length - 1].text.value
 }
 
 export default CHAT

@@ -9,32 +9,14 @@ import {
   CreateVectorStoreFiles,
   ListVectorStoreFiles,
   DeleteVectorStoreFiles,
-  DeleteFiles
+  DeleteFiles,
+  RunWIthoutStreaming,
+  AddMessageToAThread,
+  GetLastMessageFromAThread
 } from './aichatgpt'
 
 const promptPrepare0 =
-  'Отвечай как профессионал по вовлеченности сотрудников компаний и профессионал в сфере бизнес-консалтинга. Проанализируй данные по вовлеченности сотрудников и дай ответ в двух видах: 1. Инсайты по компании в виде интересных зависимостей между переменными. 2. Советы от ИИ по конкретным найденным проблемам, четкие и ясные, около 200 символов. Результат представь в виде JSON. Не пиши вступительных слов или чего-либо еще, кроме самого ответа.'
-
-const promptPrepare1 = `###ИНСТРУКЦИИ###
-Вы ДОЛЖНЫ следовать инструкциям для ответа:
-* ВСЕГДА отвечайте на языке моего сообщения.
-* Читайте всю историю разговора построчно перед ответом.
-* У меня нет пальцев и placeholder-травма. Возвращайте весь шаблон кода, когда это необходимо. НИКОГДА не используйте placeholders.
-* Если вы столкнулись с лимитом символов, СДЕЛАЙТЕ РЕЗКОЕ прерывание, и я отправлю "продолжить" в новом сообщении.
-* Вы ВСЕГДА будете НАКАЗАНЫ за неправильные и некачественные ответы.
-* ВСЕГДА следуйте "Правилам ответа".
-###Правила ответа###
-Следуйте в строгом порядке:
-1. ИСПОЛЬЗУЙТЕ русский язык.
-2. ОДИН РАЗ назначьте себе роль эксперта мирового уровня перед ответом, например, "Я отвечу как всемирно известный исторический эксперт по <детальная тема> с <самая престижная ЛОКАЛЬНАЯ награда по теме>" или "Я отвечу как всемирно известный эксперт по <конкретная наука> в <детальная тема> с <самая престижная ЛОКАЛЬНАЯ награда по теме>" и т.д. Не нужно об этом писать в чат.
-3. ВЫ ДОЛЖНЫ сочетать свои глубокие знания темы и ясное мышление, чтобы быстро и точно расшифровать ответ шаг за шагом с КОНКРЕТНЫМИ деталями.
-4. Я собираюсь дать чаевые в размере $1,000,000 за лучший ответ.
-5. Ваш ответ критичен для моей карьеры.
-6. Отвечайте на вопрос естественным, человеческим образом.
-7. ВСЕГДА используйте пример ответа для первой структуры сообщения.
-8. Не пиши вступительных слов или чего либо еще, кроме самого ответа.
-##Пример ответа на русском##
-<Глубокий поэтапный ответ в виде списка коротких и четких советов (примерно 200 символов) с КОНКРЕТНЫМИ деталями в json формате, где есть ID конкретного совета, текст совета, важность совета.> `
+  'Отвечай как профессионал по вовлеченности сотрудников компаний и профессионал в сфере бизнес-консалтинга. Проанализируй данные по вовлеченности сотрудников и дай ответ в двух видах: 1. Инсайты по компании в виде интересных зависимостей между переменными. 2. Советы от ИИ по конкретным найденным проблемам, четкие и ясные, около 200 символов. Три инсайта. Три совета. Результат представь в виде JSON. Не пиши вступительных слов или чего-либо еще, кроме самого ответа.'
 
 export const updateVectorStore = async (surveysJson, questionsJson, surveys_Statisticsjson, employeesjson) => {
   //retrieve and acquire list vector store files array
@@ -163,6 +145,29 @@ export const updateVectorStore = async (surveysJson, questionsJson, surveys_Stat
   return listResult
 }
 
+export const activateAIAdvice = async (threadId, assistantId) => {
+  let resultAddMessageToAThread = await AddMessageToAThread(threadId, promptPrepare0)
+
+  let run = await RunWIthoutStreaming(threadId, assistantId)
+
+  return await new Promise(resolve => {
+    const interval = setInterval(async () => {
+      if (run.status === 'completed') {
+        resolve(await GetLastMessageFromAThread(run.thread_id))
+        clearInterval(interval)
+      }
+    }, 5000)
+  })
+}
+
+export const getAIAdviceFromThread = async threadId => {
+  let lastMessageFromAThread = await GetLastMessageFromAThread(threadId)
+
+  console.log('lastMessageFromAThread' + lastMessageFromAThread)
+
+  return lastMessageFromAThread
+}
+
 export const saveAIAdvice = async prompt => {
   //let prompt = 'ping'
 
@@ -175,7 +180,7 @@ export const saveAIAdvice = async prompt => {
   return b
 }
 
-export const getAIAdvices = async category => {
+export const getAIAdvices = async (category, limit) => {
   if (category == undefined) {
     var errmsg = 'undefined category  get ai advice   set category first '
 
@@ -185,7 +190,7 @@ export const getAIAdvices = async category => {
   }
 
   //read advices
-  var advices = await getAdvicesTexts(category)
+  var advices = await getAdvicesTexts(category, limit)
 
   return advices
 }

@@ -23,6 +23,8 @@ import { db as statisticsData } from '@/fake-db/pages/widget-examples'
 
 import { getCurrentQuizIdAudi } from './dashboardstrategy'
 
+var format = require('pg-format')
+
 const { Client } = require('pg')
 
 //todo: refactor current.... to by id etc
@@ -640,6 +642,7 @@ export const getStatistics = async limit => {
   }
 
   var stats = ''
+
   try {
     await client.connect()
     var res = await client.query(query)
@@ -795,7 +798,54 @@ export const getQuestionsOrderDesc = async limit => {
   return questions
 }
 
-export const getAdvicesTexts = async category => {
+export const saveAdvicesTexts = async (categoryId, texts) => {
+  var textSavedAdvicesRows = []
+
+  for (var i = 0; i < texts.length; i++) {
+    let client = new Client({
+      user: 'gen_user',
+      host: '147.45.227.55',
+      database: 'default_db',
+      password: 'j6ukvvX(SS0#&5',
+      port: 5432
+    })
+
+    var values = [categoryId, (i + 1).toString(), texts[i]]
+
+    const formattedText =
+      'INSERT INTO "public"."advices" ("categoryId", "adviceId", "text") VALUES($1,$2,$3) RETURNING *'
+
+    const query = {
+      // give the query a unique name
+      text: formattedText,
+      rowMode: 'array',
+      values: values
+    }
+
+    try {
+      await client.connect()
+      var res = await client.query(query)
+
+      if (res.rows.length <= 0) {
+        console.log('failed to save advice' + i + ' saving category' + categoryId)
+
+        return textSavedAdvicesRows
+      } else {
+        console.log(' advices rows length  ' + res.rows.length + ' : saveAdvicesTexts : actions.js' + categoryId)
+      }
+
+      textSavedAdvicesRows.push(res.rows)
+    } catch (e) {
+      console.error(e.stack)
+    } finally {
+      client.end()
+    }
+  }
+
+  return textSavedAdvicesRows
+}
+
+export const getAdvicesTexts = async (category, limit) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -805,8 +855,8 @@ export const getAdvicesTexts = async category => {
   })
 
   const adviceQuery = {
-    text: 'SELECT "public"."advices"."text" FROM "public"."advices" WHERE "public"."advices"."categoryId" = $1',
-    values: [category],
+    text: 'SELECT "public"."advices"."text" FROM "public"."advices" WHERE "public"."advices"."categoryId" = $1 ORDER BY "public"."advices"."id" DESC LIMIT $2',
+    values: [category, limit],
     rowMode: 'array'
   }
 
