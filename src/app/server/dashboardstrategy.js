@@ -5,8 +5,6 @@ import Grid from '@mui/material/Grid'
 
 import ruLocale from 'date-fns/locale/ru'
 
-var formatDate = require('date-format')
-
 import { formatDistanceToNow, intervalToDuration, format } from 'date-fns'
 
 import generateOptions, { getRandomInt } from './../../../src/components/dialogs/create-app/GenerateQuizSelectedOptions'
@@ -47,6 +45,8 @@ const intervalDataUpd = 1000
 
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 import { submetricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Submetrics'
+
+var formatDate = require('date-format')
 
 const local = 'ru-RU'
 

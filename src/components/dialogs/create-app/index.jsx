@@ -70,8 +70,6 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
 
   if (activeStep < 0) return <p></p>
 
-  //if (steps < 2) return <p></p>
-  //if (isLoading) return <p></p>
   if (questionType == '') return <p></p>
 
   return (
@@ -91,11 +89,9 @@ let quizGroupTypeId = '1'
 
 const CreateApp = ({ open, setOpen }) => {
   const router = useRouter()
+
   var depVar = 1
 
-  //hideVerticalMenu()
-
-  //states
   const [steps, setSteps] = useState(initialSteps)
   const [activeStep, setActiveStep] = useState(0)
   const [isLoading, setLoading] = useState(true)
@@ -103,9 +99,6 @@ const CreateApp = ({ open, setOpen }) => {
   const [title, setTitle] = useState('Create App')
 
   async function unmount() {
-    //setActiveStep(initialSteps)
-
-    //setActiveStep(0)
     setLoading(true)
     setQuestionType('')
     setTitle('                      ')
@@ -117,10 +110,8 @@ const CreateApp = ({ open, setOpen }) => {
     }
 
     await dbData().then(data => {
-      //await unmount()
-      //onsole.logerror('step to fetch -1 : index.jsx should be 0 to n')
-
       var questionType = data[Number.parseInt(quizGroupTypeId) - 1][step].type
+
       var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
 
       setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
@@ -130,8 +121,6 @@ const CreateApp = ({ open, setOpen }) => {
       console.log('set loading false')
       setLoading(false)
     })
-
-    //let b = await makeOPENCHATAIGetRequest(prompt)
   }
 
   useEffect(() => {
@@ -140,11 +129,6 @@ const CreateApp = ({ open, setOpen }) => {
     return unmount
   }, [depVar])
 
-  //if (activeStep < 0) return <p></p>
-  //if (steps < 2) return <p></p>
-  //if (isLoading) return <p></p>
-  //if (questionType == '') return <p></p>
-
   const delay = time => new Promise(res => setTimeout(res, time))
 
   const handleClose = async () => {
@@ -152,19 +136,13 @@ const CreateApp = ({ open, setOpen }) => {
     setActiveStep(-1)
     await unmount()
     await fetch(-1)
-
-    //router.push('/ru//dashboards/dashboard') //
-    //router.prefetch('/ru//dashboards/dashboard')
-    //router.refresh() //instantly calls hide through  collapseVerticalNav(true) useEffect Navigation
-
-    //await delay(1000)
-    //showVerticalMenu() //calls show through  collapseVerticalNav(false)navCollapseVerticalNav
   }
 
   const handlePrev = async () => {
     if (activeStep > 0) {
       await unmount()
       await fetch(activeStep - 1)
+
       setActiveStep(prevActiveStep => prevActiveStep - 1)
     } else {
       console.logerror('activestep is zero cant go prev!')
@@ -175,6 +153,7 @@ const CreateApp = ({ open, setOpen }) => {
     if (!(activeStep + 1 >= steps)) {
       await unmount()
       await fetch(activeStep + 1)
+
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
       await handleClose()
@@ -203,7 +182,9 @@ const CreateApp = ({ open, setOpen }) => {
           console.logerror('generate quiz report error check validity of the slected options answers before send')
         } else {
           let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId, departmentId)
+
           await generateStatistics(1, 1)
+
           console.log('selected options   ' + c)
         }
       })
@@ -240,16 +221,7 @@ const CreateApp = ({ open, setOpen }) => {
           </div>
         </div>
       </DialogContent>
-      {/*
-      <CssVarsProvider theme={theme}>
-        <div>
-          <Switch defaultChecked />
-          <Switch />
-          <Switch disabled defaultChecked />
-          <Switch disabled />
-        </div>
-      </CssVarsProvider>
-      */}
+      {}
     </Dialog>
   )
 }

@@ -96,18 +96,14 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
       //return
 
       if ((await checkIsAvailable(companyId)) == false) {
-        console.log('checkIsAvailable(id) == false : DaSHBOARDbUILDER ')
+        console.log('useEffect() checkIsAvailable(id) == false : DashboardBuilder ')
 
         return
       } else {
         console.log('available ' + companyId)
       }
 
-      console.log('getDashboardData from db available id  ' + companyId)
-
       var data = await Item(companyId)
-
-      console.log('cnow to next ' + data.nowToNext.toString())
 
       if (data == undefined) return
 

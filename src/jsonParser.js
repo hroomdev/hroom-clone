@@ -10,6 +10,7 @@ export const getEmployeesJSON = async () => {
 
 export const getQuestionsJSON = async () => {
   var maxQuestions = 120
+
   var questionsres = await getQuestionsOrderDesc(maxQuestions)
 
   for (var i = 0; i < questionsres.rows.length; i++) {
@@ -18,19 +19,23 @@ export const getQuestionsJSON = async () => {
     for (var j = 0; j < questionsres.fields.length; j++) {
       if (questionsres.fields[j].name == 'id') {
         emp['question_id'] = emp['id']
+
         delete emp['id']
       }
+
       if (questionsres.fields[j].name == 'Question') {
         emp['question_text'] = emp['Question']
+
         delete emp['Question']
       }
+
       if (questionsres.fields[j].name == 'created_at' || questionsres.fields[j].name == 'Type') {
         delete emp[questionsres.fields[j].name]
       }
     }
   }
 
-  return JSON.stringify(questionsres.rows) //id to survey_id created_at timestart to start_date
+  return JSON.stringify(questionsres.rows)
 }
 
 export const getStatisticsJSON = async () => {
@@ -43,6 +48,7 @@ export const getStatisticsJSON = async () => {
 
 export const getSurveysJSON = async () => {
   var maxSurveys = 10
+
   var surveysres = await getSurveysOrderByIdDesc(maxSurveys)
 
   for (var i = 0; i < surveysres.rows.length; i++) {
@@ -51,12 +57,16 @@ export const getSurveysJSON = async () => {
     for (var j = 0; j < surveysres.fields.length; j++) {
       if (surveysres.fields[j].name == 'id') {
         emp['survey_id'] = emp['id']
+
         delete emp['id']
       }
+
       if (surveysres.fields[j].name == 'timestart') {
         emp['start_date'] = emp['timestart']
+
         delete emp['timestart']
       }
+
       if (
         surveysres.fields[j].name == 'created_at' ||
         surveysres.fields[j].name == 'type' ||
@@ -64,9 +74,8 @@ export const getSurveysJSON = async () => {
       ) {
         delete emp[surveysres.fields[j].name]
       }
-      //console.log('surveys ' + i + '  field  ' + surveysres.fields[j].name + ' value ' + emp[surveysres.fields[j].name])
     }
   }
 
-  return JSON.stringify(surveysres.rows) //id to survey_id created_at timestart to start_date
+  return JSON.stringify(surveysres.rows)
 }

@@ -11,6 +11,10 @@ import { getEmployeesJSON, getQuestionsJSON, getStatisticsJSON, getSurveysJSON }
 import { updateCacheData } from './app/server/dashboarddbcache'
 
 export async function register() {
+  updateCacheData()
+
+  return
+
   //load db to cache dashboard
   console.log('register hook start')
 

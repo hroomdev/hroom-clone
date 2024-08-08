@@ -1,4 +1,4 @@
-export const dynamic = 'force-static'
+'use server'
 
 import { GET } from '@/app/api/apps/dashboard/route'
 
@@ -9,7 +9,11 @@ import { getMockDashboardData } from '@/app/server/MockData'
 
 import { getAIAdvices } from './../../../../../app/server/dashboardai'
 
-export const companyId = 1
+import { getStaticProps } from './../../../../../../src/views/pages/dashboards/index'
+
+export const companyId = async () => {
+  return 1
+}
 
 import { DashboardBuilder } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/DashboardBuilder'
 
@@ -25,10 +29,10 @@ const optionsChart = {
   month: 'short'
 }
 
-const Dashboard = async () => {
-  console.log('Enter Dashboard : page.jsx')
+export const Dashboard = async () => {
+  console.log('is server ' + (typeof window === 'undefined') + 'Enter Dashboard : page.jsx')
 
-  var data = getMockDashboardData(companyId)
+  var data = await getStaticProps()
 
   updateCacheData()
 
@@ -44,17 +48,9 @@ const Dashboard = async () => {
     console.log('insights readed ' + insights[i])
   }
 
-  if ((await checkIsAvailable(companyId)) == false) {
-    console.log('checkIsAvailable(id) == false : page ')
-
-    data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)
-    data.nextQuizStarts = data.nextQuizStarts.toLocaleDateString(local, options)
-  } else {
-    console.log('available ')
-    data = await Item(companyId)
-  }
-
-  return <DashboardBuilder companyId={companyId} data={data} initialAdivces={advices} initialInsights={insights} />
+  return (
+    <DashboardBuilder companyId={await companyId()} data={data} initialAdivces={advices} initialInsights={insights} />
+  )
 }
 
 export default Dashboard

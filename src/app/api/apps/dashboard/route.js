@@ -10,6 +10,8 @@ export async function GET() {
 
   const isAvailable = await checkIsAvailable(companyId)
 
+  console.log('dashboard : route ')
+
   //console.log('db : page ' + JSON.stringify(dashboardData))
 
   //const filteredData = dashboardData?.filter(companyStats => companyStats.id === companyId)
@@ -17,6 +19,7 @@ export async function GET() {
   //if (!filteredData) {
   //  redirect('/not-found')
   //}
+
   var db = isAvailable ? await Item(companyId) : null
 
   //return isAvailable ? Item(companyId) : null
