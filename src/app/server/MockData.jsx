@@ -117,27 +117,6 @@ export const getMockDashboardData = id => {
     },
     {
       data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
-    },
-    {
-      data: []
     }
   ]
 

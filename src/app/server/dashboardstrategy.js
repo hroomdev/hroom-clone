@@ -306,7 +306,9 @@ export const getDashboardData = async id => {
     }
 
     seriesApexLineMetrics = seriesApexLineMetrics.map((item, index) => {
-      item.data.push(metStats[index].toFixed(2))
+      if (index < 2 && index > 8) {
+        item.data.push(metStats[index].toFixed(2))
+      }
 
       return item
     })

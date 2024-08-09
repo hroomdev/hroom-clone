@@ -45,6 +45,7 @@ const ritoricDefault = 'Что делать дальше'
 const chipLabelDefault = 'рекомендация'
 const borderColorDefault = 'primary'
 const chipBackgroundColorDefault = 'action-selected'
+const showAvatarIconDefault = ''
 
 const DashboardCard = props => {
   // Props
@@ -52,7 +53,7 @@ const DashboardCard = props => {
 
   const {
     title = titleDefault,
-    avatarIcon,
+    avatarIcon = showAvatarIconDefault,
     borderColor = borderColorDefault,
     ritoric = ritoricDefault,
     chipLabel = chipLabelDefault,
