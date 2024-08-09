@@ -134,6 +134,7 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
   }, [depVar])
 
   //console.log('diffstats : DashboardBuilder ' + JSON.stringify(d.teamsMetricDiffStats))
+
   return (
     <div className='dashboard-builder'>
       <div className='container-2'>
