@@ -124,16 +124,18 @@ export const QuizWizard = ({ open, setOpen }) => {
 
   const refreshUI = async (newTeamId, teamName) => {
     setLoading(true)
-    var rsult = await getEmployeesCountByDepartmentId(newTeamId)
-    setAuditoryCount(rsult)
 
-    if (rsult <= 0) {
-      setHelpMsg('В команде   ' + teamName + ' нет никого выбери другую аудиторию')
-    } else {
-      setHelpMsg('')
-    }
+    await getEmployeesCountByDepartmentId(newTeamId).then(rsult => {
+      setAuditoryCount(rsult)
 
-    setLoading(false)
+      if (rsult <= 0) {
+        setHelpMsg('В команде   ' + teamName + ' нет никого выбери другую аудиторию')
+      } else {
+        setHelpMsg('')
+      }
+
+      setLoading(false)
+    })
   }
 
   const handleCreate = async () => {
