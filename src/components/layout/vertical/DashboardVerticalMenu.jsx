@@ -28,7 +28,7 @@ import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
 import { generateSelectedOptions, generateStatistics } from '@/app/server/dashboardstrategy'
-import QuizWizard from '@/components/dialogs/create-quiz/QuizWizard'
+import QuizWizard from '@/components/dialogs/create-quiz'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -105,7 +105,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem
           icon={<i className='ri-wechat-line' />}
           onClick={async () => {
-            handleMenuItemQuizWizardClick()
+            if (quizWizardOpened == false) handleMenuItemQuizWizardClick()
           }}
         >
           {'создать опрос'}

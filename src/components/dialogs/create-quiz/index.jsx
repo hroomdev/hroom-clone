@@ -31,7 +31,7 @@ import Grid from '@mui/material/Grid'
 
 import DirectionalIcon from '@components/DirectionalIcon'
 
-import { createQuiz, getEmployeesCountByDepartmentId } from './../../../app/server/actions'
+import { createQuiz, getEmployeesCountByDepartmentId } from '../../../app/server/actions'
 
 // Components Imports
 import { setDate } from 'date-fns'
@@ -46,7 +46,7 @@ const title = 'Назначить опрос'
 
 var formatDate = require('date-format')
 
-export const QuizWizard = ({ open, setOpen }) => {
+const QuizWizard = ({ open, setOpen }) => {
   function makeid(length) {
     let result = ''
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -75,7 +75,17 @@ export const QuizWizard = ({ open, setOpen }) => {
 
   const title = 'Назначить опрос'
 
-  var handleClose = async () => {
+  var handleClose = async (event, reason) => {
+    console.log(event.target.name + ' event.target    reason' + reason)
+
+    //JSON.stringify(event.target)
+
+    if (reason && reason === 'backdropClick') {
+      console.log('return after backdropClick')
+      //event.preventDefault()
+      return
+    }
+
     setOpen(false)
   }
 
@@ -107,18 +117,14 @@ export const QuizWizard = ({ open, setOpen }) => {
     var newTeamKey = Object.keys(teamsru).find(key => teamsru[key] == e.target.value)
     var newTeamName = teamsru[newTeamKey]
 
-    console.log(
-      'newTeamId ' + newTeamId + ' newTeamKey ' + newTeamKey + ' newTeamName ' + newTeamName + ' old teamid ' + teamId
-    )
-
     setTeamId(newTeamId)
 
     refreshUI(newTeamId, newTeamName)
 
     if (!isLoading) {
-      console.log('not loading ')
+      //console.log('not loading ')
     } else {
-      console.log('loading ')
+      //console.log('loading ')
     }
   }
 
@@ -155,7 +161,11 @@ export const QuizWizard = ({ open, setOpen }) => {
 
   useEffect(() => {
     async function fetch() {
-      if (!isLoading) refreshUI()
+      if (!isLoading) {
+        var newTeamKey = Object.keys(teamsru).at(teamId)
+        var newTeamName = teamsru[newTeamKey]
+        refreshUI(teamId, newTeamName)
+      }
     }
 
     fetch()
@@ -172,6 +182,7 @@ export const QuizWizard = ({ open, setOpen }) => {
     //setTeamId(initialTeamAuditoryTeamId)
     //setSurveyName(initialSurveyName)
     //setEndDate(initialEndDate)
+    //setLoading(initialEndDate)
   }
 
   return (
@@ -215,7 +226,10 @@ export const QuizWizard = ({ open, setOpen }) => {
               onChange={e => setSurveyName(e.target.value)}
             />
 
-            <InputLabel id='demo-simple-select-label'>Аудитория - команда - {auditoryCount}</InputLabel>
+            <InputLabel id='demo-simple-select-label'>
+              {!isLoading && 'Аудитория - команда - ' + auditoryCount}
+              {isLoading && 'Загрузка данных команды...'}
+            </InputLabel>
             <Select
               labelId='demo-simple-select-label'
               id='demo-simple-select'
