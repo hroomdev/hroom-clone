@@ -28,8 +28,6 @@ export async function getStaticProps() {
   var data = getMockDashboardData(await companyId())
 
   if ((await checkIsAvailable(await companyId())) == false) {
-    await updateCacheData()
-
     console.log('checkIsAvailable(id) == false : page ')
 
     data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)

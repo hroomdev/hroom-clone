@@ -89,7 +89,7 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
 
   useEffect(() => {
     const f = async () => {
-      await updateCacheData()
+      updateCacheData()
 
       var data = await getStaticProps()
 
