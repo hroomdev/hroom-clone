@@ -12,7 +12,9 @@ import { updateCacheData } from './app/server/dashboarddbcache'
 
 export async function register() {
   console.log('registerstart' + new Date().toString())
+
   return
+
   updateCacheData()
 
   //load db to cache dashboard
