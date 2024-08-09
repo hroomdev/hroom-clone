@@ -34,9 +34,9 @@ const Card = styled(MuiCard)(({ bbcolor }) => ({
   }
 }))
 
-const MyChip = styled(Chip)(({ backColor }) => ({
+const MyChip = styled(Chip)(({ backcolor }) => ({
   fontWeight: 500,
-  backgroundColor: 'var(--mui-palette-' + backColor + ')'
+  backgroundColor: 'var(--mui-palette-' + backcolor + ')'
 }))
 
 const titleDefault = 'Найдите слабые метрики команд и ознакомьтесь с советами помощника.'
@@ -82,7 +82,7 @@ const DashboardCard = props => {
               variant='tonal'
               label={chipLabel}
               size='small'
-              backColor={chipBackgroundColor || 'action-selected'}
+              backcolor={chipBackgroundColor || 'action-selected'}
             />
             <Typography variant='body2' color='text.disabled'>
               {ritoric}
@@ -128,11 +128,11 @@ DashboardCard.propTypes = {
   chipBackground: PropTypes.string.isRequired
 }
 
-DashboardCard.defaultProps = {
-  title: titleDefault,
-  avatarIcon: '',
-  ritoric: ritoricDefault,
-  chipLabel: chipLabelDefault,
-  borderColor: borderColorDefault,
-  chipBackgroundColor: chipBackgroundColorDefault
-}
+//DashboardCard.defaultProps = {
+//  title: titleDefault,
+//  avatarIcon: '',
+//  ritoric: ritoricDefault,
+//  chipLabel: chipLabelDefault,
+//  borderColor: borderColorDefault,
+//  chipBackgroundColor: chipBackgroundColorDefault
+//}

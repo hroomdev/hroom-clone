@@ -3,6 +3,8 @@ import { useParams } from 'next/navigation'
 
 import { useTheme } from '@mui/material/styles'
 
+import { useState, useEffect, useLayoutEffect } from 'react'
+
 // Third-party Imports
 //dictionary['navigation'].analytics
 ///*dictionary['navigation'].ideas*/
@@ -25,7 +27,8 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
-import { generateSelectedOptions, generateStatistics, generateQuiz } from '@/app/server/dashboardstrategy'
+import { generateSelectedOptions, generateStatistics } from '@/app/server/dashboardstrategy'
+import QuizWizard from '@/components/dialogs/create-quiz/QuizWizard'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -35,7 +38,11 @@ const RenderExpandIcon = ({ open, transitionDuration }) => (
 
 var format = require('date-format')
 
+var initialQuizWizardOpened = false
+
 const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
+  const [quizWizardOpened, setQuizWizardOpened] = useState(initialQuizWizardOpened)
+
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
@@ -46,6 +53,10 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
   const { transitionDuration } = verticalNavOptions
   const { lang: locale } = params
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
+
+  const handleMenuItemQuizWizardClick = async () => {
+    setQuizWizardOpened(!quizWizardOpened)
+  }
 
   return (
     // eslint-disable-next-line lines-around-comment
@@ -94,12 +105,11 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem
           icon={<i className='ri-wechat-line' />}
           onClick={async () => {
-            console.log('create quiz before ener')
-            await generateQuiz()
-            console.log('create quiz after exit')
+            handleMenuItemQuizWizardClick()
           }}
         >
           {'создать опрос'}
+          {quizWizardOpened && <QuizWizard open={quizWizardOpened} setOpen={setQuizWizardOpened} />}
         </MenuItem>
         <MenuItem href={`/${locale}/pages/dialog-examples`} icon={<i className='ri-calendar-line' />}>
           {'пройти самому опрос'}

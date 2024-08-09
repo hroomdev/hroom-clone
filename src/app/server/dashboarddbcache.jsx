@@ -54,12 +54,5 @@ var sometext = ''
 
 export const checkIsAvailable = async id => {
   var isAvailable = resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
-
-  console.log('|' + sometext + '|')
-
-  console.log(
-    id + 'isavail  ' + isAvailable + ' resid ' + resultAllIds[id] + ' resultAllIds.len ' + resultAllIds.length
-  )
-
   return isAvailable
 }

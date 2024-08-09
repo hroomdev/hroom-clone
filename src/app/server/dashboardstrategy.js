@@ -46,60 +46,7 @@ const intervalDataUpd = 1000
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 import { submetricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Submetrics'
 
-var formatDate = require('date-format')
-
 const local = 'ru-RU'
-
-export const generateQuiz = async () => {
-  console.log('createQuiz enter')
-
-  //var randomDayNum = 6 + getRandomInt(15) //[7,21]
-
-  //console.log(' randomDayNum  ' + randomDayNum)
-
-  //const dates = generateDates(new Date(2024, 6, randomDayNum), new Date(2023, 6, randomDayNum + 7), 1)
-  //const date = dates[0]
-  const dateNow = new Date()
-
-  var dateStampNowParsed = Date.parse(dateNow)
-  var dateNowParsed = new Date(dateStampNowParsed)
-
-  //const date = dateNow.getDate()
-
-  const endDate = new Date()
-
-  endDate.setDate(dateNowParsed.getDate() + 7)
-
-  console.log('date now' + dateNow)
-
-  console.log('end date' + endDate)
-
-  var formattedDateNow = formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, dateNow)
-  var formattedEndDate = formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, endDate)
-
-  var quizTypeId = '1'
-  var auditory = '300'
-
-  function makeid(length) {
-    let result = ''
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    const charactersLength = characters.length
-    let counter = 0
-
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
-      counter += 1
-    }
-
-    return result
-  }
-
-  var randomName = makeid(10)
-
-  let c = await createQuiz(formattedDateNow, quizTypeId, auditory, formattedEndDate, randomName)
-
-  console.log('create quiz result ' + c)
-}
 
 export const generateStatistics = async (limitQuiz, limitAnswers) => {
   console.log('generateStatistics  ' + limitQuiz + ' limitAnswers ' + limitAnswers)

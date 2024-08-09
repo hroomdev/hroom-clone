@@ -230,6 +230,44 @@ export const getQuestionGroupsBy = async groupId => {
   return resultQuestionGroup
 }
 
+export const getEmployeesCountByDepartmentId = async departmentId => {
+  console.log('getEmployeeCountByDepartmentId ' + departmentId)
+
+  console.log('JSON --------------------')
+
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const queryGroup = {
+    text: 'SELECT COUNT(*) FROM "public"."Employees" WHERE "public"."Employees"."department_id" = $1',
+    //rowMode: 'array',
+    values: [departmentId]
+  }
+
+  var result = null
+  console.log('getEmployeeCountByDepartmentId before try')
+
+  try {
+    await client.connect()
+    var res = await client.query(queryGroup)
+
+    console.log('JSON ' + JSON.stringify(res))
+
+    result = res.rows[0]['count']
+  } catch (e) {
+    console.log(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return result
+}
+
 export const getQuestGroupGroupBy = async groupId => {
   let client = new Client({
     user: 'gen_user',

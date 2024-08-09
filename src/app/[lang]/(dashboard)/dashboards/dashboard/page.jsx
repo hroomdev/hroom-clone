@@ -39,13 +39,13 @@ export const Dashboard = async () => {
   var advices = await getAIAdvices('1')
 
   for (var i = 0; i < advices.length; i++) {
-    console.log('advice readed ' + advices[i])
+    //console.log('advice readed ' + advices[i])
   }
 
   var insights = await getAIAdvices('3')
 
   for (var i = 0; i < insights.length; i++) {
-    console.log('insights readed ' + insights[i])
+    //console.log('insights readed ' + insights[i])
   }
 
   return (
