@@ -17,7 +17,7 @@ const Readable = require('stream').Readable
 //httpAgent: new HttpsProxyAgent('http://hroomdeveloper-ai-proxy.hf.space:7860'), /// /api/v1' chat/completions
 
 //reverse proxy api
-async function CHAT(message) {
+export async function CHAT(message) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
   })

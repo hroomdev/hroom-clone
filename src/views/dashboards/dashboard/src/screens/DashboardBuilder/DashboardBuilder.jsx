@@ -91,9 +91,9 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
     const f = async () => {
       var data = getMockDashboardData(companyId)
 
-      await updateCacheData()
+      //await updateCacheData()
 
-      //return
+      return
 
       if ((await checkIsAvailable(companyId)) == false) {
         console.log('useEffect() checkIsAvailable(id) == false : DashboardBuilder ')
