@@ -96,8 +96,10 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           target='_blank'
           icon={<i className='ri-star-smile-line' />}
           onClick={async () => {
-            await generateSelectedOptions() //generate 1 quiz 1 employee last statistic
-            await generateStatistics(1, 1) //статистику только по последнему опросу только по последнему ответу
+            generateSelectedOptions().then(async () => {
+              await generateStatistics(1, 1)
+            }) //generate 1 quiz 1 employee last statistic
+            //статистику только по последнему опросу только по последнему ответу
           }}
         >
           {'заполнить опрос'}

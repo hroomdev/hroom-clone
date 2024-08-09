@@ -1,25 +1,16 @@
 // MUI Imports
-import React, { useCallback, cache } from 'react'
-
-import Grid from '@mui/material/Grid'
-
 import ruLocale from 'date-fns/locale/ru'
 
-import { formatDistanceToNow, intervalToDuration, format } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 
 import generateOptions, { getRandomInt } from './../../../src/components/dialogs/create-app/GenerateQuizSelectedOptions'
 import { checkValidJoinedStr } from './../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 
-import { DashboardBuilder } from '@views/dashboards/dashboard/src/screens/DashboardBuilder'
-
-import DashboardWelcomeCard from '@views/dashboards/dashboard/src/DashboardWelcomeCard'
-
 import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
 
-import { teamsru } from '@/views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
 import { checkIsAvailable, Item } from '@/app/server/dashboarddbcache'
 
-import { ratingMax, midRangeRating, cohortsLevelsPercents, cohortsAcutesAbs } from './const'
+import { ratingMax, cohortsLevelsPercents, cohortsAcutesAbs } from './const'
 
 import { getStatsMetrics } from '@/app/server/statistics'
 
@@ -31,17 +22,14 @@ import {
   getSelectedOptions,
   getQuestGroupGroupBy,
   getQuestionMetricSubMetricQuestionBy,
-  getEmployees,
+  getEmployeesRows,
   createSelectedAnswersCurrentQuiz,
-  createStatistics,
-  createQuiz
+  createStatistics
 } from './actions'
 
 import { getMockDashboardData } from './MockData'
 
 // Data Imports
-
-const intervalDataUpd = 1000
 
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 import { submetricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Submetrics'
@@ -105,26 +93,36 @@ export const generateSelectedOptions = async () => {
 
   var countGenerated = 20
   var maximum = 10
+
+  console.log('maximum b efore employees  ' + maximum)
+
   var generatedOptions = generateOptions(countGenerated, maximum)
+
+  console.log('generatedOptions  ' + generatedOptions)
+
   let optionsStr = generatedOptions.join(',')
 
-  var maxEmps = 10
+  var maxEmps = 11
 
   var employeeId = getRandomInt(maxEmps)
 
-  var employeesres = await getEmployees(maxEmps)
+  console.log('generateSelectedOptions b efore employees  ' + employeeId)
 
-  var employees = employeesres.rows
+  var employees = await getEmployeesRows(maxEmps)
+
+  console.log('employeesres   ' + employees)
 
   console.log('employees l ' + employees.length + 'employeeId ' + employeeId)
 
   var departmentId = 7
 
   for (var i = 0; i < employees.length; i++) {
-    if (i == employeeId - 1) {
-      departmentId = employees[i]['department_id']
+    if (employeeId - 1 == employees[i][0]) {
+      departmentId = employees[i][1]
 
-      console.log('departmentId ' + departmentId + ' ')
+      console.log('same departmentId ' + departmentId + ' ')
+    } else {
+      console.log('not same departmentId ' + departmentId + ' ')
     }
   }
 
@@ -139,7 +137,14 @@ export const generateSelectedOptions = async () => {
   }
 }
 
+var isLoading = false
+
 export const getDashboardData = async id => {
+  if (isLoading) {
+    return
+  }
+  isLoading = true
+
   console.log('loading false -> set loading true : getDashboardData... ')
 
   //cache forever
@@ -302,12 +307,18 @@ export const getDashboardData = async id => {
 
       teamsMetricDiffStats = teamDiffStats
 
-      totalRevenueStats[5] = metStats.reduce((partialSum, a) => partialSum + a, 0) / 10
+      var totalEngagementThisQuiz = metStats.reduce((partialSum, a) => partialSum + a, 0) / 10
+      totalRevenueStats[5] = totalEngagementThisQuiz.toFixed(2)
     }
 
     seriesApexLineMetrics = seriesApexLineMetrics.map((item, index) => {
-      if (index < 2 && index > 8) {
+      if (index < 2) {
+        console.log('metric stats index ' + index + ' just starts ')
         item.data.push(metStats[index].toFixed(2))
+      }
+      if (index == 2) {
+        console.log('engage index ' + index)
+        item.data.push((metStats.reduce((partialSum, a) => partialSum + a, 0) / 10).toFixed(2))
       }
 
       return item
@@ -389,6 +400,8 @@ export const getDashboardData = async id => {
   //loading = false
 
   console.log('end db sample ' + id + ' checkisavail ' + (await checkIsAvailable(id))) //+ JSON.stringify(db)
+
+  isLoading = false
 
   return db
 }

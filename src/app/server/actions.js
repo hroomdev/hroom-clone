@@ -660,6 +660,42 @@ export const getEmployees = async limit => {
   }
 }
 
+export const getEmployeesRows = async limit => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  //
+
+  const queryEmp = {
+    text: 'SELECT "public"."Employees"."employee_id", "public"."Employees"."department_id" FROM "public"."Employees" ORDER BY "public"."Employees"."employee_id" ASC LIMIT $1',
+    values: [limit],
+    rowMode: 'array'
+  }
+
+  let emps = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryEmp)
+
+    emps = res.rows
+
+    //console.log('res res.rows[0] ' + res.rows[0])
+  } catch (e) {
+    console.log('error connect to db ' + e.stack)
+    console.error(e.stack)
+  } finally {
+    client.end()
+
+    return emps
+  }
+}
+
 export const getStatistics = async limit => {
   let client = new Client({
     user: 'gen_user',
