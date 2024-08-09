@@ -32,11 +32,9 @@ const optionsChart = {
 export const Dashboard = async () => {
   console.log('is server ' + (typeof window === 'undefined') + 'Enter Dashboard : page.jsx')
 
-  var data = getMockDashboardData()
-  data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)
-  data.nextQuizStarts = data.nextQuizStarts.toLocaleDateString(local, options)
+  var data = await getStaticProps()
 
-  //updateCacheData()
+  updateCacheData()
 
   var advices = await getAIAdvices('1')
 

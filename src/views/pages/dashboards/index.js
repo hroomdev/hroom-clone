@@ -1,4 +1,4 @@
-//'use server'
+'use server'
 
 const local = 'ru-RU'
 
@@ -21,20 +21,23 @@ const optionsChart = {
   month: 'short'
 }
 
-//export async function getStaticProps() {
-//  console.log(' is server  ' + (typeof window === 'undefined') + ' :index.js')
-//
-//  var data = getMockDashboardData(await companyId())
-//
-//  if ((await checkIsAvailable(await companyId())) == false) {
-//    console.log('checkIsAvailable(id) == false : page ')
-//
-//    data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)
-//    data.nextQuizStarts = data.nextQuizStarts.toLocaleDateString(local, options)
-//  } else {
-//    console.log('available ')
-//    data = await Item(await companyId())
-//  }
-//
-//  return data
-//}
+export async function getStaticProps() {
+  console.log(' getStaticProps  : index')
+  console.log(' is server  ' + (typeof window === 'undefined') + ' :index.js')
+
+  var data = getMockDashboardData(await companyId())
+
+  if ((await checkIsAvailable(await companyId())) == false) {
+    await updateCacheData()
+
+    console.log('checkIsAvailable(id) == false : page ')
+
+    data.currentQuizStarts = data.currentQuizStarts.toLocaleDateString(local, options)
+    data.nextQuizStarts = data.nextQuizStarts.toLocaleDateString(local, options)
+  } else {
+    console.log('available ')
+    data = await Item(await companyId())
+  }
+
+  return data
+}

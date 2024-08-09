@@ -15,8 +15,6 @@ export async function register() {
 
   //updateCacheData()
 
-  return
-
   //load db to cache dashboard
   console.log('register hook start')
 

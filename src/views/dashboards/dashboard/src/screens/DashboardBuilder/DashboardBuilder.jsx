@@ -27,7 +27,7 @@ import { Icon13 } from '../../icons/Icon13'
 import { RemixIconsLineMapCarLine3 } from '../../icons/RemixIconsLineMapCarLine3'
 import { RemixIconsLineSystemArrowRightLine1 } from '../../icons/RemixIconsLineSystemArrowRightLine1'
 import { RemixIconsLineSystemErrorWarningLine1 } from '../../icons/RemixIconsLineSystemErrorWarningLine1'
-
+import { getStaticProps } from './../../../../../../../src/views/pages/dashboards/index'
 import './style.css'
 
 import { StackedBar } from './../../StackedBar'
@@ -89,11 +89,9 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
 
   useEffect(() => {
     const f = async () => {
-      var data = getMockDashboardData(companyId)
+      await updateCacheData()
 
-      //await updateCacheData()
-
-      return
+      var data = await getStaticProps()
 
       if ((await checkIsAvailable(companyId)) == false) {
         console.log('useEffect() checkIsAvailable(id) == false : DashboardBuilder ')
