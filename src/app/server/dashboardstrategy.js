@@ -1,7 +1,7 @@
 // MUI Imports
 import ruLocale from 'date-fns/locale/ru'
 
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistance, formatDistanceToNow } from 'date-fns'
 
 import generateOptions, { getRandomInt } from './../../../src/components/dialogs/create-app/GenerateQuizSelectedOptions'
 import { checkValidJoinedStr } from './../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
@@ -16,15 +16,16 @@ import { getStatsMetrics } from '@/app/server/statistics'
 
 import {
   getSelectedAnswersByOrderDescQuizId,
-  getCurrentQuiz,
-  getQuizOrderByIdDesc,
+  getLastStartedSurvey,
+  getStartedQuizesOrderByIdDesc,
   getQuestGroupTypeBy,
   getSelectedOptions,
   getQuestGroupGroupBy,
   getQuestionMetricSubMetricQuestionBy,
   getEmployeesRows,
   createSelectedAnswersCurrentQuiz,
-  createStatistics
+  createStatistics,
+  getFirstNotYetStartedSurvey
 } from './actions'
 
 import { getMockDashboardData } from './MockData'
@@ -39,7 +40,7 @@ const local = 'ru-RU'
 export const generateStatistics = async (limitQuiz, limitAnswers) => {
   console.log('generateStatistics  ' + limitQuiz + ' limitAnswers ' + limitAnswers)
 
-  let quizes = await getQuizOrderByIdDesc(limitQuiz, 0)
+  let quizes = await getStartedQuizesOrderByIdDesc(limitQuiz, 0)
 
   quizes = quizes.filter(q => {
     return q !== undefined
@@ -89,16 +90,10 @@ export const generateStatistics = async (limitQuiz, limitAnswers) => {
 }
 
 export const generateSelectedOptions = async () => {
-  console.log('onclick menuitem')
-
   var countGenerated = 20
   var maximum = 10
 
-  console.log('maximum b efore employees  ' + maximum)
-
   var generatedOptions = generateOptions(countGenerated, maximum)
-
-  console.log('generatedOptions  ' + generatedOptions)
 
   let optionsStr = generatedOptions.join(',')
 
@@ -106,13 +101,7 @@ export const generateSelectedOptions = async () => {
 
   var employeeId = getRandomInt(maxEmps)
 
-  console.log('generateSelectedOptions b efore employees  ' + employeeId)
-
   var employees = await getEmployeesRows(maxEmps)
-
-  console.log('employeesres   ' + employees)
-
-  console.log('employees l ' + employees.length + 'employeeId ' + employeeId)
 
   var departmentId = 7
 
@@ -125,8 +114,6 @@ export const generateSelectedOptions = async () => {
       console.log('not same departmentId ' + departmentId + ' ')
     }
   }
-
-  console.log('agen emplid ' + employeeId + 'dep id ' + departmentId)
 
   if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
     console.log('generated quiz is not valid! not sending to db')
@@ -205,10 +192,22 @@ export const getDashboardData = async id => {
     totalRevenueStats[4] = 100 - participationPercent
   })
 
-  await getCurrentQuizTimeStart().then(data => {
+  await getCurrentQuizTimeStart().then(async data => {
     currentQuizStarts = new Date(data)
     curToNow = formatDistanceToNow(currentQuizStarts, { locale: ruLocale })
-    nowToNext = formatDistanceToNow(nextQuizStarts, { locale: ruLocale })
+
+    await getNextQuizTimeStart().then(async data => {
+      if (data != undefined) {
+        console.log('next quiz not undefined')
+        nextQuizStarts = new Date(data)
+        nowToNext = formatDistance(nextQuizStarts, currentQuizStarts, { locale: ruLocale })
+      } else {
+        console.log('next quiz undefined')
+
+        nextQuizStarts = undefined
+        nowToNext = undefined
+      }
+    })
   })
 
   for (var i = 0; i < totalRevenueStats.length; i++) {
@@ -220,7 +219,7 @@ export const getDashboardData = async id => {
     transactionsMetricDiffStats[i] = 0
   }
 
-  let quizes = await getQuizOrderByIdDesc(12, 0)
+  let quizes = await getStartedQuizesOrderByIdDesc(12, 0)
 
   var diffStats = transactionsMetricDiffStats
   var teamDiffStats = teamsMetricDiffStats
@@ -385,7 +384,7 @@ export const getDashboardData = async id => {
     currentQuizStarts: currentQuizStarts.toLocaleDateString(local, options),
     curToNow: curToNow,
     nowToNext: nowToNext,
-    nextQuizStarts: nextQuizStarts.toLocaleDateString(local, options),
+    nextQuizStarts: nextQuizStarts ? nextQuizStarts.toLocaleDateString(local, options) : undefined,
     totalRevenueStats: totalRevenueStats, //[],
     transactionsMetricStats: transactionsMetricStats, //[]
     transactionsMetricDiffStats: transactionsMetricDiffStats, //[]
@@ -418,7 +417,7 @@ export const getCurrentQuizAuditory = async () => {
 }
 
 export const getCurrentQuizTimeStart = async () => {
-  let currentQuiz = await getCurrentQuiz()
+  let currentQuiz = await getLastStartedSurvey()
 
   var splittedStr = currentQuiz.toString().split(',')
   var timeStartIdx = await dbQuizTimeStartSIdx()
@@ -427,9 +426,23 @@ export const getCurrentQuizTimeStart = async () => {
   return currentQuizTimeStart
 }
 
+export const getNextQuizTimeStart = async () => {
+  let nextQuiz = await getFirstNotYetStartedSurvey()
+
+  var nextQuizTimeStart
+
+  if (nextQuiz != undefined) {
+    var splittedStr = nextQuiz.toString().split(',')
+    var timeStartIdx = await dbQuizTimeStartSIdx()
+    nextQuizTimeStart = Date.parse(splittedStr[timeStartIdx])
+  }
+
+  return nextQuizTimeStart
+}
+
 export const getCurrentQuizIdAudi = async () => {
   try {
-    let currentQuiz = await getCurrentQuiz()
+    let currentQuiz = await getLastStartedSurvey()
 
     var splittedStr = currentQuiz.toString().split(',')
 

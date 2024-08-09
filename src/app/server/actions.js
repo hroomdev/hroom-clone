@@ -733,7 +733,7 @@ export const getStatistics = async limit => {
   return stats
 }
 
-export const getQuizOrderByIdDesc = async (limit, offset) => {
+export const getStartedQuizesOrderByIdDesc = async (limit, offset) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -742,9 +742,11 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
     port: 5432
   })
 
+  var dateStampNow = new Date()
+
   const queryCurrentQuizId = {
-    text: 'SELECT * FROM "public"."quiz" ORDER BY "public"."quiz"."id" DESC LIMIT $1 OFFSET $2',
-    values: [limit, offset],
+    text: 'SELECT * FROM "public"."quiz" WHERE "public"."quiz"."timestart" < $3 ORDER BY "public"."quiz"."id" DESC LIMIT $1 OFFSET $2',
+    values: [limit, offset, dateStampNow],
     rowMode: 'array'
   }
 
@@ -754,6 +756,48 @@ export const getQuizOrderByIdDesc = async (limit, offset) => {
     await client.connect()
     var res = await client.query(queryCurrentQuizId)
 
+    if (res.rows.length <= 0) {
+      console.log('no quizes founded started before a datestamp ' + dateStampNow)
+    }
+    quizes = res.rows
+
+    //console.log('res res.rows[0] ' + res.rows[0])
+  } catch (e) {
+    console.log('error connect to db ' + e.stack)
+    console.error(e.stack)
+  } finally {
+    client.end()
+
+    return quizes
+  }
+}
+
+export const getNotYetStartedQuizesOrderByIdAsc = async (limit, offset) => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  var dateStampNow = new Date()
+
+  const queryCurrentQuizId = {
+    text: 'SELECT * FROM "public"."quiz" WHERE "public"."quiz"."timestart" >= $3 ORDER BY "public"."quiz"."id" ASC LIMIT $1 OFFSET $2',
+    values: [limit, offset, dateStampNow],
+    rowMode: 'array'
+  }
+
+  let quizes = 'empty'
+
+  try {
+    await client.connect()
+    var res = await client.query(queryCurrentQuizId)
+
+    if (res.rows.length <= 0) {
+      console.log('no quizes founded after a datestamp ' + dateStampNow)
+    }
     quizes = res.rows
 
     //console.log('res res.rows[0] ' + res.rows[0])
@@ -800,12 +844,24 @@ export const getSurveysOrderByIdDesc = async limit => {
   }
 }
 
-export const getCurrentQuiz = async () => {
-  var quizesLast = await getQuizOrderByIdDesc(1, 0)
+export const getLastStartedSurvey = async () => {
+  var quizesLast = await getStartedQuizesOrderByIdDesc(1, 0)
 
   var currentQuiz = quizesLast[0]
 
   return currentQuiz
+}
+
+export const getFirstNotYetStartedSurvey = async () => {
+  var quizesNext = await getNotYetStartedQuizesOrderByIdAsc(1, 0)
+
+  if (quizesNext == undefined || quizesNext.length <= 0) {
+    return undefined
+  }
+
+  var nextQuiz = quizesNext[0]
+
+  return nextQuiz
 }
 
 //todo: add limi LIMIT $1

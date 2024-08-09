@@ -159,9 +159,11 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
                 {curToNow} назад / {currentQuizStarts}
               </p>
               <p className='element-2'>
-                Следующий опрос
+                {nowToNext != undefined && 'Следующий опрос'}
                 <br />
-                через {nowToNext} / {nextQuizStarts}
+                {nowToNext != undefined && 'через'} {nowToNext != undefined && nowToNext}{' '}
+                {nowToNext != undefined && '/'}
+                {nowToNext != undefined && nextQuizStarts != undefined && nextQuizStarts}
               </p>
               <div className='frame-5'>
                 <div className='frame-6'>

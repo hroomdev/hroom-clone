@@ -2,8 +2,8 @@ import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens
 
 import {
   getSelectedAnswersByOrderDescQuizId,
-  getCurrentQuiz,
-  getQuizOrderByIdDesc,
+  getLastStartedSurvey,
+  getStartedQuizesOrderByIdDesc,
   getQuestGroupTypeBy,
   getSelectedOptions,
   getQuestGroupGroupBy,
