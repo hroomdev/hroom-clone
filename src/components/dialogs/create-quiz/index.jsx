@@ -3,42 +3,33 @@
 // React Imports
 import * as React from 'react'
 
+import { useEffect, useLayoutEffect, useState } from 'react'
+
+// Components Imports
+import { setDate } from 'date-fns'
+
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-
-import { useState, useEffect, useLayoutEffect } from 'react'
-
-import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import Button from '@mui/material/Button'
 import InputLabel from '@mui/material/InputLabel'
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 
-import { formatDistanceToNow, intervalToDuration, format } from 'date-fns'
 
 import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
-import Grid from '@mui/material/Grid'
-
-import DirectionalIcon from '@components/DirectionalIcon'
+import { teamsru } from './../../../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
 
 import { createQuiz, getEmployeesCountByDepartmentId } from '../../../app/server/actions'
-
-// Components Imports
-import { setDate } from 'date-fns'
-import { teamsru } from '@views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
-
-import { getEmployeeCountByDepartmentId } from '@/app/server/actions'
-import { number } from 'valibot'
 
 const dayjs = require('dayjs')
 
@@ -82,6 +73,7 @@ const QuizWizard = ({ open, setOpen }) => {
 
     if (reason && reason === 'backdropClick') {
       console.log('return after backdropClick')
+
       //event.preventDefault()
       return
     }
@@ -94,8 +86,6 @@ const QuizWizard = ({ open, setOpen }) => {
 
     setType(key)
   }
-
-  const router = useRouter()
 
   // States
 
@@ -164,6 +154,7 @@ const QuizWizard = ({ open, setOpen }) => {
       if (!isLoading) {
         var newTeamKey = Object.keys(teamsru).at(teamId)
         var newTeamName = teamsru[newTeamKey]
+
         refreshUI(teamId, newTeamName)
       }
     }

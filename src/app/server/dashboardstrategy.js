@@ -10,22 +10,22 @@ import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbS
 
 import { checkIsAvailable, Item } from '@/app/server/dashboarddbcache'
 
-import { ratingMax, cohortsLevelsPercents, cohortsAcutesAbs } from './const'
+import { cohortsAcutesAbs, cohortsLevelsPercents, ratingMax } from './const'
 
 import { getStatsMetrics } from '@/app/server/statistics'
 
 import {
-  getSelectedAnswersByOrderDescQuizId,
-  getLastStartedSurvey,
-  getStartedQuizesOrderByIdDesc,
-  getQuestGroupTypeBy,
-  getSelectedOptions,
-  getQuestGroupGroupBy,
-  getQuestionMetricSubMetricQuestionBy,
-  getEmployeesRows,
   createSelectedAnswersCurrentQuiz,
   createStatistics,
-  getFirstNotYetStartedSurvey
+  getEmployeesRows,
+  getFirstNotYetStartedSurvey,
+  getLastStartedSurvey,
+  getQuestGroupGroupBy,
+  getQuestGroupTypeBy,
+  getQuestionMetricSubMetricQuestionBy,
+  getSelectedAnswersByOrderDescQuizId,
+  getSelectedOptions,
+  getStartedQuizesOrderByIdDesc
 } from './actions'
 
 import { getMockDashboardData } from './MockData'
@@ -130,6 +130,7 @@ export const getDashboardData = async id => {
   if (isLoading) {
     return
   }
+
   isLoading = true
 
   console.log('loading false -> set loading true : getDashboardData... ')
@@ -307,16 +308,18 @@ export const getDashboardData = async id => {
       teamsMetricDiffStats = teamDiffStats
 
       var totalEngagementThisQuiz = metStats.reduce((partialSum, a) => partialSum + a, 0) / 10
+
       totalRevenueStats[5] = totalEngagementThisQuiz.toFixed(2)
     }
 
     seriesApexLineMetrics = seriesApexLineMetrics.map((item, index) => {
       if (index < 2) {
-        console.log('metric stats index ' + index + ' just starts ')
+        //console.log('metric stats index ' + index + ' just starts ')
         item.data.push(metStats[index].toFixed(2))
       }
+
       if (index == 2) {
-        console.log('engage index ' + index)
+        //console.log('engage index ' + index)
         item.data.push((metStats.reduce((partialSum, a) => partialSum + a, 0) / 10).toFixed(2))
       }
 
@@ -434,6 +437,7 @@ export const getNextQuizTimeStart = async () => {
   if (nextQuiz != undefined) {
     var splittedStr = nextQuiz.toString().split(',')
     var timeStartIdx = await dbQuizTimeStartSIdx()
+
     nextQuizTimeStart = Date.parse(splittedStr[timeStartIdx])
   }
 

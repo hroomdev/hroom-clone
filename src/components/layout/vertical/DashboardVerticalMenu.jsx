@@ -1,9 +1,9 @@
 // Next Imports
+import { useState } from 'react'
+
 import { useParams } from 'next/navigation'
 
 import { useTheme } from '@mui/material/styles'
-
-import { useState, useEffect, useLayoutEffect } from 'react'
 
 // Third-party Imports
 //dictionary['navigation'].analytics
@@ -15,7 +15,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Component Imports
-import { Menu, SubMenu, MenuItem, MenuSection } from '@menu/vertical-menu'
+import { Menu, MenuItem } from '@menu/vertical-menu'
 
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'

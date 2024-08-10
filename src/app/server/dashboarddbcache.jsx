@@ -7,11 +7,13 @@ export const updateCacheData = async () => {
   console.log('company id ' + 1)
 
   var res = await preload(1)
+
   if (res != undefined && res != null) {
     resultAllIds[1] = res
   } else {
     console.log('goes invalidate!')
   }
+
   console.log('updateCacheData ') //+ JSON.stringify(db)
 }
 
@@ -27,6 +29,7 @@ export async function preload(id) {
 
 export const Item = async id => {
   console.log('is server ITEM:dashboarddbcache.jsx' + (typeof window === 'undefined'))
+
   return resultAllIds[id]
 }
 
@@ -36,5 +39,6 @@ export const checkIsAvailable = async id => {
   console.log('is server checkIsAvailable:dashboarddbcache.jsx' + (typeof window === 'undefined'))
 
   var isAvailable = resultAllIds[id] != null && resultAllIds[id] != undefined && resultAllIds.length >= id - 1
+
   return isAvailable
 }

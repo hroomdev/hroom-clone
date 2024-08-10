@@ -10,15 +10,15 @@ import { connect } from 'react-redux'
 
 import { validateSort } from '@formkit/drag-and-drop'
 
-import { db as eCommerceData } from '@/fake-db/apps/ecommerce'
 import { db as academyData } from '@/fake-db/apps/academy'
-import { db as vehicleData } from '@/fake-db/apps/logistics'
+import { db as eCommerceData } from '@/fake-db/apps/ecommerce'
 import { db as invoiceData } from '@/fake-db/apps/invoice'
-import { db as userData } from '@/fake-db/apps/user-list'
+import { db as vehicleData } from '@/fake-db/apps/logistics'
 import { db as permissionData } from '@/fake-db/apps/permissions'
-import { db as profileData } from '@/fake-db/pages/user-profile'
+import { db as userData } from '@/fake-db/apps/user-list'
 import { db as faqData } from '@/fake-db/pages/faq'
 import { db as pricingData } from '@/fake-db/pages/pricing'
+import { db as profileData } from '@/fake-db/pages/user-profile'
 import { db as statisticsData } from '@/fake-db/pages/widget-examples'
 
 import { getCurrentQuizIdAudi } from './dashboardstrategy'
@@ -245,11 +245,13 @@ export const getEmployeesCountByDepartmentId = async departmentId => {
 
   const queryGroup = {
     text: 'SELECT COUNT(*) FROM "public"."Employees" WHERE "public"."Employees"."department_id" = $1',
+
     //rowMode: 'array',
     values: [departmentId]
   }
 
   var result = null
+
   console.log('getEmployeeCountByDepartmentId before try')
 
   try {
@@ -726,8 +728,6 @@ export const getStatistics = async limit => {
     console.error(e.stack)
   } finally {
     client.end()
-
-    return stats
   }
 
   return stats
@@ -759,6 +759,7 @@ export const getStartedQuizesOrderByIdDesc = async (limit, offset) => {
     if (res.rows.length <= 0) {
       console.log('no quizes founded started before a datestamp ' + dateStampNow)
     }
+
     quizes = res.rows
 
     //console.log('res res.rows[0] ' + res.rows[0])
@@ -798,6 +799,7 @@ export const getNotYetStartedQuizesOrderByIdAsc = async (limit, offset) => {
     if (res.rows.length <= 0) {
       console.log('no quizes founded after a datestamp ' + dateStampNow)
     }
+
     quizes = res.rows
 
     //console.log('res res.rows[0] ' + res.rows[0])
