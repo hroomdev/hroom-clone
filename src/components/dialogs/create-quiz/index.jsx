@@ -6,10 +6,9 @@ import * as React from 'react'
 import { useEffect, useLayoutEffect, useState } from 'react'
 
 // Components Imports
-import { setDate } from 'date-fns'
-
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { format, setDate } from 'date-fns'
 
 // MUI Imports
 import Button from '@mui/material/Button'
@@ -19,7 +18,6 @@ import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
-
 
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
@@ -67,7 +65,7 @@ const QuizWizard = ({ open, setOpen }) => {
   const title = 'Назначить опрос'
 
   var handleClose = async (event, reason) => {
-    console.log(event.target.name + ' event.target    reason' + reason)
+    //console.log(event.target.name + ' event.target    reason' + reason)
 
     //JSON.stringify(event.target)
 
@@ -144,7 +142,16 @@ const QuizWizard = ({ open, setOpen }) => {
 
     ////dayjs frmat
 
-    let c = await createQuiz(formattedDateNow, quizTypeId, auditoryCount, formattedEndDate, randomName)
+    setLoading(true)
+
+    console.log(formattedDateNow + ' formattedDateNow ' + '   formattedEndDate ' + formattedEndDate)
+
+    await createQuiz(formattedDateNow, quizTypeId, auditoryCount, formattedEndDate, randomName).then(c => {
+      console.log('c ' + c)
+      setLoading(false)
+
+      handleClose()
+    })
 
     console.log('create quiz result ' + c)
   }
@@ -186,9 +193,12 @@ const QuizWizard = ({ open, setOpen }) => {
       </DialogTitle>
       {}
       <DialogContent className='pbs-5 sm:pli-16 sm:pbe-16'>
-        <IconButton onClick={handleClose} className='absolute block-start-4 inline-end-4'>
-          <i className='ri-close-line text-textSecondary' />
-        </IconButton>
+        {!isLoading && (
+          <IconButton onClick={handleClose} className='absolute block-start-4 inline-end-4'>
+            <i className='ri-close-line text-textSecondary' />
+          </IconButton>
+        )}
+
         <div className='flex gap-y-6 pbs-5 flex-col md:flex-row'>
           <div className='flex-1'>
             <InputLabel id='demo-simple-select-label'>Тип</InputLabel>

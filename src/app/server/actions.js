@@ -169,6 +169,8 @@ export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, emplo
 
   let currentQuizIdAudi = await getCurrentQuizIdAudi()
 
+  console.log('current quiz id audi')
+
   let currentQuizId = currentQuizIdAudi[0]
   let currentQuizAudi = currentQuizIdAudi[1]
 
