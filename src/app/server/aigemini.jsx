@@ -1,4 +1,4 @@
-const axios = require('axios')
+//const axios = require('axios')
 
 const googleApiKey = process.env.GOOGLEGEMINI_API_KEY
 
@@ -19,14 +19,12 @@ async function makeGOOGLEGEMINIGetRequest(message) {
   }
 
   try {
-    let response = await axios.post(url, data, { headers })
-
-    returnResponse = response.data.choices[0].message.content
-
-    console.log('Google gemini:', returnResponse)
+    //let response = await axios.post(url, data, { headers })
+    //returnResponse = response.data.choices[0].message.content
+    //console.log('Google gemini:', returnResponse)
   } catch (error) {
-    returnResponse = ''
-    console.error('Error communicating with Google Gemini:', error.response ? error.response.data : error.message)
+    //returnResponse = ''
+    //console.error('Error communicating with Google Gemini:', error.response ? error.response.data : error.message)
   }
 
   return returnResponse

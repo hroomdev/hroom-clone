@@ -37,7 +37,8 @@ const nextConfig = {
 
     return config
   },
-  experimental: { instrumentationHook: true }
+  experimental: { instrumentationHook: true },
+  serverExternalPackages: ['pg']
 }
 
 export default nextConfig

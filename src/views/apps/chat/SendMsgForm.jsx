@@ -1,20 +1,20 @@
 // React Imports
-import { useRef, useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // MUI Imports
-import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Popper from '@mui/material/Popper'
-import Fade from '@mui/material/Fade'
-import Paper from '@mui/material/Paper'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
+import Fade from '@mui/material/Fade'
+import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import Paper from '@mui/material/Paper'
+import Popper from '@mui/material/Popper'
+import TextField from '@mui/material/TextField'
 
 // Third-party Imports
-import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 //AI import
 import CHAT from '../../../app/server/aichatgpt'
@@ -27,8 +27,6 @@ import { sendMsg } from '@/redux-store/slices/chat'
 
 // Component Imports
 import CustomIconButton from '@core/components/mui/IconButton'
-
-const axios = require('axios')
 
 const googleApiKey = process.env.GOOGLEGEMINI_API_KEY
 const apiKey = process.env.CHATGPT_API_KEY
