@@ -1,19 +1,19 @@
 import {
-  getAIAdvices,
+  activateAIAdvice,
   getAIAdviceFromThread,
+  getAIAdvices,
   saveAIAdvice,
-  updateVectorStore,
-  activateAIAdvice
+  updateVectorStore
 } from './app/server/dashboardai'
 
 import { saveAdvicesTexts } from './app/server/actions.js'
-import { getEmployeesJSON, getQuestionsJSON, getStatisticsJSON, getSurveysJSON } from './jsonParser'
 import { updateCacheData } from './app/server/dashboarddbcache'
+import { getEmployeesJSON, getQuestionsJSON, getStatisticsJSON, getSurveysJSON } from './jsonParser'
 
 export async function register() {
   console.log('registerstart' + new Date().toString())
 
-  return
+  //return
 
   updateCacheData()
 
@@ -42,18 +42,7 @@ export async function register() {
   try {
     var employees = await updateVectorStore(surveysJSONStr, questionsJSONStr, statisticJSONStr, employesJSONStr)
 
-    var threadid = 'thread_UEBpIa52VnG5dc77bt8H2HAW'
-    var assistantid = 'asst_MUBJtTYH5GqDjiGSTEbOajEp'
-
-    //var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) adds prompt message and runs once
-
-    var rethinkedAdviceRun = await getAIAdviceFromThread(threadid) // только взять последнее сообщение из истории
-
-    console.log('rethinkedAdviceRun' + rethinkedAdviceRun)
-
-    var resultWithoutRoleJSON = rethinkedAdviceRun.split('>').pop()
-
-    console.log('ответ не по ролям' + resultWithoutRoleJSON)
+    return
   } catch (error) {
     console.log('ошибка обновления векторного хранилища характеристик из бд и получения свежих данных ' + error)
   }

@@ -1,18 +1,19 @@
 import { getAdvicesTexts } from './actions'
 
 import {
-  CHAT,
-  VectorStoreLIST,
-  VectorStoreDEL,
-  VectorStoreCREATE,
-  FilesUpload,
-  CreateVectorStoreFiles,
-  ListVectorStoreFiles,
-  DeleteVectorStoreFiles,
-  DeleteFiles,
-  RunWIthoutStreaming,
   AddMessageToAThread,
-  GetLastMessageFromAThread
+  CHAT,
+  CreateVectorStoreFiles,
+  DeleteFiles,
+  DeleteVectorStoreFiles,
+  FilesUpload,
+  GetLastMessageFromAThread,
+  ListVectorStoreFiles,
+  ListVectorStoreFilesAxios,
+  RunWIthoutStreaming,
+  VectorStoreCREATE,
+  VectorStoreDEL,
+  VectorStoreLIST
 } from './aichatgpt'
 
 const promptPrepare0 =
@@ -25,124 +26,9 @@ export const updateVectorStore = async (surveysJson, questionsJson, surveys_Stat
 
   const vectorStoreFilesListResult = await ListVectorStoreFiles(vectorStoreId)
 
+  //const vectorStoreFilesListResult = await ListVectorStoreFilesAxios(vectorStoreId)no use timeout error with reverse proxy
+
   console.log('list result JSON  ' + JSON.stringify(vectorStoreFilesListResult))
-
-  var FilesIDS = []
-
-  for (var i = 0; i < vectorStoreFilesListResult.data.length; i++) {
-    console.log('list result id i ' + i + '   is ' + vectorStoreFilesListResult.data[i].id)
-    FilesIDS.push(vectorStoreFilesListResult.data[i].id)
-  }
-
-  //delete vector store files
-
-  var deleteFilesFromVectorStoreResults = await DeleteVectorStoreFiles(vectorStoreId, FilesIDS)
-
-  for (var i = 0; i < deleteFilesFromVectorStoreResults.length; i++) {
-    console.log(
-      'delete files from vector store result for  i ' +
-        i +
-        '   id is ' +
-        deleteFilesFromVectorStoreResults[i].id +
-        '  status ' +
-        deleteFilesFromVectorStoreResults[i].deleted
-    )
-  }
-
-  if (FilesIDS.length != deleteFilesFromVectorStoreResults.length) {
-    console.error('failed to delete files from vector store all files earlyout : dashboardai.js')
-
-    return 'fail update files reason -  inconsistent vector store delete retry'
-  }
-
-  //delete files
-
-  var deleteFilesResults = await DeleteFiles(FilesIDS)
-
-  for (var i = 0; i < deleteFilesResults.length; i++) {
-    console.log(
-      'delete files result for  i ' +
-        i +
-        '   id is ' +
-        deleteFilesResults[i].id +
-        '  status ' +
-        deleteFilesResults[i].deleted
-    )
-  }
-
-  if (FilesIDS.length != deleteFilesResults.length) {
-    console.error('failed to delete files all earlyout : dashboardai.js')
-
-    return 'fail update files reason -  inconsistent remove retry'
-  }
-
-  //upload files
-  var filesAsStrs = [surveysJson, questionsJson, surveys_Statisticsjson, employeesjson]
-
-  var date = new Date()
-
-  var hash =
-    date.getFullYear().toString() +
-    date.getMonth().toString() +
-    date.getDate().toString() +
-    date.getHours().toString() +
-    date.getMinutes().toString() +
-    date.getSeconds().toString() +
-    date.getMilliseconds().toString()
-
-  console.log('date.getFullYear() ' + date.getFullYear())
-  console.log('date.getMonth() ' + date.getMonth())
-  console.log('date.getDate() ' + date.getDate())
-  console.log(' date.getHours() ' + date.getHours())
-  console.log('date.getMinutes() ' + date.getMinutes())
-  console.log('date.getSeconds() ' + date.getSeconds())
-  console.log('date.getMilliseconds() ' + date.getMilliseconds())
-
-  console.log('hash ' + hash)
-
-  var filesNames = [
-    'Surveys' + hash + '.json',
-    'Questions' + hash + '.json',
-    'Survey_Statistics' + hash + '.json',
-    'Employees' + hash + '.json'
-  ]
-
-  let uploadFilesResults = await FilesUpload(filesAsStrs, filesNames, 'assistants')
-
-  //createvector store file by attaching files with ids to store
-  if (uploadFilesResults.length != filesNames.length) {
-    console.error('failed to upload all files earlyout : dashboardai.js')
-
-    return 'fail upload files reason -  inconsistent upload retry'
-  }
-
-  let vectorStoreFilesUploadResullts = await CreateVectorStoreFiles(vectorStoreId, uploadFilesResults)
-
-  for (var i = 0; i < vectorStoreFilesUploadResullts.length; i++) {
-    console.log('vectorStoreFilesUploadResullts i ' + i + '  status ' + vectorStoreFilesUploadResullts[i].status)
-  }
-
-  if (vectorStoreFilesUploadResullts.length != uploadFilesResults.length) {
-    console.error('failed to connect files to vector stores earlyout : dashboardai.js')
-
-    return 'fail upload files reason -  inconsistent connect files to vector store retry connect files'
-  }
-
-  //let storeCreate = await VectorStoreCREATE()
-
-  //console.log(' store Create ' + storeCreate)
-
-  ////create store with files from theese stringsjsons
-  let listResult = await VectorStoreLIST(vectorStoreId)
-
-  //add surveysJson questionsJson surveys_Statisticsjson employeesjson
-
-  //let prompt = 'ping'
-
-  //query ai then save advices
-  //
-
-  return listResult
 }
 
 export const activateAIAdvice = async (threadId, assistantId) => {
@@ -153,7 +39,7 @@ export const activateAIAdvice = async (threadId, assistantId) => {
   return await new Promise(resolve => {
     const interval = setInterval(async () => {
       if (run.status === 'completed') {
-        resolve(await GetLastMessageFromAThread(run.thread_id))
+        resolve('run status = completed') //moved to .then await GetLastMessageFromAThread(run.thread_id)
         clearInterval(interval)
       }
     }, 5000)
