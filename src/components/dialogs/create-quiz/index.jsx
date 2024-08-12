@@ -135,8 +135,14 @@ const QuizWizard = ({ open, setOpen }) => {
   const handleCreate = async () => {
     var dateNow = timeStart.toDate()
     const endDateSurvey = endDate.toDate()
-    var formattedDateNow = formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, dateNow)
-    var formattedEndDate = formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, endDateSurvey)
+
+    console.log('dateNow ' + dateNow + 'typeof ' + typeof dateNow)
+
+    formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, dateNow)
+    formatDate(format.ISO8601_WITH_TZ_OFFSET_FORMAT, endDateSurvey)
+
+    console.log('dateNow after ' + dateNow)
+
     var quizTypeId = initialType
     var randomName = surveyName
 
@@ -144,16 +150,14 @@ const QuizWizard = ({ open, setOpen }) => {
 
     setLoading(true)
 
-    console.log(formattedDateNow + ' formattedDateNow ' + '   formattedEndDate ' + formattedEndDate)
+    console.log(dateNow + ' formattedDateNow ' + '   formattedEndDate ' + endDateSurvey)
 
-    await createQuiz(formattedDateNow, quizTypeId, auditoryCount, formattedEndDate, randomName).then(c => {
+    await createQuiz(dateNow, quizTypeId, auditoryCount, endDateSurvey, randomName).then(c => {
       console.log('c ' + c)
       setLoading(false)
 
       handleClose()
     })
-
-    console.log('create quiz result ' + c)
   }
 
   useEffect(() => {
