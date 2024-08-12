@@ -1,12 +1,20 @@
-import { HttpsProxyAgent } from 'https-proxy-agent'
+//import { HttpsProxyAgent } from 'https-proxy-agent'
 
 import OpenAI from 'openai'
 
 const Readable = require('stream').Readable
 
-const axios = require('axios')
+// Override per-request:
 
-const apiKey = process.env.CHATGPT_API_KEY
+//const axios = require('axios')
+
+//const apiKey = process.env.CHATGPT_API_KEY
+
+//const client = new OpenAI({
+//  apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted
+//})
+//  HttpsProxyAgent: new HttpsProxyAgent('http://168.63.76.32:3128'),
+//httpAgent: new HttpsProxyAgent('http://hroomdeveloper-ai-proxy.hf.space:7860'), /// /api/v1' chat/completions
 
 //reverse proxy api
 export async function CHAT(message) {
@@ -115,58 +123,10 @@ export async function CreateVectorStoreFiles(vectorStoreId, uploadResultsArr) {
   return vectorStoreFilesUploadResullt
 }
 
-//reverse proxy api
-export async function ListVectorStoreFilesAxios(message) {
-  //const url = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/chat/completions' original for chat
-
-  const url = 'https://hroomdeveloper-ai-proxy.hf.space/api/v1/vector_stores'
-
-  //https://api.openai.com/
-
-  let returnResponse = ''
-
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${apiKey}`,
-    'OpenAI-Beta': 'assistants=v2'
-  }
-
-  const data = {
-    //model: 'gpt-4', // Or use 'gpt-3.5-turbo' if you are using GPT-3.5
-    //messages: [{ role: 'user', content: message }],
-    //max_tokens: 150
-  }
-
-  try {
-    //let response = await axios.post(url, data, { headers })
-
-    var config = {
-      headers: { Authorization: 'Bearer ${apiKey}' } //, 'OpenAI-Beta': 'assistants=v2'
-    }
-
-    let response = await axios.get(url, config)
-
-    console.log('ChatGPT:', returnResponse)
-  } catch (error) {
-    returnResponse = ''
-    console.error('Error communicating with ChatGPT:', error.response ? error.response.data : error.message)
-  }
-
-  return returnResponse
-}
-
 export async function ListVectorStoreFiles(vectorStoreId) {
-  //const agent = new HttpsProxyAgent({
-  //  protocol: 'https',
-  //  host: 'hroomdeveloper-ai-proxy.hf.space/api/v1'
-  //})
-
-  //    port: '7860'
-
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom' //,
-    //httpAgent: agent
+    organization: 'hroom'
   })
 
   var vectorStoreFilesListResult = ''
