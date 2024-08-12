@@ -23,7 +23,7 @@ const nextConfig = {
       }
     ]
   },
-  webpack: config => {
+  webpack: (config, { isServer }) => {
     config.resolve.fallback = {
       fs: false,
       path: false,
@@ -32,13 +32,14 @@ const nextConfig = {
       dns: false,
       net: false,
       crypto: false,
-      tls: false
+      tls: false,
+      http: false,
+      https: false
     }
 
     return config
   },
-  experimental: { instrumentationHook: true },
-  serverExternalPackages: ['pg']
+  experimental: { instrumentationHook: true }
 }
 
 export default nextConfig

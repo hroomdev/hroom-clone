@@ -4,19 +4,13 @@ import OpenAI from 'openai'
 
 const Readable = require('stream').Readable
 
-//const { SocksProxyAgent } = require('socks-proxy-agent')
-
-// Define your SOCKS proxy server URL
-//const proxyUrl = 'socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247' // Replace with your SOCKS proxy server details
-
-// Create a SOCKS agent with the proxy server
-//const socksAgent = new SocksProxyAgent(proxyUrl)
+const { SocksProxyAgent } = require('socks-proxy-agent')
 
 //reverse proxy api
 export async function CHAT(message) {
   const openai = new OpenAI({
-    apiKey: process.env.CHATGPT_API_KEY // This is the default and can be omitted,
-    //httpAgent: socksAgent
+    apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   const completion = await openai.chat.completions.create({
@@ -32,9 +26,8 @@ export async function CHAT(message) {
 export async function VectorStoreDEL() {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   const deletedVectorStoreFile = await openai.beta.vectorStores.del('vs_qIjt5szPOVqtyifTrOLFde1C')
@@ -54,9 +47,8 @@ export async function VectorStoreDEL() {
 export async function FilesUpload(filesAsStrsArr, filesNamesArr, purpose) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   console.log(' files upload ' + JSON.stringify(filesAsStrsArr))
@@ -90,9 +82,8 @@ export async function FilesUpload(filesAsStrsArr, filesNamesArr, purpose) {
 export async function CreateVectorStoreFiles(vectorStoreId, uploadResultsArr) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   const vectorStoreFilesUploadResullt = []
@@ -129,9 +120,8 @@ export async function CreateVectorStoreFiles(vectorStoreId, uploadResultsArr) {
 export async function ListVectorStoreFiles(vectorStoreId) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   var vectorStoreFilesListResult = ''
@@ -151,9 +141,8 @@ export async function ListVectorStoreFiles(vectorStoreId) {
 export async function DeleteVectorStoreFiles(vectorStoreId, files_ids) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   var deleteVectorStoreFilesResults = []
@@ -180,9 +169,8 @@ export async function DeleteFiles(files_ids) {
 
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   var deleteFilesResults = []
@@ -204,9 +192,8 @@ export async function DeleteFiles(files_ids) {
 export async function VectorStoreCREATE() {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   const createVectorStoreResult = await openai.beta.vectorStores.create({
@@ -228,9 +215,8 @@ export async function VectorStoreCREATE() {
 export async function VectorStoreLIST() {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   //    project: 'hroom'
@@ -266,9 +252,8 @@ export async function VectorStoreLIST() {
 export async function AddMessageToAThread(threadId, prompt) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   const resultCreateMessage = await openai.beta.threads.messages.create(threadId, {
@@ -282,9 +267,8 @@ export async function AddMessageToAThread(threadId, prompt) {
 export async function RunWIthoutStreaming(threadId, assistantId) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   let run = await openai.beta.threads.runs.createAndPoll(threadId, {
@@ -298,9 +282,8 @@ export async function RunWIthoutStreaming(threadId, assistantId) {
 export async function GetLastMessageFromAThread(thread_id) {
   const openai = new OpenAI({
     apiKey: process.env.CHATGPT_API_KEY, // This is the default and can be omitted,
-    organization: 'hroom'
-
-    //httpAgent: socksAgent
+    organization: 'hroom',
+    httpAgent: new SocksProxyAgent('socks5://proxy_user:oS6QQKYCA4@38.180.206.64:47247')
   })
 
   const messages = await openai.beta.threads.messages.list(thread_id)
