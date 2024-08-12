@@ -1,18 +1,18 @@
 import { getAdvicesTexts } from './actions'
 
 import {
-  CHAT,
-  VectorStoreLIST,
-  VectorStoreDEL,
-  VectorStoreCREATE,
-  FilesUpload,
-  CreateVectorStoreFiles,
-  ListVectorStoreFiles,
-  DeleteVectorStoreFiles,
-  DeleteFiles,
-  RunWIthoutStreaming,
   AddMessageToAThread,
-  GetLastMessageFromAThread
+  CHAT,
+  CreateVectorStoreFiles,
+  DeleteFiles,
+  DeleteVectorStoreFiles,
+  FilesUpload,
+  GetLastMessageFromAThread,
+  ListVectorStoreFiles,
+  RunWIthoutStreaming,
+  VectorStoreCREATE,
+  VectorStoreDEL,
+  VectorStoreLIST
 } from './aichatgpt'
 
 const promptPrepare0 =
@@ -153,7 +153,7 @@ export const activateAIAdvice = async (threadId, assistantId) => {
   return await new Promise(resolve => {
     const interval = setInterval(async () => {
       if (run.status === 'completed') {
-        resolve(await GetLastMessageFromAThread(run.thread_id))
+        resolve('run completed')
         clearInterval(interval)
       }
     }, 5000)
