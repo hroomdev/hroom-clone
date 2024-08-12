@@ -52,6 +52,7 @@
     "@tiptap/pm": "2.4.0",
     "@tiptap/react": "2.4.0",
     "@tiptap/starter-kit": "2.4.0",
+    "agent-base": "^7.1.1",
     "apexcharts": "3.49.1",
     "bootstrap-icons": "1.11.3",
     "classnames": "2.5.1",
@@ -60,6 +61,8 @@
     "date-format": "^4.0.14",
     "dayjs": "^1.11.12",
     "emoji-mart": "5.6.0",
+    "http": "^0.0.1-security",
+    "http-proxy-agent": "^7.0.2",
     "https-proxy-agent": "^7.0.5",
     "keen-slider": "6.8.6",
     "mapbox-gl": "3.4.0",
@@ -84,6 +87,7 @@
     "react-use": "17.5.0",
     "recharts": "2.12.7",
     "server-only": "0.0.1",
+    "socks-proxy-agent": "^8.0.4",
     "valibot": "0.31.1"
   },
   "devDependencies": {
