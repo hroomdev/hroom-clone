@@ -16,10 +16,7 @@ import DirectionalIcon from '@components/DirectionalIcon'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
-import { binaryFormat } from './../../../app/server/const.jsx'
-import handleChange from './SelectAnswerHandler.jsx'
-
-const initialSelected = ''
+import handleChange, { handleChangeFollowUps } from './SelectAnswerHandler.jsx'
 
 var onClickNext = (f1, f2) => {
   f1()
@@ -38,9 +35,15 @@ const OpenQuestion = ({
   handleNext,
   handlePrev,
   setTitle,
-  selectedOptions
+  selectedOptions,
+  followUps
 }) => {
   //States sources
+
+  function hanldeChange(e) {
+    setInputText(e.target.value)
+    handleChangeFollowUps(followUps, activeStep, e.target.value)
+  }
 
   const [isLoading, setLoading] = useState(true)
   const [inputText, setInputText] = useState(true)
@@ -90,7 +93,7 @@ const OpenQuestion = ({
             variant='outlined'
             placeholder='California'
             value={inputText}
-            onChange={e => setInputText(e.target.value)}
+            onChange={e => hanldeChange(e)}
           />
         </div>
       </Grid>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -11,11 +11,11 @@ import Button from '@mui/material/Button'
 
 //import Grid from '@mui/material/Grid'
 
-import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
+import DirectionalIcon from '@components/DirectionalIcon'
 
-import handleChange from './SelectAnswerHandler.jsx'
 import { ratingMax } from './../../../app/server/const.jsx'
+import handleChange from './SelectAnswerHandler.jsx'
 
 const stepSize = 1
 let initialMarks = [

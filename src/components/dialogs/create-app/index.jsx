@@ -14,36 +14,13 @@ import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
-//import { useNavigate } from 'react-router-dom'
-
-import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  experimental_extendTheme as extendTheme
-} from '@mui/material/styles'
-
 // Third-party Imports
-import classnames from 'classnames'
 
-import employeesru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Employees'
-import teamsru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
-
-import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
-
-import { hideVerticalMenu, showVerticalMenu } from './../../../components/layout/vertical/Navigation'
-
-import Billing from './Billing'
-import Database from './Database'
-import Details from './Details'
-import FrameWork from './FrameWork'
 import SliderScale from './SliderScale'
 import SliderStep from './SliderStep'
 import StarRate from './StarRate'
-import Submit from './Submit'
 import VerticalRadioImage from './VerticalRadioImage'
 import VerticalRadioSVG from './VerticalRadioSVG'
-
-// Styled Component Imports
-import StepperWrapper from '@core/styles/stepper'
 
 import { createSelectedAnswersCurrentQuiz, getQuestData as dbData } from '@/app/server/actions'
 
@@ -55,6 +32,7 @@ import OpenQuestion from './OpenQuestion'
 const initialSteps = 0
 
 let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+let followUps = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, handlePrev, questionType, setTitle) => {
   const Tag = questionType.includes('dots')
@@ -84,6 +62,7 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
       isLastStep={lastStep}
       setTitle={setTitle}
       selectedOptions={selectedOptions}
+      followUps={followUps}
     />
   )
 }
@@ -135,11 +114,33 @@ const CreateApp = ({ open, setOpen }) => {
 
         var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
 
-        setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
+        var steps = data[Number.parseInt(quizGroupTypeId) - 1].length
+
+        if (followUps.length < steps) {
+          //reinitialize based on 'steps' or questions and answers count
+          followUps = Array(5)
+
+          Array.apply(null, Array(5)).map(function (x, i) {
+            return -1
+          })
+
+          //followUps = Array.from(x.repeat(-1))
+
+          console.log('followUps ' + JSON.stringify(followUps) + '   ' + followUps + ' reinitialize fetch : index.jsx')
+        } else {
+          console.log('followUps length' + followUps.length)
+
+          console.log('steps' + steps)
+        }
+
+        setSteps(steps)
 
         setQuestionType(questionType)
+
         setTitle(questionTitle)
+
         console.log('set loading false')
+
         setLoading(false)
       }
     })
@@ -215,21 +216,24 @@ const CreateApp = ({ open, setOpen }) => {
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     } else {
       await handleClose()
+
       await dbData().then(async data => {
         let qaArray = []
 
         console.log('selected options ' + selectedOptions.length)
+        console.log('followups length  ' + followUps.length)
+
+        //save selected answers
 
         for (var i = 0; i < selectedOptions.length; i++) {
           var a = data[Number.parseInt(quizGroupTypeId) - 1][i].answers[selectedOptions[i]]
+
           var q = data[Number.parseInt(quizGroupTypeId) - 1][i].subtitle
 
           qaArray.push('for question ' + q + '  answer ' + a)
         }
 
         let prompt = qaArray.join('/n')
-
-        //test db
 
         let optionsStr = selectedOptions.join(',')
 
@@ -244,6 +248,11 @@ const CreateApp = ({ open, setOpen }) => {
           await generateStatistics(1, 1)
 
           console.log('selected options   ' + c)
+        }
+
+        //save input text answers
+        for (var i = 0; i < followUps.length; i++) {
+          console.log('followUps    ' + followUps[i])
         }
       })
     }
