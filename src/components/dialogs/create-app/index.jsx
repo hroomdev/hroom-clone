@@ -9,47 +9,48 @@ import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
 //import { useNavigate } from 'react-router-dom'
 
 import {
-  experimental_extendTheme as extendTheme,
-  Experimental_CssVarsProvider as CssVarsProvider
+  Experimental_CssVarsProvider as CssVarsProvider,
+  experimental_extendTheme as extendTheme
 } from '@mui/material/styles'
 
 // Third-party Imports
 import classnames from 'classnames'
 
-import teamsru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
 import employeesru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Employees'
+import teamsru from '@/app/../components/../views/dashboards/dashboard/src/screens/DashboardBuilder/Teams'
 
 import generateOptions, { getRandomInt } from '../../dialogs/create-app/GenerateQuizSelectedOptions'
 
 import { hideVerticalMenu, showVerticalMenu } from './../../../components/layout/vertical/Navigation'
 
+import Billing from './Billing'
+import Database from './Database'
 import Details from './Details'
 import FrameWork from './FrameWork'
-import VerticalRadioImage from './VerticalRadioImage'
-import VerticalRadioSVG from './VerticalRadioSVG'
 import SliderScale from './SliderScale'
 import SliderStep from './SliderStep'
 import StarRate from './StarRate'
-import Database from './Database'
-import Billing from './Billing'
 import Submit from './Submit'
+import VerticalRadioImage from './VerticalRadioImage'
+import VerticalRadioSVG from './VerticalRadioSVG'
 
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
 
-import { getQuestData as dbData, createSelectedAnswersCurrentQuiz } from '@/app/server/actions'
+import { createSelectedAnswersCurrentQuiz, getQuestData as dbData } from '@/app/server/actions'
 
 import { generateStatistics } from '@/app/server/dashboardstrategy'
 
 import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
+import OpenQuestion from './OpenQuestion'
 
 const initialSteps = 0
 
@@ -66,7 +67,9 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
           ? StarRate
           : questionType.includes('scale')
             ? SliderScale
-            : 'unknown'
+            : questionType.includes('followup')
+              ? OpenQuestion
+              : 'unknown'
 
   if (activeStep < 0) return <p></p>
 
@@ -104,27 +107,46 @@ const CreateApp = ({ open, setOpen }) => {
     setTitle('                      ')
   }
 
-  async function fetch(step) {
+  async function fetch(step, isFollowUp) {
     if (step == -1 || activeStep < 0) {
       return
     }
 
-    await dbData().then(data => {
-      var questionType = data[Number.parseInt(quizGroupTypeId) - 1][step].type
+    console.log('fetch step' + step + ' isFollowUp ' + isFollowUp)
 
-      var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
+    await dbData().then(async data => {
+      console.log('questionType dbdata fetch' + questionType + ' ')
 
-      setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
+      if (isFollowUp) {
+        var followUp = await getFollowUp(step)
+        var questionType = 'followup'
 
-      setQuestionType(questionType)
-      setTitle(questionTitle)
-      console.log('set loading false')
-      setLoading(false)
+        console.log('followUp' + followUp)
+        var questionTitle = followUp
+
+        //setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
+
+        setQuestionType(questionType)
+        setTitle(questionTitle)
+        console.log('set loading false')
+        setLoading(false)
+      } else {
+        var questionType = data[Number.parseInt(quizGroupTypeId) - 1][step].type
+
+        var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
+
+        setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
+
+        setQuestionType(questionType)
+        setTitle(questionTitle)
+        console.log('set loading false')
+        setLoading(false)
+      }
     })
   }
 
   useEffect(() => {
-    fetch(activeStep)
+    fetch(activeStep, false)
 
     return unmount
   }, [depVar])
@@ -135,13 +157,13 @@ const CreateApp = ({ open, setOpen }) => {
     setOpen(false)
     setActiveStep(-1)
     await unmount()
-    await fetch(-1)
+    await fetch(-1, false)
   }
 
   const handlePrev = async () => {
     if (activeStep > 0) {
       await unmount()
-      await fetch(activeStep - 1)
+      await fetch(activeStep - 1, false)
 
       setActiveStep(prevActiveStep => prevActiveStep - 1)
     } else {
@@ -149,7 +171,43 @@ const CreateApp = ({ open, setOpen }) => {
     }
   }
 
+  const getFollowUp = async step => {
+    return await dbData().then(data => {
+      console.log('   dbData  ' + data + '  ' + step)
+
+      return data[Number.parseInt(quizGroupTypeId) - 1][step].followup
+    })
+  }
+
   const handleNext = async () => {
+    var followUp = await getFollowUp(activeStep)
+
+    console.log('followUp JSON ' + JSON.stringify(followUp) + followUp + 'followUp')
+
+    console.log('questionType ' + questionType)
+    console.log('followUp JSON ' + JSON.stringify(followUp) + followUp + 'followUp')
+    console.log('followUp != undefined ' + followUp != undefined)
+    console.log('followUp != null ' + followUp != null)
+    console.log('followUp != ' + followUp != '')
+
+    if (
+      questionType != undefined &&
+      questionType != '' &&
+      questionType != 'followup' &&
+      followUp != undefined &&
+      followUp != null &&
+      followUp != ''
+    ) {
+      console.log('is follow up : index.js')
+
+      await unmount()
+      await fetch(activeStep, true)
+
+      return
+    } else {
+      console.log('is NOT follow up : index.js')
+    }
+
     if (!(activeStep + 1 >= steps)) {
       await unmount()
       await fetch(activeStep + 1)

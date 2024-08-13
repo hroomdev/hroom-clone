@@ -332,11 +332,12 @@ export const getQuestGroupTypeBy = async groupId => {
   return resultQuestionGroup
 }
 
-const getTypeQuestions = async questionIdsNums => {
+const getTypeQuestionsFollowups = async questionIdsNums => {
   const queryQuestions = {
-    text: 'SELECT "public"."question-list"."id","public"."question-list"."Type","public"."question-list"."Question" FROM "public"."question-list" WHERE "public"."question-list"."id" = ANY ($1)',
-    values: [questionIdsNums],
-    rowMode: 'array'
+    text: 'SELECT "public"."question-list"."id","public"."question-list"."Type","public"."question-list"."Question","public"."question-list"."followup" FROM "public"."question-list" WHERE "public"."question-list"."id" = ANY ($1)',
+    values: [questionIdsNums]
+
+    //rowMode: 'array'
   }
 
   var typeQuestions = []
@@ -359,9 +360,10 @@ const getTypeQuestions = async questionIdsNums => {
       for (var j = 0; j < res.rows.length; j++) {
         var idtypequestion = res.rows[j]
 
-        var idtypequestionSplittedStr0 = idtypequestion.toString().split(',')[0]
-        var idtypequestionSplittedStr1 = idtypequestion.toString().split(',')[1]
-        var idtypequestionSplittedStr2 = idtypequestion.toString().split(',')[2]
+        var idtypequestionSplittedStr0 = idtypequestion['id']
+        var idtypequestionSplittedStr1 = idtypequestion['Type']
+        var idtypequestionSplittedStr2 = idtypequestion['Question']
+        var idtypequestionSplittedStr3 = idtypequestion['followup']
 
         if (!idtypequestionSplittedStr1 || idtypequestionSplittedStr1 === '' || idtypequestionSplittedStr1 === ' ') {
           idtypequestionSplittedStr1 = 'dots5'
@@ -372,9 +374,13 @@ const getTypeQuestions = async questionIdsNums => {
             console.error('doesnt reassigns')
           }
 
-          var typeQuestion = [idtypequestionSplittedStr1, idtypequestionSplittedStr2]
+          var typeQuestionFollowup = [
+            idtypequestionSplittedStr1,
+            idtypequestionSplittedStr2,
+            idtypequestionSplittedStr3
+          ]
 
-          typeQuestions.push(typeQuestion)
+          typeQuestions.push(typeQuestionFollowup)
 
           //types.push(idtypequestionSplittedStr1)
           //questions.push(idtypequestionSplittedStr2)
@@ -474,16 +480,19 @@ export const getQuestData = async () => {
       //console.log(id + ' id | n' + n)
     })
 
-    var typeQuestions = await getTypeQuestions(questionIdsNums)
+    var typeQuestionsFollowups = await getTypeQuestionsFollowups(questionIdsNums)
     var types = []
     var questions = []
+    var followups = []
 
-    for (var j = 0; j < typeQuestions.length; j++) {
-      var type = typeQuestions[j][0]
-      var question = typeQuestions[j][1]
+    for (var j = 0; j < typeQuestionsFollowups.length; j++) {
+      var type = typeQuestionsFollowups[j][0]
+      var question = typeQuestionsFollowups[j][1]
+      var followup = typeQuestionsFollowups[j][2]
 
       types.push(type)
       questions.push(question)
+      followups.push(followup)
     }
 
     var answers = await getAnswers(questionIdsNums, types)
@@ -507,7 +516,8 @@ export const getQuestData = async () => {
         type: types[j],
         subtitle: questions[j],
         answers: answers[j],
-        imgSrcs: types[j].includes('image') ? imgSources : undefined
+        imgSrcs: types[j].includes('image') ? imgSources : undefined,
+        followup: followups[j]
       }
 
       quizIdQuestions.push(quizQuestion)
