@@ -3,8 +3,12 @@ import ruLocale from 'date-fns/locale/ru'
 
 import { formatDistance, formatDistanceToNow } from 'date-fns'
 
-import generateOptions, { getRandomInt } from './../../../src/components/dialogs/create-app/GenerateQuizSelectedOptions'
-import { checkValidJoinedStr } from './../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
+import { checkValidJoinedStr } from '../../components/dialogs/create-app/TestAnswersValidity'
+
+import generateOptions, {
+  generateFollowUps,
+  getRandomInt
+} from './../../../src/components/dialogs/create-app/GenerateQuizSelectedOptions'
 
 import { dbQuizAuditoryIdx, dbQuizIdIdx, dbQuizTimeStartSIdx, dbQuizTypeIdx, dbSelectedAnswersIdIdx } from './dbMapping'
 
@@ -89,13 +93,32 @@ export const generateStatistics = async (limitQuiz, limitAnswers) => {
   }
 }
 
-export const generateSelectedOptions = async () => {
+export const generateSelectedOptionsAndFollowups = async () => {
+  let quizes = await getStartedQuizesOrderByIdDesc(1, 0)
+
+  quizes = quizes.filter(q => {
+    return q !== undefined
+  })
+
+  for (var quizI = quizes.length - 1; quizI > -1; quizI--) {
+    var quiz = quizes[quizI]
+    var quizSplittedStr = quiz.toString().split(',')
+
+    //var quizIdIdx = await dbQuizIdIdx()
+
+    var quizTypeIdx = await dbQuizTypeIdx()
+    var quizTypeId = quizSplittedStr[quizTypeIdx]
+  }
+
   var countGenerated = 20
   var maximum = 10
 
   var generatedOptions = generateOptions(countGenerated, maximum)
 
+  var generatedFollowups = generateFollowUps(countGenerated)
+
   let optionsStr = generatedOptions.join(',')
+  let followUpStr = generatedFollowups.join(',')
 
   var maxEmps = 11
 
@@ -115,10 +138,13 @@ export const generateSelectedOptions = async () => {
     }
   }
 
-  if (!checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0)) {
+  if (
+    !checkValidJoinedStr(optionsStr, countGenerated, 1, maximum, 0) ||
+    !checkValidJoinedStr(followUpStr, countGenerated, countGenerated)
+  ) {
     console.log('generated quiz is not valid! not sending to db')
   } else {
-    let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId, departmentId)
+    let c = await createSelectedAnswersCurrentQuiz(optionsStr, followUpStr, employeeId, departmentId)
 
     console.log('options   ' + c)
   }
@@ -134,13 +160,6 @@ export const getDashboardData = async id => {
   isLoading = true
 
   console.log('loading false -> set loading true : getDashboardData... ')
-
-  //cache forever
-  //if ((await checkIsAvailable(id)) == true) {
-  //  console.log('available cached version return : dashboardstrategy')
-  //
-  //  return await Item(id)
-  //}
 
   var mockData = getMockDashboardData(id)
 

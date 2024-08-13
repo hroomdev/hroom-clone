@@ -42,7 +42,18 @@ const OpenQuestion = ({
 
   function hanldeChange(e) {
     setInputText(e.target.value)
+
+    console.log(e.target.value + '  e.target.value: OpqnQuiestion ')
+
+    for (var i = 0; i < followUps.length; i++) {
+      console.log(followUps.length + '  hanldeChange before handle  followUps.length : OpqnQuiestion ' + followUps[i])
+    }
+
     handleChangeFollowUps(followUps, activeStep, e.target.value)
+
+    for (var i = 0; i < followUps.length; i++) {
+      console.log(followUps.length + '   handlechange after handle followUps.length : OpqnQuiestion' + followUps[i])
+    }
   }
 
   const [isLoading, setLoading] = useState(true)

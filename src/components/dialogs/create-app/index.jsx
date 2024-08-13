@@ -14,6 +14,8 @@ import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
+import { register } from './../../../../src/instrumentation'
+
 // Third-party Imports
 
 import SliderScale from './SliderScale'
@@ -26,8 +28,8 @@ import { createSelectedAnswersCurrentQuiz, getQuestData as dbData } from '@/app/
 
 import { generateStatistics } from '@/app/server/dashboardstrategy'
 
-import { checkValidJoinedStr } from './../../../../src/components/dialogs/create-app/TestSelectedOptionsValidity'
 import OpenQuestion from './OpenQuestion'
+import { checkValidJoinedStr, checkValidJoinedStrFollowUps } from './TestAnswersValidity'
 
 const initialSteps = 0
 
@@ -118,9 +120,9 @@ const CreateApp = ({ open, setOpen }) => {
 
         if (followUps.length < steps) {
           //reinitialize based on 'steps' or questions and answers count
-          followUps = Array(5)
+          followUps = Array(steps)
 
-          Array.apply(null, Array(5)).map(function (x, i) {
+          Array.apply(null, followUps).map(function (x, i) {
             return -1
           })
 
@@ -218,12 +220,8 @@ const CreateApp = ({ open, setOpen }) => {
       await handleClose()
 
       await dbData().then(async data => {
-        let qaArray = []
-
-        console.log('selected options ' + selectedOptions.length)
-        console.log('followups length  ' + followUps.length)
-
         //save selected answers
+        let qaArray = []
 
         for (var i = 0; i < selectedOptions.length; i++) {
           var a = data[Number.parseInt(quizGroupTypeId) - 1][i].answers[selectedOptions[i]]
@@ -239,20 +237,34 @@ const CreateApp = ({ open, setOpen }) => {
 
         var departmentId = 7 //to separate generated and real data
         var employeeId = 1 //to separate generated and real data
+        //save input text answers
+        let followupsArray = []
 
-        if (checkValidJoinedStr(optionsStr, selectedOptions.length, 1, 10, 0) == false) {
-          console.logerror('generate quiz report error check validity of the slected options answers before send')
+        for (var i = 0; i < followUps.length; i++) {
+          if (followUps[i] != undefined) {
+            followupsArray.push(followUps[i])
+          } else {
+            followupsArray.push('')
+          }
+        }
+
+        var followUpsStr = followupsArray.join(',')
+
+        console.log('followUpsStr    ' + followUpsStr)
+
+        if (
+          checkValidJoinedStr(optionsStr, selectedOptions.length, 1, 10, 0) == false ||
+          checkValidJoinedStrFollowUps(followUps, steps, steps) == false
+        ) {
+          console.logerror(
+            'generate selectedanswers row selcetedoptions str error check validity of the slected options answers before send'
+          )
         } else {
-          let c = await createSelectedAnswersCurrentQuiz(optionsStr, employeeId, departmentId)
+          let c = await createSelectedAnswersCurrentQuiz(optionsStr, followUpsStr, employeeId, departmentId)
 
           await generateStatistics(1, 1)
 
-          console.log('selected options   ' + c)
-        }
-
-        //save input text answers
-        for (var i = 0; i < followUps.length; i++) {
-          console.log('followUps    ' + followUps[i])
+          await register()
         }
       })
     }

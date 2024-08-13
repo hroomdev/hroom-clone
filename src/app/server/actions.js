@@ -158,7 +158,7 @@ export const createStatistics = async (
   return res
 }
 
-export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, employeeId, department_id) => {
+export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, followUpsStr, employeeId, department_id) => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -177,9 +177,9 @@ export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, emplo
   await client.connect()
 
   const text =
-    'INSERT INTO "public"."selectedAnswers" ("selectedOptions","quizId","department_id","employee_id") VALUES($1, $2,$3,$4) RETURNING *'
+    'INSERT INTO "public"."selectedAnswers" ("selectedOptions","followups","quizId","department_id","employee_id") VALUES($1, $2,$3,$4,$5) RETURNING *'
 
-  const values = [selectedOptionsStr, currentQuizId, department_id, employeeId]
+  const values = [selectedOptionsStr, followUpsStr, currentQuizId, department_id, employeeId]
 
   const query = {
     // give the query a unique name
@@ -194,7 +194,7 @@ export const createSelectedAnswersCurrentQuiz = async (selectedOptionsStr, emplo
     .query(query) // your query string here
     .then(result => {
       r = result.rows[0]
-      console.log(result)
+      console.log('result createSelectedAnswersCurrentQuiz ' + r + '    ' + JSON.stringify(r))
     }) // your callback here
     .catch(e => console.error(e.stack)) // your callback here
     .then(() => client.end())

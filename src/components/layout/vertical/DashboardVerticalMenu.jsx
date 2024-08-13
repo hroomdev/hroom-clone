@@ -27,8 +27,10 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
-import { generateSelectedOptions, generateStatistics } from '@/app/server/dashboardstrategy'
+import { generateSelectedOptionsAndFollowups, generateStatistics } from '@/app/server/dashboardstrategy'
 import QuizWizard from '@/components/dialogs/create-quiz'
+
+import { register } from './../../../../src/instrumentation'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -96,8 +98,10 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           target='_blank'
           icon={<i className='ri-star-smile-line' />}
           onClick={async () => {
-            generateSelectedOptions().then(async () => {
+            generateSelectedOptionsAndFollowups().then(async () => {
               await generateStatistics(1, 1)
+
+              //register() todo:  посмотреть как синхронизировать кэш без инвалидации кэша или вызова с  клиента
             }) //generate 1 quiz 1 employee last statistic
             //статистику только по последнему опросу только по последнему ответу
           }}

@@ -22,3 +22,7 @@ export function checkValidJoinedStr(optionsArrayStr, countMax, countMin, maximum
 
   return checkValidArrNums(numsArr, countMax, countMin, maximum, minimum)
 }
+
+export function checkValidJoinedStrFollowUps(followUpsArrayStr, countMax, countMin) {
+  return followUpsArrayStr.length >= countMax && followUpsArrayStr.length <= countMin
+}

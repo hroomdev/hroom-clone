@@ -43,7 +43,7 @@ export async function register() {
     var threadid = 'thread_UEBpIa52VnG5dc77bt8H2HAW'
     var assistantid = 'asst_MUBJtTYH5GqDjiGSTEbOajEp'
 
-    var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) // adds prompt message and runs once
+    //var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) // adds prompt message and runs once
 
     var rethinkedAdviceRun = await getAIAdviceFromThread(threadid) // только взять последнее сообщение из истории
 

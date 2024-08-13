@@ -20,9 +20,15 @@ const handleChange = (selectedOptions, activeStep, answersCount, answerId) => {
 }
 
 export const handleChangeFollowUps = (followUps, activeStep, answer) => {
-  console.log(' followUps' + followUps + ' activeStep ' + activeStep + ' answer ' + answer)
+  for (var i = 0; i < followUps.length; i++) {
+    console.log(followUps.length + '  hanldeChange before handle  followUps.length ')
+  }
 
   followUps[activeStep] = answer
+
+  for (var i = 0; i < followUps.length; i++) {
+    console.log(followUps.length + '   handlechange after handle followUps.length ')
+  }
 
   console.log(' followUps.length' + followUps.length)
 }

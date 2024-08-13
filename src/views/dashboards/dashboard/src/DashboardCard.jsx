@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 // MUI Imports
 import MuiCard from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
-import Chip from '@mui/material/Chip'
 import './../../../../app/globals.css'
 
 //Component Imports
@@ -128,12 +128,3 @@ DashboardCard.propTypes = {
    */
   chipBackground: PropTypes.string.isRequired
 }
-
-//DashboardCard.defaultProps = {
-//  title: titleDefault,
-//  avatarIcon: '',
-//  ritoric: ritoricDefault,
-//  chipLabel: chipLabelDefault,
-//  borderColor: borderColorDefault,
-//  chipBackgroundColor: chipBackgroundColorDefault
-//}

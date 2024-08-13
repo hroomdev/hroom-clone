@@ -14,4 +14,14 @@ const generateOptions = (questionsCount, maximum) => {
   return generatedOptions
 }
 
+export const generateFollowUps = followUpsCount => {
+  let generatedFollowUps = [4, 5, 5, 5, 5, 5, 3, 3, 3, 1, 2] //test data
+
+  for (var i = 0; i < followUpsCount; i++) {
+    generatedFollowUps[i] = ''
+  }
+
+  return generatedFollowUps
+}
+
 export default generateOptions
