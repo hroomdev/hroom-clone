@@ -16,9 +16,15 @@ import {
 } from './aichatgpt'
 
 const promptPrepare0 =
-  'Отвечай как профессионал по вовлеченности сотрудников компаний и профессионал в сфере бизнес-консалтинга. Проанализируй данные по вовлеченности сотрудников и дай ответ в двух видах: 1. Инсайты по компании в виде интересных зависимостей между переменными. 2. Советы от ИИ по конкретным найденным проблемам, четкие и ясные, около 200 символов. Три инсайта. Три совета. Результат представь в виде JSON. Не пиши вступительных слов или чего-либо еще, кроме самого ответа.'
+  'Отвечай как профессионал по вовлеченности сотрудников компаний и профессионал в сфере бизнес-консалтинга. Проанализируй данные по вовлеченности сотрудников и дай ответ в двух видах: 1. Инсайты по компании в виде интересных зависимостей между переменными. 2. Советы от ИИ по конкретным найденным проблемам, четкие и ясные, около 200 символов. 3. Текст строка из двух отделов, через разделитель - символ тире, первый отдел - название когорты второй отдел - процент ответов от общего числа ответов; когорты выбирай строго по - тематикам значения подбирай только из этого списка : Отношения с руководителем,  Доверие с руководителем, Общение с руководителем, Качество признания, Частота признания, Качество обратной связи, Частота обратной связи, Предложения для организации, Автономия, Мастерство, Цель, Ценности, Видение и миссия, Этика и социальная ответственность, Справедливость, Роль внутри организации, Рабочая среда, Сотрудничество между коллегами, Доверие между коллегами, Общение между коллегами, Стресс, Личное здоровье, Счастье на работе, Баланс работа-жизнь, Отстаивание, Гордость; четкие и ясные, около 200 символов. Три инсайта. Три совета. Три текста с наибольшим значением процента вхождения в когорту. Результат представь в виде JSON. Не пиши вступительных слов или чего-либо еще, кроме самого ответа.'
 
-export const updateVectorStore = async (surveysJson, questionsJson, surveys_Statisticsjson, employeesjson) => {
+export const updateVectorStore = async (
+  surveysJson,
+  questionsJson,
+  surveys_Statisticsjson,
+  employeesjson,
+  answerjson
+) => {
   //retrieve and acquire list vector store files array
 
   var vectorStoreId = 'vs_qIjt5szPOVqtyifTrOLFde1C'
@@ -77,7 +83,7 @@ export const updateVectorStore = async (surveysJson, questionsJson, surveys_Stat
   }
 
   //upload files
-  var filesAsStrs = [surveysJson, questionsJson, surveys_Statisticsjson, employeesjson]
+  var filesAsStrs = [surveysJson, questionsJson, surveys_Statisticsjson, employeesjson, answerjson]
 
   var date = new Date()
 
@@ -104,7 +110,8 @@ export const updateVectorStore = async (surveysJson, questionsJson, surveys_Stat
     'Surveys' + hash + '.json',
     'Questions' + hash + '.json',
     'Survey_Statistics' + hash + '.json',
-    'Employees' + hash + '.json'
+    'Employees' + hash + '.json',
+    'Answers' + hash + '.json'
   ]
 
   let uploadFilesResults = await FilesUpload(filesAsStrs, filesNames, 'assistants')

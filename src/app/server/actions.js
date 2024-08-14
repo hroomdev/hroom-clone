@@ -332,7 +332,7 @@ export const getQuestGroupTypeBy = async groupId => {
   return resultQuestionGroup
 }
 
-const getTypeQuestionsFollowups = async questionIdsNums => {
+export const getTypeQuestionsFollowups = async questionIdsNums => {
   const queryQuestions = {
     text: 'SELECT "public"."question-list"."id","public"."question-list"."Type","public"."question-list"."Question","public"."question-list"."followup" FROM "public"."question-list" WHERE "public"."question-list"."id" = ANY ($1)',
     values: [questionIdsNums]
@@ -596,6 +596,43 @@ export const getSelectedOptions = async answersId => {
     }
 
     selectedOptions = res.rows[0]
+  } catch (e) {
+    console.error(e.stack)
+  } finally {
+    client.end()
+  }
+
+  return selectedOptions
+}
+
+export const getAllSelectedOptions = async () => {
+  let client = new Client({
+    user: 'gen_user',
+    host: '147.45.227.55',
+    database: 'default_db',
+    password: 'j6ukvvX(SS0#&5',
+    port: 5432
+  })
+
+  const selectedOptionsQuery = {
+    text: 'SELECT * FROM "public"."selectedAnswers"'
+  }
+
+  var selectedOptions = ''
+
+  try {
+    await client.connect()
+    var res = await client.query(selectedOptionsQuery)
+
+    if (res.rows.length <= 0) {
+      console.log('no selectedAnswers Options at all')
+
+      console.log('res.rows.length ' + res.rows.length)
+
+      return selectedOptions
+    }
+
+    selectedOptions = res
   } catch (e) {
     console.error(e.stack)
   } finally {

@@ -1,4 +1,10 @@
-import { getEmployees, getQuestionsOrderDesc, getStatistics, getSurveysOrderByIdDesc } from './app/server/actions'
+import {
+  getAllSelectedOptions,
+  getEmployees,
+  getQuestionsOrderDesc,
+  getStatistics,
+  getSurveysOrderByIdDesc
+} from './app/server/actions'
 
 export const getEmployeesJSON = async () => {
   var maxEmps = 10
@@ -9,6 +15,68 @@ export const getEmployeesJSON = async () => {
 }
 
 export const getQuestionsJSON = async () => {
+  var maxQuestions = 120
+
+  var questionsres = await getQuestionsOrderDesc(maxQuestions)
+
+  for (var i = 0; i < questionsres.rows.length; i++) {
+    var emp = questionsres.rows[i]
+
+    for (var j = 0; j < questionsres.fields.length; j++) {
+      if (questionsres.fields[j].name == 'id') {
+        emp['question_id'] = emp['id']
+
+        delete emp['id']
+      }
+
+      if (questionsres.fields[j].name == 'Question') {
+        emp['question_text'] = emp['Question']
+
+        delete emp['Question']
+      }
+
+      if (questionsres.fields[j].name == 'created_at' || questionsres.fields[j].name == 'Type') {
+        delete emp[questionsres.fields[j].name]
+      }
+    }
+  }
+
+  return JSON.stringify(questionsres.rows)
+}
+
+export const getSelectedAnswersJSON = async () => {
+  var maxQuestions = 120
+
+  var answersres = await getAllSelectedOptions()
+
+  console.log('answersres' + answersres)
+
+  for (var i = 0; i < answersres.rows.length; i++) {
+    var answer = answersres.rows[i]
+
+    for (var j = 0; j < answersres.fields.length; j++) {
+      if (answersres.fields[j].name == 'id') {
+        answer['question_id'] = answer['id']
+
+        delete answer['id']
+      }
+
+      if (answersres.fields[j].name == 'Question') {
+        answer['question_text'] = answer['Question']
+
+        delete answer['Question']
+      }
+
+      if (answersres.fields[j].name == 'created_at' || answersres.fields[j].name == 'id') {
+        delete answer[answersres.fields[j].name]
+      }
+    }
+  }
+
+  return JSON.stringify(answersres.rows)
+}
+
+export const getAnswersJSON = async () => {
   var maxQuestions = 120
 
   var questionsres = await getQuestionsOrderDesc(maxQuestions)

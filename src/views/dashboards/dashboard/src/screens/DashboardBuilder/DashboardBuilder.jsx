@@ -1,24 +1,24 @@
 'use client'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
 import { Truculenta } from 'next/font/google'
+import { useRouter } from 'next/navigation'
 
 import Grid from '@mui/material/Grid'
 
 const local = 'ru-RU'
 
-import { formatDistanceToNow, subDays, intervalToDuration } from 'date-fns'
+import { formatDistanceToNow, intervalToDuration, subDays } from 'date-fns'
 
 import { getMockDashboardData } from '@/app/server/MockData'
 
-import { Item, preload, checkIsAvailable, updateCacheData } from './../../../../../../app/server/dashboarddbcache'
-import DashboardCard from './../../DashboardCard'
 import DashboardApexLineChart from '@views/dashboards/dashboard/src/DashboardApexLineChart'
-import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
-import TeamsTransactions from '@views/dashboards/dashboard/src/TeamsTransactions'
 import DashboardBarChart from '@views/dashboards/dashboard/src/DashboardBarChart'
 import DashboardHeatmapChart from '@views/dashboards/dashboard/src/DashboardHeatmapChart'
+import DashboardTransactions from '@views/dashboards/dashboard/src/DashboardTransactions'
+import TeamsTransactions from '@views/dashboards/dashboard/src/TeamsTransactions'
+import { checkIsAvailable, Item, preload, updateCacheData } from './../../../../../../app/server/dashboarddbcache'
+import DashboardCard from './../../DashboardCard'
 
 import ProgressLinearWithLabel from '../../ProgressLinearWithLabel'
 import { TotalRevenue } from '../../components/TotalRevenue'
@@ -41,7 +41,7 @@ const options = {
 var initialMetricByTeam = 'Ambassadorship'
 var initialTimeInterval = 'quarter'
 
-export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsights }) => {
+export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsights, initialCohortsQuestionCard }) => {
   var depVar = 1
 
   //ai advices insights
@@ -53,6 +53,14 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
   const [advice1, setAdvice1] = useState(initialAdivces[0]) // Declare a state variable...
   const [advice2, setAdvice2] = useState(initialAdivces[1]) // Declare a state variable...
   const [advice3, setAdvice3] = useState(initialAdivces[2]) // Declare a state variable...
+
+  const [cohortTopic1, setCohort1] = useState(initialCohortsQuestionCard[0].toString().split('-')[0]) // Declare a state variable...
+  const [cohortTopic2, setCohort2] = useState(initialCohortsQuestionCard[1].toString().split('-')[0]) // Declare a state variable...
+  const [cohortTopic3, setCohort3] = useState(initialCohortsQuestionCard[2].toString().split('-')[0]) // Declare a state variable...
+
+  const [cohort1Percent1, setCohortPercent1] = useState(initialCohortsQuestionCard[0].toString().split('-')[1]) // Declare a state variable...
+  const [cohort1Percent2, setCohortPercent2] = useState(initialCohortsQuestionCard[1].toString().split('-')[1]) // Declare a state variable...
+  const [cohort1Percent3, setCohortPercent3] = useState(initialCohortsQuestionCard[2].toString().split('-')[1]) // Declare a state variable...
 
   //user data
   const [selectedEngagementMetricKey, setSelected] = useState(initialMetricByTeam) // Declare a state variable...
@@ -442,27 +450,27 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
                 <div className='row-9'>
                   <div className='list-4'>
                     <div className='text-19'>
-                      <div className='text-20'>Карьера</div>
+                      <div className='text-20'>{cohortTopic1}</div>
                       <div className='frame-14'>
-                        <div className='text-21'>22%</div>
+                        <div className='text-21'>{cohort1Percent1}</div>
                         <div className='text-22'>Возникновения</div>
                       </div>
                     </div>
                   </div>
                   <div className='list-5'>
                     <div className='text-23'>
-                      <div className='text-24'>Высшее руковдство</div>
+                      <div className='text-24'>{cohortTopic2}</div>
                       <div className='frame-14'>
-                        <div className='text-21'>22%</div>
+                        <div className='text-21'>{cohort1Percent2}</div>
                         <div className='text-22'>Возникновения</div>
                       </div>
                     </div>
                   </div>
                   <div className='list-6'>
                     <div className='text-25'>
-                      <div className='text-26'>Руководитель</div>
+                      <div className='text-26'>{cohortTopic3}</div>
                       <div className='frame-15'>
-                        <div className='text-21'>22%</div>
+                        <div className='text-21'>{cohort1Percent3}</div>
                         <div className='text-22'>Возникновения</div>
                       </div>
                     </div>

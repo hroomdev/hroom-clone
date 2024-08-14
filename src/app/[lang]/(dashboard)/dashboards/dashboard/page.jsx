@@ -4,7 +4,7 @@ import { GET } from '@/app/api/apps/dashboard/route'
 
 const local = 'ru-RU'
 
-import { Item, preload, checkIsAvailable, updateCacheData } from '@/app/server/dashboarddbcache'
+import { checkIsAvailable, Item, preload, updateCacheData } from '@/app/server/dashboarddbcache'
 import { getMockDashboardData } from '@/app/server/MockData'
 
 import { getAIAdvices } from './../../../../../app/server/dashboardai'
@@ -48,8 +48,21 @@ export const Dashboard = async () => {
     //console.log('insights readed ' + insights[i])
   }
 
+  console.log('когорты из бд')
+  var cohorts = await getAIAdvices(4, 3)
+
+  for (var i = 0; i < cohorts.length; i++) {
+    console.log('cohort readed ' + cohorts[i])
+  }
+
   return (
-    <DashboardBuilder companyId={await companyId()} data={data} initialAdivces={advices} initialInsights={insights} />
+    <DashboardBuilder
+      companyId={await companyId()}
+      data={data}
+      initialAdivces={advices}
+      initialInsights={insights}
+      initialCohortsQuestionCard={cohorts}
+    />
   )
 }
 

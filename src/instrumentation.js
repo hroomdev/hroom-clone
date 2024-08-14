@@ -8,7 +8,13 @@ import {
 
 import { saveAdvicesTexts } from './app/server/actions.js'
 import { updateCacheData } from './app/server/dashboarddbcache'
-import { getEmployeesJSON, getQuestionsJSON, getStatisticsJSON, getSurveysJSON } from './jsonParser'
+import {
+  getEmployeesJSON,
+  getQuestionsJSON,
+  getSelectedAnswersJSON,
+  getStatisticsJSON,
+  getSurveysJSON
+} from './jsonParser'
 
 export async function register() {
   console.log('registerstart' + new Date().toString())
@@ -37,10 +43,20 @@ export async function register() {
 
   console.log('questionsJSONStr ' + questionsJSONStr)
 
-  try {
-    var employees = await updateVectorStore(surveysJSONStr, questionsJSONStr, statisticJSONStr, employesJSONStr)
+  var selectedAnswersJSONStr = await getSelectedAnswersJSON()
 
-    var threadid = 'thread_UEBpIa52VnG5dc77bt8H2HAW'
+  console.log('selectedAnswersJsonStr ' + selectedAnswersJSONStr)
+
+  try {
+    var employees = await updateVectorStore(
+      surveysJSONStr,
+      questionsJSONStr,
+      statisticJSONStr,
+      employesJSONStr,
+      selectedAnswersJSONStr
+    )
+
+    var threadid = 'thread_RCpXzhcJXh0W6D4FbpZXKgm7' // new 'thread_UEBpIa52VnG5dc77bt8H2HAW'
     var assistantid = 'asst_MUBJtTYH5GqDjiGSTEbOajEp'
 
     //var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) // adds prompt message and runs once
@@ -58,59 +74,27 @@ export async function register() {
 
   var result = JSON.parse(resultWithoutRoleJSON)
 
-  var insights = []
+  var insights = result.insights
+  var cohort = result.top_cohorts_percentage_text
+  var advices = result.advice_from_AI
 
-  var insightStore = result['insights']
-
-  console.log('insightStore' + JSON.stringify(insightStore))
-
-  var interestingFindingsAssocArr = insightStore['interesting_findings']
-
-  //brute-force all findings one by one from associative array
-  var limitAnswers = 10
-
-  for (var i = 1; i < limitAnswers; i++) {
-    var key = i.toString()
-
-    if (key in interestingFindingsAssocArr) {
-      var ifinding = interestingFindingsAssocArr[i.toString()]
-
-      insights.push(ifinding)
-
-      continue
-    }
-
-    break
-  }
-
-  console.log('всего сгенерировано ' + insights.length)
-
-  var advices = []
-  var advicesStoreAssocArr = result['recommendations']
-
-  for (var i = 1; i < limitAnswers; i++) {
-    var key = i.toString()
-
-    if (key in advicesStoreAssocArr) {
-      var advice = advicesStoreAssocArr[i.toString()]
-
-      advices.push(advice)
-
-      continue
-    }
-
-    break
-  }
-
-  console.log(advices.length + ' советов ')
+  console.log(cohort.length + ' cohort ')
 
   for (var i = 0; i < insights.length; i++) {
     console.log('инсайт  ' + insights[i] + ' ' + i)
   }
 
+  for (var i = 0; i < cohort.length; i++) {
+    console.log('когорт  ' + cohort[i] + ' ' + i)
+  }
+
   for (var i = 0; i < advices.length; i++) {
     console.log('совет  ' + advices[i] + ' ' + i)
   }
+
+  var savedCohortsResultRows = await saveAdvicesTexts(4, cohort)
+
+  console.log('save cohort rows ' + JSON.stringify(savedCohortsResultRows))
 
   var savedInsightsResultRows = await saveAdvicesTexts(3, insights)
 
@@ -129,4 +113,8 @@ export async function register() {
 
   console.log('инсайты из бд')
   insightsFromDB.map(i => console.log(i))
+
+  console.log('когорты из бд')
+  var cohortsFromDB = await getAIAdvices(4, 3)
+  cohortsFromDB.map(i => console.log(i))
 }
