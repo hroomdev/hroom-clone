@@ -41,7 +41,7 @@ const options = {
 var initialMetricByTeam = 'Ambassadorship'
 var initialTimeInterval = 'quarter'
 
-export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsights, initialCohortsQuestionCard }) => {
+export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsights, initialCohortsJSONstrs }) => {
   var depVar = 1
 
   //ai advices insights
@@ -54,13 +54,19 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
   const [advice2, setAdvice2] = useState(initialAdivces[1]) // Declare a state variable...
   const [advice3, setAdvice3] = useState(initialAdivces[2]) // Declare a state variable...
 
-  const [cohortTopic1, setCohort1] = useState(initialCohortsQuestionCard[0].toString().split('-')[0]) // Declare a state variable...
-  const [cohortTopic2, setCohort2] = useState(initialCohortsQuestionCard[1].toString().split('-')[0]) // Declare a state variable...
-  const [cohortTopic3, setCohort3] = useState(initialCohortsQuestionCard[2].toString().split('-')[0]) // Declare a state variable...
+  const [cohortTopic1, setCohort1] = useState(JSON.parse(initialCohortsJSONstrs[0])['cohort']) // Declare a state variable...
+  const [cohortTopic2, setCohort2] = useState(JSON.parse(initialCohortsJSONstrs[1])['cohort']) // Declare a state variable...
+  const [cohortTopic3, setCohort3] = useState(JSON.parse(initialCohortsJSONstrs[2])['cohort']) // Declare a state variable...
 
-  const [cohort1Percent1, setCohortPercent1] = useState(initialCohortsQuestionCard[0].toString().split('-')[1]) // Declare a state variable...
-  const [cohort1Percent2, setCohortPercent2] = useState(initialCohortsQuestionCard[1].toString().split('-')[1]) // Declare a state variable...
-  const [cohort1Percent3, setCohortPercent3] = useState(initialCohortsQuestionCard[2].toString().split('-')[1]) // Declare a state variable...
+  const [cohort1Percent1, setCohortPercent1] = useState(JSON.parse(initialCohortsJSONstrs[0])['answers_percentage']) // Declare a state variable...
+  const [cohort1Percent2, setCohortPercent2] = useState(JSON.parse(initialCohortsJSONstrs[1])['answers_percentage']) // Declare a state variable...
+  const [cohort1Percent3, setCohortPercent3] = useState(JSON.parse(initialCohortsJSONstrs[2])['answers_percentage']) // Declare a state variable...
+
+  const [questionText, setQuestionText] = useState(JSON.parse(initialCohortsJSONstrs[0])['question_text']) // Declare a state variable...
+  const [respondents, setRespondents] = useState(JSON.parse(initialCohortsJSONstrs[0])['respondents']) // Declare a state variable...
+  const [answeredPercentege, setAnsweredPercentege] = useState(
+    JSON.parse(initialCohortsJSONstrs[0])['answered_percentage']
+  ) // Declare a state variable...
 
   //user data
   const [selectedEngagementMetricKey, setSelected] = useState(initialMetricByTeam) // Declare a state variable...
@@ -428,22 +434,20 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
                     <div className='text-wrapper-15'>Вопрос</div>
                     <div className='text-wrapper-15'>К ответам &gt;</div>
                   </div>
-                  <p className='text-wrapper-16'>
-                    Какое одно улучшение вы могли бы предложить, чтобы сделать эту организацию лучшим местом для работы?
-                  </p>
+                  <p className='text-wrapper-16'>{questionText}</p>
                 </div>
               </div>
               <div className='card-body'>
                 <div className='list-2'>
                   <div className='text-15'>
                     <div className='text-16'>Процент ответов</div>
-                    <div className='text-17'>98%</div>
+                    <div className='text-17'>{answeredPercentege}%</div>
                   </div>
                 </div>
                 <div className='list-3'>
                   <div className='text-18'>
                     <div className='text-16'>Респонденты</div>
-                    <div className='text-17'>4 397</div>
+                    <div className='text-17'>{respondents}</div>
                   </div>
                 </div>
                 <div className='rectangle' />
@@ -452,7 +456,7 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
                     <div className='text-19'>
                       <div className='text-20'>{cohortTopic1}</div>
                       <div className='frame-14'>
-                        <div className='text-21'>{cohort1Percent1}</div>
+                        <div className='text-21'>{cohort1Percent1}%</div>
                         <div className='text-22'>Возникновения</div>
                       </div>
                     </div>
@@ -461,7 +465,7 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
                     <div className='text-23'>
                       <div className='text-24'>{cohortTopic2}</div>
                       <div className='frame-14'>
-                        <div className='text-21'>{cohort1Percent2}</div>
+                        <div className='text-21'>{cohort1Percent2}%</div>
                         <div className='text-22'>Возникновения</div>
                       </div>
                     </div>
@@ -470,7 +474,7 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
                     <div className='text-25'>
                       <div className='text-26'>{cohortTopic3}</div>
                       <div className='frame-15'>
-                        <div className='text-21'>{cohort1Percent3}</div>
+                        <div className='text-21'>{cohort1Percent3}%</div>
                         <div className='text-22'>Возникновения</div>
                       </div>
                     </div>

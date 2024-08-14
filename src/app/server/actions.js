@@ -461,6 +461,14 @@ const getAnswers = async (questionIdsNums, types) => {
   return answers
 }
 
+export const getFollowUp = async (quizGroupTypeId, step) => {
+  return await getQuestData().then(data => {
+    console.log(quizGroupTypeId + 'quizGroupTypeId|    dbData  ' + data + '| step  ' + step + '|')
+
+    return data[Number.parseInt(quizGroupTypeId) - 1][step].followup
+  })
+}
+
 export const getQuestData = async () => {
   //values for questionGroups is 'A' column here https://docs.google.com/spreadsheets/d/1TbnTMajgWkNOg1-ZeRZJbNwVyfLDTQufz9aYtWjmDAw/edit?gid=1027310322#gid=1027310322
   //data layout @/fake-db/pages/quiz' questionsData

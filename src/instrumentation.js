@@ -56,10 +56,10 @@ export async function register() {
       selectedAnswersJSONStr
     )
 
-    var threadid = 'thread_RCpXzhcJXh0W6D4FbpZXKgm7' // new 'thread_UEBpIa52VnG5dc77bt8H2HAW'
+    var threadid = 'thread_XAxhKZhtmHHNy3mWc1keuksq' // ''thread_RCpXzhcJXh0W6D4FbpZXKgm7'' new 'thread_UEBpIa52VnG5dc77bt8H2HAW' 'thread_XAxhKZhtmHHNy3mWc1keuksq'
     var assistantid = 'asst_MUBJtTYH5GqDjiGSTEbOajEp'
 
-    var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) // adds prompt message and runs once
+    //var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) // adds prompt message and runs once
 
     var rethinkedAdviceRun = await getAIAdviceFromThread(threadid) // только взять последнее сообщение из истории
 
@@ -75,8 +75,8 @@ export async function register() {
   var result = JSON.parse(resultWithoutRoleJSON)
 
   var insights = result.insights
-  var cohort = result.top_cohorts_percentage_text
-  var advices = result.advice_from_AI
+  var cohort = result.top_questions
+  var advices = result.advice
 
   console.log(cohort.length + ' cohort ')
 

@@ -24,7 +24,7 @@ import StarRate from './StarRate'
 import VerticalRadioImage from './VerticalRadioImage'
 import VerticalRadioSVG from './VerticalRadioSVG'
 
-import { createSelectedAnswersCurrentQuiz, getQuestData as dbData } from '@/app/server/actions'
+import { createSelectedAnswersCurrentQuiz, getQuestData as dbData, getFollowUp } from '@/app/server/actions'
 
 import { generateStatistics } from '@/app/server/dashboardstrategy'
 
@@ -99,7 +99,7 @@ const CreateApp = ({ open, setOpen }) => {
       console.log('questionType dbdata fetch' + questionType + ' ')
 
       if (isFollowUp) {
-        var followUp = await getFollowUp(step)
+        var followUp = await getFollowUp(quizGroupTypeId, step)
         var questionType = 'followup'
 
         console.log('followUp' + followUp)
@@ -172,14 +172,6 @@ const CreateApp = ({ open, setOpen }) => {
     } else {
       console.logerror('activestep is zero cant go prev!')
     }
-  }
-
-  const getFollowUp = async step => {
-    return await dbData().then(data => {
-      console.log('   dbData  ' + data + '  ' + step)
-
-      return data[Number.parseInt(quizGroupTypeId) - 1][step].followup
-    })
   }
 
   const handleNext = async () => {

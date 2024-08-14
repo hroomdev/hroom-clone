@@ -7,6 +7,8 @@ const local = 'ru-RU'
 import { checkIsAvailable, Item, preload, updateCacheData } from '@/app/server/dashboarddbcache'
 import { getMockDashboardData } from '@/app/server/MockData'
 
+import { getMaxRespondentsFollowUpArrTextRespPercResp } from '@/app/server/actions'
+
 import { getAIAdvices } from './../../../../../app/server/dashboardai'
 
 import { getStaticProps } from './../../../../../../src/views/pages/dashboards/index'
@@ -49,10 +51,10 @@ export const Dashboard = async () => {
   }
 
   console.log('когорты из бд')
-  var cohorts = await getAIAdvices(4, 3)
+  var cohortsJSONstrs = await getAIAdvices(4, 3)
 
-  for (var i = 0; i < cohorts.length; i++) {
-    console.log('cohort readed ' + cohorts[i])
+  for (var i = 0; i < cohortsJSONstrs.length; i++) {
+    console.log('cohort readed ' + cohortsJSONstrs[i])
   }
 
   return (
@@ -61,7 +63,7 @@ export const Dashboard = async () => {
       data={data}
       initialAdivces={advices}
       initialInsights={insights}
-      initialCohortsQuestionCard={cohorts}
+      initialCohortsJSONstrs={cohortsJSONstrs}
     />
   )
 }
