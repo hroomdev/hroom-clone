@@ -7,7 +7,7 @@ const local = 'ru-RU'
 import { checkIsAvailable, Item, preload, updateCacheData } from '@/app/server/dashboarddbcache'
 import { getMockDashboardData } from '@/app/server/MockData'
 
-import { getMaxRespondentsFollowUpArrTextRespPercResp } from '@/app/server/actions'
+import { getEmployeesRows } from '@/app/server/actions'
 
 import { getAIAdvices } from './../../../../../app/server/dashboardai'
 
@@ -50,7 +50,7 @@ export const Dashboard = async () => {
     //console.log('insights readed ' + insights[i])
   }
 
-  console.log('когорты из бд')
+  console.log('когорты из бд') //советы из бд дополняем данными о всех пользователях из бд - то что проще вытянуть из бд (не подсчитывая ии)
   var cohortsJSONstrs = await getAIAdvices(4, 3)
 
   for (var i = 0; i < cohortsJSONstrs.length; i++) {

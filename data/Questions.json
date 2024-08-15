@@ -1,0 +1,856 @@
+[
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Purpose",
+    "followup": null,
+    "question_id": 122,
+    "question_text": "Я чувствую сильное чувство цели, связанное с моей ролью здесь."
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Purpose",
+    "followup": null,
+    "question_id": 121,
+    "question_text": "Вы видите, как ваша работа способствует достижению целей вашей организации?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Purpose",
+    "followup": null,
+    "question_id": 120,
+    "question_text": "Вы считаете, что ваша работа влияет на цель вашей организации?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Purpose",
+    "followup": null,
+    "question_id": 119,
+    "question_text": "Я чувствую, что моя организация доверяет мне вносить вклад в нашу миссию."
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Mastery",
+    "followup": null,
+    "question_id": 118,
+    "question_text": "У меня есть возможность делать то, что я умею лучше всего, в своей роли."
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Mastery",
+    "followup": null,
+    "question_id": 117,
+    "question_text": "Я получаю поддержку для своего роста и развития."
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Mastery",
+    "followup": null,
+    "question_id": 116,
+    "question_text": "У вас есть возможность расти в вашей организации?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Mastery",
+    "followup": null,
+    "question_id": 115,
+    "question_text": "Как бы вы описали уровень вызова, с которым вы сталкиваетесь на работе?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Mastery",
+    "followup": null,
+    "question_id": 114,
+    "question_text": "По шкале от 0 до 10, как бы вы оценили уровень вашего доступа к соответствующему обучению?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Mastery",
+    "followup": null,
+    "question_id": 113,
+    "question_text": "Как бы вы оценили способ, которым ваша организация использует ваши сильные стороны?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Autonomy",
+    "followup": null,
+    "question_id": 112,
+    "question_text": "Вы можете попробовать новые инструменты или идеи, которые помогут вам лучше выполнять свою работу?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Autonomy",
+    "followup": null,
+    "question_id": 111,
+    "question_text": "Я считаю, что я контролирую выполнение своей работы."
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Autonomy",
+    "followup": null,
+    "question_id": 110,
+    "question_text": "По шкале от 0 до 10, насколько вы удовлетворены уровнем автономии, который у вас есть на работе?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Autonomy",
+    "followup": null,
+    "question_id": 109,
+    "question_text": "Вы чувствуете, что у вас достаточно свободы, чтобы решать, как выполнять свою работу?"
+  },
+  {
+    "Metric": "Personal Growth",
+    "Sub Metric": "Autonomy",
+    "followup": null,
+    "question_id": 108,
+    "question_text": "Я адекватно вовлечен в принятие решений, касающихся моей работы."
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Personal Health",
+    "followup": "what’s missing for you to have a helthy lifestyle?",
+    "question_id": 107,
+    "question_text": "Вы чувствуете, что работа в вашей организации позволяет вам вести здоровый образ жизни?"
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Personal Health",
+    "followup": null,
+    "question_id": 106,
+    "question_text": "Я могу поддерживать хороший уровень энергии на работе."
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Personal Health",
+    "followup": null,
+    "question_id": 105,
+    "question_text": "My organization really cares about my mental well-being."
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Personal Health",
+    "followup": null,
+    "question_id": 104,
+    "question_text": "По шкале от 0 до 10, как бы вы оценили действия вашей организации по продвижению благополучия (поддержка, ресурсы для удаленной работы или программы по психическому здоровью и т.д.)?"
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Personal Health",
+    "followup": null,
+    "question_id": 103,
+    "question_text": "Я чувствую себя физически в безопасности там, где я работаю."
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Stress",
+    "followup": null,
+    "question_id": 102,
+    "question_text": "У меня управляемый уровень стресса на работе."
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Stress",
+    "followup": null,
+    "question_id": 101,
+    "question_text": "В целом, как вы оцениваете уровень своего рабочего стресса?"
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Stress",
+    "followup": null,
+    "question_id": 100,
+    "question_text": "Кто-то скажет или сделает что-то полезное, если я проявлю признаки стресса на работе."
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Stress",
+    "followup": null,
+    "question_id": 99,
+    "question_text": "Моя организация предоставляет необходимую поддержку для решения вопросов, связанных со стрессом на работе."
+  },
+  {
+    "Metric": "Wellness",
+    "Sub Metric": "Stress",
+    "followup": "",
+    "question_id": 98,
+    "question_text": "По шкале от 0 до 10, насколько разумна ваша рабочая нагрузка?"
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Work-Life Balance",
+    "followup": "",
+    "question_id": 97,
+    "question_text": "Вы замечали, что ваша работа негативно влияет на вашу личную жизнь?"
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Work-Life Balance",
+    "followup": "",
+    "question_id": 96,
+    "question_text": "Я чувствую поддержку на работе, когда сталкиваюсь с личными или семейными проблемами."
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Work-Life Balance",
+    "followup": "",
+    "question_id": 95,
+    "question_text": "У вас есть возможность брать отпуск, когда это необходимо?"
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Work-Life Balance",
+    "followup": "",
+    "question_id": 94,
+    "question_text": "Моя организация поддерживает меня, если мне нужно воспользоваться гибкими рабочими условиями."
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Work-Life Balance",
+    "followup": "",
+    "question_id": 93,
+    "question_text": "Я считаю, что могу поддерживать здоровый баланс между работой и личной жизнью."
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Happiness at Work",
+    "followup": "",
+    "question_id": 92,
+    "question_text": "В общем, как бы вы оценили свой уровень счастья на работе?"
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Happiness at Work",
+    "followup": "what’s missing for your work to be fullfilling?",
+    "question_id": 91,
+    "question_text": "Моя работа приносит удовлетворение."
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Happiness at Work",
+    "followup": "",
+    "question_id": 90,
+    "question_text": "Большую часть дней я чувствую удовлетворение от того, что я делаю."
+  },
+  {
+    "Metric": "Happiness",
+    "Sub Metric": "Happiness at Work",
+    "followup": "",
+    "question_id": 89,
+    "question_text": "Вам нравится работа, которую вы выполняете?"
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Ethics & Social Responsibility",
+    "followup": "",
+    "question_id": 88,
+    "question_text": "По шкале от 0 до 10, насколько желанным и включенным вы себя чувствуете в своей организации?"
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Ethics & Social Responsibility",
+    "followup": "",
+    "question_id": 87,
+    "question_text": "Моя организация работает над привлечением, развитием и удержанием людей с различными предысториями."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Ethics & Social Responsibility",
+    "followup": "",
+    "question_id": 86,
+    "question_text": "Моя организация ценит уникальность своих членов команды."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Ethics & Social Responsibility",
+    "followup": "",
+    "question_id": 85,
+    "question_text": "Я вижу конкретные действия, которые воплощают приверженность моей организации социальной ответственности."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Ethics & Social Responsibility",
+    "followup": "",
+    "question_id": 84,
+    "question_text": "Людей из всех слоев общества справедливо относятся в моей организации."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Ethics & Social Responsibility",
+    "followup": "",
+    "question_id": 83,
+    "question_text": "Людей уважают за то, кто они есть, в моей организации."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Values",
+    "followup": "",
+    "question_id": 82,
+    "question_text": "Ваша команда работает в соответствии с ценностями вашей организации?"
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Values",
+    "followup": "",
+    "question_id": 81,
+    "question_text": "По шкале от 0 до 10, насколько хорошо ценности вашей организации отражены в поведении людей на работе?"
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Values",
+    "followup": "can you share an example of decision that reflected the organization’s values well?",
+    "question_id": 80,
+    "question_text": "Способ принятия решений в нашей организации отражает ценности нашей организации."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Values",
+    "followup": "",
+    "question_id": 79,
+    "question_text": "Ценности моей организации совпадают с ценностями, которые я считаю важными в жизни."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Vision & Mission",
+    "followup": "",
+    "question_id": 78,
+    "question_text": "Моя организация четко и эффективно общается с членами команды."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Vision & Mission",
+    "followup": "",
+    "question_id": 77,
+    "question_text": "Долгосрочное видение вашей организации понятно для вас?"
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Vision & Mission",
+    "followup": "",
+    "question_id": 76,
+    "question_text": "Вы верите, что ваша организация способна достичь своих целей?"
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Vision & Mission",
+    "followup": "",
+    "question_id": 75,
+    "question_text": "Цели и стратегии моей организации ведут нас в правильном направлении."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Vision & Mission",
+    "followup": "",
+    "question_id": 74,
+    "question_text": "Ваша организация инвестирует достаточно ресурсов, людей и усилий, чтобы соответствовать своим амбициям?"
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Vision & Mission",
+    "followup": "",
+    "question_id": 73,
+    "question_text": "Лидеры моей организации донесли до меня видение, которое меня мотивирует."
+  },
+  {
+    "Metric": "Alignment",
+    "Sub Metric": "Vision & Mission",
+    "followup": "",
+    "question_id": 72,
+    "question_text": "Меня вдохновляет цель и миссия моей организации."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Work environment",
+    "followup": "",
+    "question_id": 71,
+    "question_text": "Наша организация позволяет людям легко сотрудничать, даже если они работают удаленно."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Work environment",
+    "followup": "",
+    "question_id": 70,
+    "question_text": "У вас есть все необходимое для выполнения вашей работы надлежащим образом?"
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Work environment",
+    "followup": "what do you enjoy most about your work environment?",
+    "question_id": 69,
+    "question_text": "Насколько вам нравится ваше рабочее окружение?"
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Work environment",
+    "followup": "what makes you comfortable in your work environment?",
+    "question_id": 68,
+    "question_text": "Вам комфортно в рабочей среде?"
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Work environment",
+    "followup": "",
+    "question_id": 67,
+    "question_text": "Ваше рабочее окружение позволяет вам работать без отвлечений, когда это необходимо?"
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Role within Organization",
+    "followup": "",
+    "question_id": 66,
+    "question_text": "Мои обязанности соответствуют моей роли."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Role within Organization",
+    "followup": "",
+    "question_id": 65,
+    "question_text": "Я чувствую себя уверенно в своей роли и должности здесь."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Role within Organization",
+    "followup": "",
+    "question_id": 64,
+    "question_text": "Я пересматриваю и обсуждаю свои цели с такой частотой, которая имеет смысл для меня."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Role within Organization",
+    "followup": "",
+    "question_id": 63,
+    "question_text": "Я чувствую, что мои индивидуальные цели сильно связаны с целями нашей команды."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Role within Organization",
+    "followup": "",
+    "question_id": 62,
+    "question_text": "На работе я знаю, что от меня ожидается."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Role within Organization",
+    "followup": "are there any additional responsibilities you'd like to have that you currently don't?",
+    "question_id": 61,
+    "question_text": "Ваши обязанности ясны?"
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Fairness",
+    "followup": "",
+    "question_id": 60,
+    "question_text": "Низкая производительность эффективно решается в нашей организации."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Fairness",
+    "followup": "",
+    "question_id": 59,
+    "question_text": "Моя работа оценивается справедливо."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Fairness",
+    "followup": "",
+    "question_id": 58,
+    "question_text": "Вы доверяете, что вас справедливо оплачивают по сравнению с аналогичными ролями в вашей организации?"
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Fairness",
+    "followup": "",
+    "question_id": 57,
+    "question_text": "Вы доверяете, что вас справедливо оплачивают по сравнению с аналогичными ролями в других организациях?"
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Fairness",
+    "followup": "",
+    "question_id": 56,
+    "question_text": "Учитывая мои обязанности, навыки и опыт, я считаю, что меня справедливо оплачивают."
+  },
+  {
+    "Metric": "Satisfaction",
+    "Sub Metric": "Fairness",
+    "followup": "why do you believe that the way pay is decided in your organization is unfair?",
+    "question_id": 55,
+    "question_text": "Вы считаете, что способ принятия решений о зарплате в вашей организации справедлив?"
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Communication with Manager",
+    "followup": "",
+    "question_id": 54,
+    "question_text": "Мой непосредственный менеджер создает возможности для открытых обсуждений в нашей команде."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Communication with Manager",
+    "followup": "why do you feel that your direct manager isn’t being fully honest in their communications?",
+    "question_id": 53,
+    "question_text": "Я считаю, что мой непосредственный менеджер честно со мной общается."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Communication with Manager",
+    "followup": "",
+    "question_id": 52,
+    "question_text": "Мой непосредственный менеджер держит меня в курсе того, что происходит в нашей организации."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Communication with Manager",
+    "followup": "in an ideal world, how frequently would you communicate with your direct manager?",
+    "question_id": 51,
+    "question_text": "По шкале от 0 до 10, насколько вы довольны частотой общения с вашим непосредственным менеджером?"
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Trust with Manager",
+    "followup": "",
+    "question_id": 50,
+    "question_text": "Я считаю, что мой непосредственный менеджер понимает мою повседневную реальность."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Trust with Manager",
+    "followup": "",
+    "question_id": 49,
+    "question_text": "Я считаю, что мой непосредственный менеджер хорошо справляется с управлением людьми."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Trust with Manager",
+    "followup": "",
+    "question_id": 48,
+    "question_text": "Мой непосредственный менеджер относится ко мне с уважением."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Trust with Manager",
+    "followup": "",
+    "question_id": 47,
+    "question_text": "Мой непосредственный менеджер заботится о моем благополучии."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Trust with Manager",
+    "followup": "",
+    "question_id": 46,
+    "question_text": "Мой непосредственный менеджер – это человек, которому я могу доверять."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Collaboration with Manager",
+    "followup": "what can your direct manager continue doing to support you in your role?",
+    "question_id": 45,
+    "question_text": "Мой непосредственный менеджер дает мне необходимую поддержку в работе."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Collaboration with Manager",
+    "followup": "what’s the impact when your direct manager does not take accountability for their part in team results?",
+    "question_id": 44,
+    "question_text": "Мой непосредственный менеджер берет на себя ответственность за результаты нашей команды."
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Collaboration with Manager",
+    "followup": "why is your relationship with your direct manager positive?",
+    "question_id": 43,
+    "question_text": "Каково это работать с вашим непосредственным менеджером?"
+  },
+  {
+    "Metric": "Relationship with Manager",
+    "Sub Metric": "Collaboration with Manager",
+    "followup": "",
+    "question_id": 42,
+    "question_text": "Мой непосредственный менеджер заботится о моем мнении."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Communication between Peers",
+    "followup": "in what way do you feel communications among peers can improve?",
+    "question_id": 41,
+    "question_text": "Ощущается ли честность в общении между коллегами?"
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Communication between Peers",
+    "followup": "",
+    "question_id": 40,
+    "question_text": "Мои коллеги и я открыто обсуждаем вопросы, и мнения всех учитываются."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Communication between Peers",
+    "followup": "",
+    "question_id": 39,
+    "question_text": "По шкале от 0 до 10, насколько вы довольны частотой общения с вашими коллегами на работе?"
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Trust between Peers",
+    "followup": "test followup text",
+    "question_id": 38,
+    "question_text": "Мои коллеги демонстрируют компетентность в своих ролях."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Trust between Peers",
+    "followup": "",
+    "question_id": 37,
+    "question_text": "Я чувствую себя в безопасности быть собой с моими коллегами."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Trust between Peers",
+    "followup": "",
+    "question_id": 36,
+    "question_text": "Вы уважаете людей, с которыми работаете?"
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Trust between Peers",
+    "followup": "",
+    "question_id": 35,
+    "question_text": "По шкале от 0 до 10, насколько вы доверяете своим коллегам?"
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Trust between Peers",
+    "followup": "",
+    "question_id": 34,
+    "question_text": "Мои коллеги стремятся выполнять качественную работу."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Collaboration between Peers",
+    "followup": "",
+    "question_id": 33,
+    "question_text": "В нашей команде мы привлекаем друг друга к ответственности за результаты."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Collaboration between Peers",
+    "followup": "",
+    "question_id": 32,
+    "question_text": "Я чувствую, что каждый член нашей команды вносит вклад в наши командные цели."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Collaboration between Peers",
+    "followup": "",
+    "question_id": 31,
+    "question_text": "Сотрудничество с коллегами из других команд положительное."
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Collaboration between Peers",
+    "followup": "what’s the essentional ingredient to ensure good collaboration between you and your peers?",
+    "question_id": 30,
+    "question_text": "Вы и ваши коллеги хорошо сотрудничаете?"
+  },
+  {
+    "Metric": "Relationship with Peers",
+    "Sub Metric": "Collaboration between Peers",
+    "followup": "",
+    "question_id": 29,
+    "question_text": "Я чувствую себя частью команды."
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Suggestions for the Organization",
+    "followup": "",
+    "question_id": 28,
+    "question_text": "Моя организация принимает во внимание предложения от членов команды."
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Suggestions for the Organization",
+    "followup": "",
+    "question_id": 27,
+    "question_text": "По шкале от 0 до 10, если у вас есть новые идеи для вашей организации, каковы шансы, что вы поделитесь ими?"
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Suggestions for the Organization",
+    "followup": "",
+    "question_id": 26,
+    "question_text": "Как бы вы оценили важность, которую ваша организация придает вашим мнениям и предложениям?"
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Suggestions for the Organization",
+    "followup": "",
+    "question_id": 25,
+    "question_text": "Члены команды поощряются к инновациям, даже если некоторые инициативы могут не увенчаться успехом."
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Suggestions for the Organization",
+    "followup": "",
+    "question_id": 24,
+    "question_text": "Я чувствую, что могу высказать свое мнение относительно моей организации."
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Frequency",
+    "followup": "",
+    "question_id": 23,
+    "question_text": "Обратная связь, которую я получаю, достаточно часта, чтобы я мог понять, как я могу улучшиться."
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Frequency",
+    "followup": "",
+    "question_id": 22,
+    "question_text": "Какое из следующих утверждений лучше всего описывает количество обратной связи, которую вы обычно получаете относительно вашей работы?"
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Frequency",
+    "followup": "",
+    "question_id": 21,
+    "question_text": "Вы удовлетворены частотой обратной связи от вашего непосредственного менеджера?"
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Frequency",
+    "followup": "",
+    "question_id": 20,
+    "question_text": "Я доволен частотой обратной связи от моих коллег."
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Quality",
+    "followup": "",
+    "question_id": 19,
+    "question_text": "Обратная связь, которую вы получаете, конкретна?"
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Quality",
+    "followup": "",
+    "question_id": 18,
+    "question_text": "По шкале от 0 до 10, насколько ценна получаемая вами обратная связь?"
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Quality",
+    "followup": "",
+    "question_id": 17,
+    "question_text": "Когда кто-то дает мне обратную связь на работе, это делается с уважением."
+  },
+  {
+    "Metric": "Feedback",
+    "Sub Metric": "Feedback Quality",
+    "followup": "what’s missing for feedback to fully help you grow?",
+    "question_id": 16,
+    "question_text": "Обратная связь, которую я получаю, помогает мне расти и развиваться."
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Championing",
+    "followup": "",
+    "question_id": 15,
+    "question_text": "По шкале от 0 до 10, насколько вероятно, что вы останетесь в [Luxclusif], если вам предложат аналогичную работу в другом месте?"
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Championing",
+    "followup": "",
+    "question_id": 14,
+    "question_text": "Если бы вы отвечали за награды \"лучшие места для работы\", вы бы номинировали свою организацию?"
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Championing",
+    "followup": "",
+    "question_id": 13,
+    "question_text": "Я считаю себя послом моей организации."
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Championing",
+    "followup": "",
+    "question_id": 12,
+    "question_text": "По шкале от 0 до 10, насколько вероятно, что вы порекомендуете продукты/услуги вашей организации?"
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Championing",
+    "followup": "What's holding you back from recommending \"company-name\" as a good place to work?",
+    "question_id": 11,
+    "question_text": "По шкале от 0 до 10, насколько вероятно, что вы порекомендуете вашу организацию как хорошее место работы?"
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Pride",
+    "followup": "",
+    "question_id": 10,
+    "question_text": "Я горжусь ценностью, которую мы создаем как организация."
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Pride",
+    "followup": "2: Why are you proud of your organization? Why aren't you proud of your organization?",
+    "question_id": 9,
+    "question_text": "Когда вы говорите, в какой организации работаете, что вы чувствуете?"
+  },
+  {
+    "Metric": "Ambassadorship",
+    "Sub Metric": "Pride",
+    "followup": "",
+    "question_id": 8,
+    "question_text": "Я горжусь тем, за что выступает моя организация."
+  },
+  {
+    "Metric": "Recognition",
+    "Sub Metric": "Recognition Frequency",
+    "followup": "",
+    "question_id": 7,
+    "question_text": "Как бы вы оценили частоту получения признания?"
+  },
+  {
+    "Metric": "Recognition",
+    "Sub Metric": "Recognition Frequency",
+    "followup": "",
+    "question_id": 6,
+    "question_text": "Признание предоставляется своевременно."
+  },
+  {
+    "Metric": "Recognition",
+    "Sub Metric": "Recognition Frequency",
+    "followup": "how frequently and in what way would you like to be recognized?",
+    "question_id": 5,
+    "question_text": "Я доволен частотой признания моих заслуг."
+  },
+  {
+    "Metric": "Recognition",
+    "Sub Metric": "Recognition Quality",
+    "followup": "What forums can we use to ensure recognition flows continuously?",
+    "question_id": 4,
+    "question_text": "В моей организации предоставляется постоянное признание."
+  },
+  {
+    "Metric": "Recognition",
+    "Sub Metric": "Recognition Quality",
+    "followup": "2: What kind of recognition means the most to you? What are your expectations in terms of recognition?",
+    "question_id": 3,
+    "question_text": "Если я делаю отличную работу, я знаю, что это будет признано."
+  },
+  {
+    "Metric": "Recognition",
+    "Sub Metric": "Recognition Quality",
+    "followup": "",
+    "question_id": 2,
+    "question_text": "Я получаю значимое признание."
+  },
+  {
+    "Metric": "Recognition",
+    "Sub Metric": "Recognition Quality",
+    "followup": "what can your organization do better to encourage team members to give each other recognition?",
+    "question_id": 1,
+    "question_text": "Моя организация поощряет членов команды признавать заслуги друг друга."
+  }
+]

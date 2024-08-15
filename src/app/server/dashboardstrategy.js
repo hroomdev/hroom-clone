@@ -24,6 +24,7 @@ import {
   getEmployeesRows,
   getFirstNotYetStartedSurvey,
   getLastStartedSurvey,
+  getQuestData,
   getQuestGroupGroupBy,
   getQuestGroupTypeBy,
   getQuestionMetricSubMetricQuestionBy,
@@ -94,6 +95,8 @@ export const generateStatistics = async (limitQuiz, limitAnswers) => {
 }
 
 export const generateSelectedOptionsAndFollowups = async () => {
+  var followUpsIdsArr = Array(0)
+
   let quizes = await getStartedQuizesOrderByIdDesc(1, 0)
 
   quizes = quizes.filter(q => {
@@ -104,10 +107,25 @@ export const generateSelectedOptionsAndFollowups = async () => {
     var quiz = quizes[quizI]
     var quizSplittedStr = quiz.toString().split(',')
 
-    //var quizIdIdx = await dbQuizIdIdx()
-
     var quizTypeIdx = await dbQuizTypeIdx()
     var quizTypeId = quizSplittedStr[quizTypeIdx]
+
+    await getQuestData().then(dbData => {
+      //var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+      //var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
+
+      for (var i = 0; i < dbData[Number.parseInt(quizTypeId) - 1].length; i++) {
+        var followup = dbData[Number.parseInt(quizTypeId) - 1][i].followup
+
+        if (followup != undefined) {
+          followUpsIdsArr.push(i) //составляем массив индексов для которых в массиве ответов должны быть фразы отвечающих
+          //если находим уточняющий вопрос...
+          //...создаем ответ
+        }
+      }
+
+      setLoading(false)
+    })
   }
 
   var countGenerated = 20
@@ -115,7 +133,7 @@ export const generateSelectedOptionsAndFollowups = async () => {
 
   var generatedOptions = generateOptions(countGenerated, maximum)
 
-  var generatedFollowups = generateFollowUps(countGenerated)
+  var generatedFollowups = generateFollowUps(countGenerated, followUpsIdsArr)
 
   let optionsStr = generatedOptions.join(',')
   let followUpStr = generatedFollowups.join(',')

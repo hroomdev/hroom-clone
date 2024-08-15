@@ -1,3 +1,6 @@
+import fs from 'fs'
+import path from 'path'
+
 import {
   activateAIAdvice,
   getAIAdviceFromThread,
@@ -30,22 +33,76 @@ export async function register() {
   var employesJSONStr = await getEmployeesJSON()
 
   console.log('employesJSONStr ' + employesJSONStr)
+  var jsonData = JSON.parse(employesJSONStr)
+
+  // Define the path where you want to save the file
+  var filePath = path.join(process.cwd(), 'data', 'Employees.json')
+
+  // Ensure the directory exists
+  fs.mkdirSync(path.dirname(filePath), { recursive: true })
+
+  // Write the JSON data to a file
+  fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2))
 
   var statisticJSONStr = await getStatisticsJSON()
 
   console.log('statisticJSONStr ' + statisticJSONStr)
 
+  jsonData = JSON.parse(statisticJSONStr)
+
+  // Define the path where you want to save the file
+  filePath = path.join(process.cwd(), 'data', 'Statistics.json')
+
+  // Ensure the directory exists
+  fs.mkdirSync(path.dirname(filePath), { recursive: true })
+
+  // Write the JSON data to a file
+  fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2))
+
   var surveysJSONStr = await getSurveysJSON()
 
   console.log('surveysJSONStr ' + surveysJSONStr)
+
+  jsonData = JSON.parse(surveysJSONStr)
+
+  // Define the path where you want to save the file
+  filePath = path.join(process.cwd(), 'data', 'Surveys.json')
+
+  // Ensure the directory exists
+  fs.mkdirSync(path.dirname(filePath), { recursive: true })
+
+  // Write the JSON data to a file
+  fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2))
 
   var questionsJSONStr = await getQuestionsJSON()
 
   console.log('questionsJSONStr ' + questionsJSONStr)
 
+  jsonData = JSON.parse(questionsJSONStr)
+
+  // Define the path where you want to save the file
+  filePath = path.join(process.cwd(), 'data', 'Questions.json')
+
+  // Ensure the directory exists
+  fs.mkdirSync(path.dirname(filePath), { recursive: true })
+
+  // Write the JSON data to a file
+  fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2))
+
   var selectedAnswersJSONStr = await getSelectedAnswersJSON()
 
   console.log('selectedAnswersJsonStr ' + selectedAnswersJSONStr)
+
+  jsonData = JSON.parse(selectedAnswersJSONStr)
+
+  // Define the path where you want to save the file
+  filePath = path.join(process.cwd(), 'data', 'Answers.json')
+
+  // Ensure the directory exists
+  fs.mkdirSync(path.dirname(filePath), { recursive: true })
+
+  // Write the JSON data to a file
+  fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2))
 
   try {
     var employees = await updateVectorStore(
@@ -56,14 +113,22 @@ export async function register() {
       selectedAnswersJSONStr
     )
 
-    var threadid = 'thread_XAxhKZhtmHHNy3mWc1keuksq' // ''thread_RCpXzhcJXh0W6D4FbpZXKgm7'' new 'thread_UEBpIa52VnG5dc77bt8H2HAW' 'thread_XAxhKZhtmHHNy3mWc1keuksq'
+    var threadid = 'thread_1SFBMP1wh9cljxry6AkOSu3a' //
     var assistantid = 'asst_MUBJtTYH5GqDjiGSTEbOajEp'
 
-    //var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) // adds prompt message and runs once
+    var rethinkedAdviceRun = await activateAIAdvice(threadid, assistantid) // adds prompt message and runs once
 
     var rethinkedAdviceRun = await getAIAdviceFromThread(threadid) // только взять последнее сообщение из истории
 
     console.log('rethinkedAdviceRun' + rethinkedAdviceRun)
+
+    if (rethinkedAdviceRun.includes('user')) {
+      console.log(
+        'последний ответ в треде ' + threadid + 'от юзера не импортируем в базу данных - сгенерируйте ответ от ии'
+      )
+
+      return
+    }
 
     var resultWithoutRoleJSON = rethinkedAdviceRun.split('>').pop()
 
@@ -74,9 +139,11 @@ export async function register() {
 
   var result = JSON.parse(resultWithoutRoleJSON)
 
+  //названия этих полей меняются по изменению thredId
+
   var insights = result.insights
-  var cohort = result.top_questions
-  var advices = result.advice
+  var cohort = result.top_texts
+  var advices = result.AI_advice
 
   console.log(cohort.length + ' cohort ')
 
@@ -84,13 +151,19 @@ export async function register() {
     console.log('инсайт  ' + insights[i] + ' ' + i)
   }
 
+  console.log('инсайт  -------------------------------')
+
   for (var i = 0; i < cohort.length; i++) {
     console.log('когорт  ' + cohort[i] + ' ' + i)
   }
 
+  console.log('когорт  -------------------------------')
+
   for (var i = 0; i < advices.length; i++) {
     console.log('совет  ' + advices[i] + ' ' + i)
   }
+
+  console.log('совет  -------------------------------')
 
   var savedCohortsResultRows = await saveAdvicesTexts(4, cohort)
 
@@ -116,5 +189,6 @@ export async function register() {
 
   console.log('когорты из бд')
   var cohortsFromDB = await getAIAdvices(4, 3)
+
   cohortsFromDB.map(i => console.log(i))
 }

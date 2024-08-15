@@ -7,7 +7,7 @@ import {
 } from './app/server/actions'
 
 export const getEmployeesJSON = async () => {
-  var maxEmps = 10
+  var maxEmps = Number.MAX_SAFE_INTEGER
 
   var employeesres = await getEmployees(maxEmps)
 
@@ -15,7 +15,7 @@ export const getEmployeesJSON = async () => {
 }
 
 export const getQuestionsJSON = async () => {
-  var maxQuestions = 120
+  var maxQuestions = Number.MAX_SAFE_INTEGER
 
   var questionsres = await getQuestionsOrderDesc(maxQuestions)
 
@@ -45,8 +45,6 @@ export const getQuestionsJSON = async () => {
 }
 
 export const getSelectedAnswersJSON = async () => {
-  var maxQuestions = 120
-
   var answersres = await getAllSelectedOptions()
 
   console.log('answersres' + answersres)
@@ -77,7 +75,7 @@ export const getSelectedAnswersJSON = async () => {
 }
 
 export const getAnswersJSON = async () => {
-  var maxQuestions = 120
+  var maxQuestions = Number.MAX_SAFE_INTEGER
 
   var questionsres = await getQuestionsOrderDesc(maxQuestions)
 
@@ -107,7 +105,7 @@ export const getAnswersJSON = async () => {
 }
 
 export const getStatisticsJSON = async () => {
-  var maxStatistics = 10
+  var maxStatistics = Number.MAX_SAFE_INTEGER
 
   var statisticssres = await getStatistics(maxStatistics)
 
@@ -115,7 +113,7 @@ export const getStatisticsJSON = async () => {
 }
 
 export const getSurveysJSON = async () => {
-  var maxSurveys = 10
+  var maxSurveys = Number.MAX_SAFE_INTEGER
 
   var surveysres = await getSurveysOrderByIdDesc(maxSurveys)
 
