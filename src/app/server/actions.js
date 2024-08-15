@@ -548,8 +548,9 @@ export const getSelectedAnswersByOrderDescQuizId = async (id, limit) => {
 
   const selectedAnswersIds = {
     text: 'SELECT * FROM "public"."selectedAnswers" WHERE "public"."selectedAnswers"."quizId" = $1 ORDER BY "public"."selectedAnswers"."id" DESC LIMIT $2',
-    values: [id, limit],
-    rowMode: 'array'
+    values: [id, limit]
+
+    //rowMode: 'array'
   }
 
   var selectedAnswers = []

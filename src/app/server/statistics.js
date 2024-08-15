@@ -1,13 +1,13 @@
 import { metricsru } from './../../../src/views/dashboards/dashboard/src/screens/DashboardBuilder/Metrics'
 
 import {
-  getSelectedAnswersByOrderDescQuizId,
   getLastStartedSurvey,
-  getStartedQuizesOrderByIdDesc,
-  getQuestGroupTypeBy,
-  getSelectedOptions,
   getQuestGroupGroupBy,
-  getQuestionMetricSubMetricQuestionBy
+  getQuestGroupTypeBy,
+  getQuestionMetricSubMetricQuestionBy,
+  getSelectedAnswersByOrderDescQuizId,
+  getSelectedOptions,
+  getStartedQuizesOrderByIdDesc
 } from './actions'
 
 import {
@@ -60,8 +60,6 @@ export const getStatsMetrics = async (quiz, selectedAnswer) => {
 
   survey_id = quizId //out parameter
 
-  var selectedAnswers = await getSelectedAnswersByOrderDescQuizId(quizId, quizAuditory)
-
   //transactions stats START/////////////////////////////////////
   let quizGroupGroup = await getQuestGroupGroupBy(quizGroupId) //'1,2,3,4,5,6,32'..
 
@@ -107,14 +105,13 @@ export const getStatsMetrics = async (quiz, selectedAnswer) => {
     counterMetricQuiz[i] = counterMetric
   }
 
-  var selectedAnswerSplittedStr = selectedAnswer.toString().split(',')
+  //var selectedAnswerSplittedStr = selectedAnswer['']
 
-  var selectedAnswersIdx = await dbSelectedAnswersIdIdx()
-  var selectedAnswerId = selectedAnswerSplittedStr[selectedAnswersIdx]
+  var selectedAnswerId = selectedAnswer['id']
 
-  var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 2]) //hack count columns selectedAnswers table Depenent
+  var empId = selectedAnswer['employee_id']
 
-  employee_id = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 1]) //hack count columns selectAnswers table dependent
+  employee_id = Number.parseInt(empId)
 
   var selectedOptions = await getSelectedOptions(selectedAnswerId)
 

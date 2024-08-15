@@ -99,6 +99,7 @@ const DashboardVerticalMenu = ({ dictionary, scrollMenu }) => {
           icon={<i className='ri-star-smile-line' />}
           onClick={async () => {
             generateSelectedOptionsAndFollowups().then(async () => {
+              console.log('генерировать статистику старт')
               await generateStatistics(1, 1)
 
               //register() todo:  посмотреть как синхронизировать кэш без инвалидации кэша или вызова с  клиента

@@ -64,6 +64,7 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
 
   const [questionText, setQuestionText] = useState(JSON.parse(initialCohortsJSONstrs[0])['question_text']) // Declare a state variable...
   const [respondents, setRespondents] = useState(JSON.parse(initialCohortsJSONstrs[0])['respondents']) // Declare a state variable...
+
   const [answeredPercentege, setAnsweredPercentege] = useState(
     JSON.parse(initialCohortsJSONstrs[0])['answered_percentage']
   ) // Declare a state variable...
@@ -129,8 +130,6 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
       setTotalRevenueStats(data.totalRevenueStats)
       setSeriesApexLineMetrics(data.seriesApexLineMetrics)
 
-      console.log('set cur to now :Dashboardbuilder.jsx' + data.curToNow.toString())
-
       setCategoriesApexLineMetrics(data.categoriesApexLineMetrics)
       setTransactionsMetricStats(data.transactionsMetricStats)
       setTransactionsMetricDiffStats(data.transactionsMetricDiffStats)
@@ -138,8 +137,6 @@ export const DashboardBuilder = ({ companyId, data, initialAdivces, initialInsig
       setTeamsMetricDiffStats(data.teamsMetricDiffStats)
       setAcutelys(data.acutelys)
       setTeamMetricStory(data.teamsMetricStory)
-
-      console.log(JSON.stringify(data))
     }
 
     f()

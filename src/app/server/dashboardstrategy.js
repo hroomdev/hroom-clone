@@ -353,7 +353,6 @@ export const getDashboardData = async id => {
 
     teamsMetricStory.dateStamp.push(quizStartsAtDate)
 
-    //console.log('team stats json i' + i + ' teamsstats ' + JSON.stringify(teamStats))
     teamsMetricStory.stats.push(teamStats)
 
     categoriesApexLineMetrics.push(dateToLocal)
@@ -384,8 +383,6 @@ export const getDashboardData = async id => {
       return acc
     }, {})
   })
-
-  //console.log('teamStats length ' + teamStats.length + '  teamsstats ' + teamsMetricDiffStats.length)
 
   var timeEnd = Date.now()
 
@@ -419,8 +416,6 @@ export const getDashboardData = async id => {
   }
 
   //loading = false
-
-  console.log('end db sample ' + id + ' checkisavail ' + (await checkIsAvailable(id))) //+ JSON.stringify(db)
 
   isLoading = false
 
@@ -612,8 +607,9 @@ export const getEngageMetrics = async (quiz, totalRevenueStats, metricsStats, te
   }
 
   for (var i = 0; i < selectedAnswers.length; i++) {
-    var selectedAnswerSplittedStr = selectedAnswers[i].toString().split(',')
-    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 2]) //hack count minus two db column dependent
+    var selectedAnswer = selectedAnswers[i]
+    var teamId = selectedAnswer['department_id']
+    var selectedAnswerTeamId = Number.parseInt(teamId)
 
     counterTeamMetricQuiz[selectedAnswerTeamId - 1] = counterTeamMetricQuiz[selectedAnswerTeamId - 1] + 1
   }
@@ -626,19 +622,15 @@ export const getEngageMetrics = async (quiz, totalRevenueStats, metricsStats, te
     revStats[1] = 0
 
     //console.log('no one is involved in participation zero acutelys')
-
     return [revStats, metStats, teamStats, acutelys]
   }
 
   const CountCohort = async selectedAnswer => {
-    var selectedAnswerSplittedStr = selectedAnswer.toString().split(',')
+    var teamId = selectedAnswer['department_id']
+    var answerId = selectedAnswer['id']
 
-    var selectedAnswersIdx = await dbSelectedAnswersIdIdx()
-    var selectedAnswerId = selectedAnswerSplittedStr[selectedAnswersIdx]
-
-    var selectedAnswerTeamId = Number.parseInt(selectedAnswerSplittedStr[selectedAnswerSplittedStr.length - 2]) //hack count columns selectedAnswers table Depenent
-
-    //if (selectedAnswerTeamId == 7) console.log('selectedAnswerTeamId SEVEN')
+    var selectedAnswerId = Number.parseInt(answerId)
+    var selectedAnswerTeamId = Number.parseInt(teamId)
 
     var selectedOptions = await getSelectedOptions(selectedAnswerId)
 
