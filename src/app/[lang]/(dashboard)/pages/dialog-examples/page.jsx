@@ -1,26 +1,28 @@
 'use client' // MUI Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Grid from '@mui/material/Grid'
+
+import { dbQuizTypeIdx } from '../../../../../../src/app/server/dbMapping'
 
 // React Imports
 
 // Component Imports
 //import { BrowserRouter } from 'react-router-dom'
 
+import DialogCreateApp from '@/views/pages/dialog-examples/DialogCreateApp'
 import DialogAddCard from '@views/pages/dialog-examples/DialogAddCard'
-import DialogEditUserInfo from '@views/pages/dialog-examples/DialogEditUserInfo'
-import DialogAuthentication from '@views/pages/dialog-examples/DialogAuthentication'
 import DialogAddNewAddress from '@views/pages/dialog-examples/DialogAddNewAddress'
-import DialogShareProject from '@views/pages/dialog-examples/DialogShareProject'
-import DialogReferEarn from '@views/pages/dialog-examples/DialogReferEarn'
+import DialogAuthentication from '@views/pages/dialog-examples/DialogAuthentication'
+import DialogEditUserInfo from '@views/pages/dialog-examples/DialogEditUserInfo'
 import DialogPaymentMethod from '@views/pages/dialog-examples/DialogPaymentMethod'
 import DialogPaymentProviders from '@views/pages/dialog-examples/DialogPaymentProviders'
-import DialogCreateApp from '@/views/pages/dialog-examples/DialogCreateApp'
 import DialogPricing from '@views/pages/dialog-examples/DialogPricing'
+import DialogReferEarn from '@views/pages/dialog-examples/DialogReferEarn'
+import DialogShareProject from '@views/pages/dialog-examples/DialogShareProject'
 
 // Data Imports
-import { getPricingData } from '@/app/server/actions'
+import { getLastStartedSurvey, getPricingData } from '@/app/server/actions'
 
 import CreateApp from '@components/dialogs/create-app'
 
@@ -43,14 +45,30 @@ import CreateApp from '@components/dialogs/create-app'
 var initialState = true
 
 const DialogExamples = () => {
-  // Vars
-  //const data = getPricingData()
-  // States
   const [open, setOpen] = useState(initialState)
+  const [lastStartedQuizGroupType, setLastStartedGroupType] = useState(0)
 
-  console.log('dialog examples ' + open)
+  useEffect(() => {
+    const f = async () => {
+      let currentQuiz = await getLastStartedSurvey()
+      var splittedStr = currentQuiz.toString().split(',')
+      var quizTypeIdx = await dbQuizTypeIdx()
+      var quizTypeGroupId = splittedStr[quizTypeIdx]
+      var LastStartedGroupTypeNum = Number.parseInt(quizTypeGroupId)
 
-  return <CreateApp open={open} setOpen={setOpen}></CreateApp>
+      setLastStartedGroupType(LastStartedGroupTypeNum)
+    }
+
+    f()
+
+    return () => {}
+  }, [])
+
+  return (
+    lastStartedQuizGroupType != 0 && (
+      <CreateApp open={open} setOpen={setOpen} quizGroupTypeId={lastStartedQuizGroupType}></CreateApp>
+    )
+  )
 
   //<Grid container spacing={6}>
   //  <Grid item xs={12} sm={6} md={4}>

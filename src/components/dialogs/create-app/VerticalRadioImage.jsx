@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import Grid from '@mui/material/Unstable_Grid2'
 
@@ -14,8 +14,8 @@ import DirectionalIcon from '@components/DirectionalIcon'
 
 import { getQuestData as dbData } from '@/app/server/actions'
 
-import handleChange from './SelectAnswerHandler.jsx'
 import { binaryFormat } from './../../../app/server/const.jsx'
+import handleChange from './SelectAnswerHandler.jsx'
 
 let initialData = [
   {
@@ -56,10 +56,10 @@ const VerticalRadioImage = ({
   useEffect(() => {
     async function fetch() {
       console.log('use effect called : VerticalRadioImage')
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
-        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
-        var imgSources = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].imgSrcs
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[activeStep].subtitle
+        var answers = dbData[activeStep].answers
+        var imgSources = dbData[activeStep].imgSrcs
 
         if (imgSources === 'undefined' || imgSources === undefined) return
 

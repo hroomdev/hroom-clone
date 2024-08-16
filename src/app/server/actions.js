@@ -272,7 +272,7 @@ export const getEmployeesCountByDepartmentId = async departmentId => {
   return result
 }
 
-export const getQuestGroupGroupBy = async groupId => {
+export const getQuestGroupGroupBy = async groupIdInt => {
   let client = new Client({
     user: 'gen_user',
     host: '147.45.227.55',
@@ -292,7 +292,11 @@ export const getQuestGroupGroupBy = async groupId => {
     await client.connect()
     var res = await client.query(queryGroup)
 
-    resultQuestionGroup = res.rows[groupId - 1] //id of a row less then id of any table by one
+    if (!res.rows[groupIdInt - 1]) {
+      throw new Error(groupIdInt + 'There is no question data associated with question group ID.' + groupIdInt)
+    }
+
+    resultQuestionGroup = res.rows[groupIdInt - 1] //id of a row less then id of any table by one
   } catch (e) {
     console.error(e.stack)
   } finally {
@@ -462,79 +466,80 @@ const getAnswers = async (questionIdsNums, types) => {
 }
 
 export const getFollowUp = async (quizGroupTypeId, step) => {
-  return await getQuestData().then(data => {
+  return await getQuestData(quizGroupTypeId).then(data => {
+    // ... rest of the function
     console.log(quizGroupTypeId + 'quizGroupTypeId|    dbData  ' + data + '| step  ' + step + '|')
 
-    return data[Number.parseInt(quizGroupTypeId) - 1][step].followup
+    return data[step].followup
   })
 }
 
-export const getQuestData = async () => {
+export const getQuestData = async questionGroupId => {
+  console.log('getQuestData ' + questionGroupId)
+
   //values for questionGroups is 'A' column here https://docs.google.com/spreadsheets/d/1TbnTMajgWkNOg1-ZeRZJbNwVyfLDTQufz9aYtWjmDAw/edit?gid=1027310322#gid=1027310322
+
   //data layout @/fake-db/pages/quiz' questionsData
-  const maxQuestGroupId = 2
-  var quizQuestions = []
 
-  for (var questionGroupId = 1; questionGroupId <= maxQuestGroupId; questionGroupId++) {
-    var resultQuestionGroup = await getQuestGroupGroupBy(questionGroupId)
+  var resultQuestionGroup = await getQuestGroupGroupBy(questionGroupId)
 
-    var splittedStr = resultQuestionGroup.toString().split(',')
+  var splittedStr = resultQuestionGroup.toString().split(',')
+  var questionIdsNums = splittedStr.map(s => Number.parseInt(s))
 
-    var questionIdsNums = splittedStr.map(s => {
-      return Number.parseInt(s)
-    })
+  var splittedStr = resultQuestionGroup.toString().split(',')
 
-    questionIdsNums.map((n, i) => {
-      //console.log(id + ' id | n' + n)
-    })
+  var questionIdsNums = splittedStr.map(s => {
+    return Number.parseInt(s)
+  })
 
-    var typeQuestionsFollowups = await getTypeQuestionsFollowups(questionIdsNums)
-    var types = []
-    var questions = []
-    var followups = []
+  questionIdsNums.map((n, i) => {
+    //console.log(id + ' id | n' + n)
+  })
 
-    for (var j = 0; j < typeQuestionsFollowups.length; j++) {
-      var type = typeQuestionsFollowups[j][0]
-      var question = typeQuestionsFollowups[j][1]
-      var followup = typeQuestionsFollowups[j][2]
+  var typeQuestionsFollowups = await getTypeQuestionsFollowups(questionIdsNums)
+  var types = []
+  var questions = []
+  var followups = []
 
-      types.push(type)
-      questions.push(question)
-      followups.push(followup)
-    }
+  for (var j = 0; j < typeQuestionsFollowups.length; j++) {
+    var type = typeQuestionsFollowups[j][0]
+    var question = typeQuestionsFollowups[j][1]
+    var followup = typeQuestionsFollowups[j][2]
 
-    var answers = await getAnswers(questionIdsNums, types)
-
-    var quizIdQuestions = []
-
-    var imgSources = []
-
-    for (var j = 0; j < questionIdsNums.length; j++) {
-      if (types[j].includes('image')) {
-        imgSources = [
-          '/images/illustrations/characters/q1.png',
-          '/images/illustrations/characters/q2.png',
-          '/images/illustrations/characters/q3.png',
-          '/images/illustrations/characters/q4.png',
-          '/images/illustrations/characters/q4.png'
-        ]
-      }
-
-      var quizQuestion = {
-        type: types[j],
-        subtitle: questions[j],
-        answers: answers[j],
-        imgSrcs: types[j].includes('image') ? imgSources : undefined,
-        followup: followups[j]
-      }
-
-      quizIdQuestions.push(quizQuestion)
-    }
-
-    quizQuestions.push(quizIdQuestions)
+    types.push(type)
+    questions.push(question)
+    followups.push(followup)
   }
 
-  return quizQuestions
+  var answers = await getAnswers(questionIdsNums, types)
+
+  var quizIdQuestions = []
+
+  var imgSources = []
+
+  for (var j = 0; j < questionIdsNums.length; j++) {
+    if (types[j].includes('image')) {
+      imgSources = [
+        '/images/illustrations/characters/q1.png',
+        '/images/illustrations/characters/q2.png',
+        '/images/illustrations/characters/q3.png',
+        '/images/illustrations/characters/q4.png',
+        '/images/illustrations/characters/q4.png'
+      ]
+    }
+
+    var quizQuestion = {
+      type: types[j],
+      subtitle: questions[j],
+      answers: answers[j],
+      imgSrcs: types[j].includes('image') ? imgSources : undefined,
+      followup: followups[j]
+    }
+
+    quizIdQuestions.push(quizQuestion)
+  }
+
+  return quizIdQuestions
 }
 
 export const getSelectedAnswersByOrderDescQuizId = async (id, limit) => {

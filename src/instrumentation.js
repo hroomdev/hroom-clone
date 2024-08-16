@@ -19,7 +19,9 @@ import {
   getSurveysJSON
 } from './jsonParser'
 
-export async function register() {
+export async function register() {}
+
+export async function registera() {
   console.log('registerstart' + new Date().toString())
 
   updateCacheData()
@@ -191,4 +193,6 @@ export async function register() {
   var cohortsFromDB = await getAIAdvices(4, 3)
 
   cohortsFromDB.map(i => console.log(i))
+
+  vs: console.log('earlyout')
 }

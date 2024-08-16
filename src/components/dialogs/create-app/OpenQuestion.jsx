@@ -62,9 +62,9 @@ const OpenQuestion = ({
   useEffect(() => {
     async function fetch() {
       console.log(quizGroupTypeId + 'use effect called : OpenQuestion activeStep ' + activeStep)
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
-        var followup = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].followup
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[activeStep].subtitle
+        var followup = dbData[activeStep].followup
 
         if (followup != undefined) {
           setTitle(followup)

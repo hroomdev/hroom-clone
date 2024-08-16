@@ -1,14 +1,14 @@
 import * as React from 'react'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
 import Slider from '@mui/material/Slider'
 
-import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
+import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Unstable_Grid2'
 
 // MUI Imports
@@ -56,9 +56,9 @@ const StarRate = ({ quizGroupTypeId, activeStep, isLastStep, handleNext, handleP
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
-        var title = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+      await dbData(quizGroupTypeId).then(dbData => {
+        var answers = dbData[activeStep].answers
+        var title = dbData[activeStep].subtitle
 
         setTitle(title)
 

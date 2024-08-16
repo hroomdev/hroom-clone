@@ -37,6 +37,8 @@ let selectedOptions = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 let followUps = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
 const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, handlePrev, questionType, setTitle) => {
+  if (questionType == '' || questionType == undefined) return <p></p>
+
   const Tag = questionType.includes('dots')
     ? VerticalRadioSVG
     : questionType.includes('slider')
@@ -53,8 +55,6 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
 
   if (activeStep < 0) return <p></p>
 
-  if (questionType == '') return <p></p>
-
   return (
     <Tag
       quizGroupTypeId={quizGroupTypeId}
@@ -69,14 +69,15 @@ const renderStepCount = (quizGroupTypeId, activeStep, lastStep, handleNext, hand
   )
 }
 
-let quizGroupTypeId = '1'
-
-const CreateApp = ({ open, setOpen }) => {
+const CreateApp = ({ open, setOpen, quizGroupTypeId }) => {
   const router = useRouter()
 
   var depVar = 1
 
+  const [quizTypeId, setQuizTypeId] = useState(quizGroupTypeId)
+
   const [steps, setSteps] = useState(initialSteps)
+
   const [activeStep, setActiveStep] = useState(0)
   const [isLoading, setLoading] = useState(true)
   const [questionType, setQuestionType] = useState('')
@@ -95,28 +96,30 @@ const CreateApp = ({ open, setOpen }) => {
 
     console.log('fetch step' + step + ' isFollowUp ' + isFollowUp)
 
-    await dbData().then(async data => {
-      console.log('questionType dbdata fetch' + questionType + ' ')
+    await dbData(quizTypeId).then(async data => {
+      console.log(
+        JSON.stringify(data) + ' data | quizTypeId' + quizTypeId + 'questionType dbdata fetch' + questionType + ' '
+      )
 
       if (isFollowUp) {
-        var followUp = await getFollowUp(quizGroupTypeId, step)
+        var followUp = await getFollowUp(quizTypeId, step)
         var questionType = 'followup'
 
         console.log('followUp' + followUp)
         var questionTitle = followUp
 
-        //setSteps(data[Number.parseInt(quizGroupTypeId) - 1].length)
+        //setSteps(data[].length)
 
         setQuestionType(questionType)
         setTitle(questionTitle)
         console.log('set loading false')
         setLoading(false)
       } else {
-        var questionType = data[Number.parseInt(quizGroupTypeId) - 1][step].type
+        var questionType = data[step].type
 
-        var questionTitle = data[Number.parseInt(quizGroupTypeId) - 1][step].subtitle
+        var questionTitle = data[step].subtitle
 
-        var steps = data[Number.parseInt(quizGroupTypeId) - 1].length
+        var steps = data.length
 
         if (followUps.length < steps) {
           //reinitialize based on 'steps' or questions and answers count
@@ -144,6 +147,8 @@ const CreateApp = ({ open, setOpen }) => {
         console.log('set loading false')
 
         setLoading(false)
+
+        router.refresh()
       }
     })
   }
@@ -211,14 +216,14 @@ const CreateApp = ({ open, setOpen }) => {
     } else {
       await handleClose()
 
-      await dbData().then(async data => {
+      await dbData(quizTypeId).then(async data => {
         //save selected answers
         let qaArray = []
 
         for (var i = 0; i < selectedOptions.length; i++) {
-          var a = data[Number.parseInt(quizGroupTypeId) - 1][i].answers[selectedOptions[i]]
+          var a = data[i].answers[selectedOptions[i]]
 
-          var q = data[Number.parseInt(quizGroupTypeId) - 1][i].subtitle
+          var q = data[i].subtitle
 
           qaArray.push('for question ' + q + '  answer ' + a)
         }
@@ -281,7 +286,7 @@ const CreateApp = ({ open, setOpen }) => {
         <div className='flex gap-y-6 pbs-5 flex-col md:flex-row'>
           <div className='flex-1'>
             {renderStepCount(
-              quizGroupTypeId,
+              quizTypeId,
               activeStep,
               activeStep >= steps - 1,
               handleNext,

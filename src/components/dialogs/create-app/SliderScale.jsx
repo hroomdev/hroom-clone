@@ -52,8 +52,8 @@ const SliderScale = ({
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[activeStep].subtitle
         var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
 
         setTitle(questionsubtitle)

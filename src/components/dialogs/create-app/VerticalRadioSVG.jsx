@@ -1,7 +1,7 @@
 // React Imports
 import * as React from 'react'
 
-import { useState, useEffect, useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -78,11 +78,11 @@ const VerticalRadioSVG = ({
     async function fetch() {
       //setData(initialData)
 
-      await dbData().then(dbData => {
+      await dbData(quizGroupTypeId).then(dbData => {
         //var loadedStepNumber = loadedStep
-        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
-        var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
-        var imgSources = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].imgSources
+        var questionsubtitle = dbData[activeStep].subtitle
+        var answers = dbData[activeStep].answers
+        var imgSources = dbData[activeStep].imgSources
 
         setTitle(questionsubtitle)
 

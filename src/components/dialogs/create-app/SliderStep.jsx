@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import MuiSlider from '@mui/material/Slider'
 import { styled } from '@mui/material/styles'
@@ -8,8 +8,8 @@ import { styled } from '@mui/material/styles'
 // MUI Imports
 import Button from '@mui/material/Button'
 
-import DirectionalIcon from '@components/DirectionalIcon'
 import { getQuestData as dbData } from '@/app/server/actions'
+import DirectionalIcon from '@components/DirectionalIcon'
 
 import handleChange from './SelectAnswerHandler.jsx'
 
@@ -58,8 +58,8 @@ const SliderStepNew = ({
 
   useEffect(() => {
     async function fetch() {
-      await dbData().then(dbData => {
-        var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
+      await dbData(quizGroupTypeId).then(dbData => {
+        var questionsubtitle = dbData[activeStep].subtitle
 
         console.log('subtitle step ' + questionsubtitle)
 

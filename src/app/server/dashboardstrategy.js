@@ -107,15 +107,15 @@ export const generateSelectedOptionsAndFollowups = async () => {
     var quiz = quizes[quizI]
     var quizSplittedStr = quiz.toString().split(',')
 
-    var quizTypeIdx = await dbQuizTypeIdx()
-    var quizTypeId = quizSplittedStr[quizTypeIdx]
+    var quizGroupTypeIdx = await dbQuizTypeIdx()
+    var quizGroupTypeId = quizSplittedStr[quizGroupTypeIdx]
 
-    await getQuestData().then(dbData => {
+    await getQuestData(quizGroupTypeId).then(dbData => {
       //var questionsubtitle = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].subtitle
       //var answers = dbData[Number.parseInt(quizGroupTypeId) - 1][activeStep].answers
 
-      for (var i = 0; i < dbData[Number.parseInt(quizTypeId) - 1].length; i++) {
-        var followup = dbData[Number.parseInt(quizTypeId) - 1][i].followup
+      for (var i = 0; i < dbData.length; i++) {
+        var followup = dbData[i].followup
 
         if (followup != undefined) {
           followUpsIdsArr.push(i) //составляем массив индексов для которых в массиве ответов должны быть фразы отвечающих
